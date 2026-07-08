@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Scan Retur - SRF V3</title>
+
+<link rel="manifest" href="manifest.json">
+
+<link rel="stylesheet" href="css/style.css">
+
+<script src="https://unpkg.com/html5-qrcode"></script>
+
+</head>
+
+<body>
+
+<div class="header-box">
+
+<h2>📷 Scan Retur</h2>
+
+<a href="index.html" class="btn-nav">
+← Menu Utama
+</a>
+
+</div>
+
+<div id="bca-indicator"></div>
+
+<div id="status-message">
+
+Menyalakan Kamera...
+
+</div>
+
+<div class="card">
+
+<div id="reader"></div>
+
+</div>
+
+<div class="card">
+
+<h3>Detail Scan</h3>
+
+<table>
+
+<tr>
+<td>Resi</td>
+<td id="d_resi">-</td>
+</tr>
+
+<tr>
+<td>Order ID</td>
+<td id="d_order">-</td>
+</tr>
+
+<tr>
+<td>SKU</td>
+<td id="d_sku">-</td>
+</tr>
+
+<tr>
+<td>Warna</td>
+<td id="d_warna">-</td>
+</tr>
+
+<tr>
+<td>Size</td>
+<td id="d_size">-</td>
+</tr>
+
+<tr>
+<td>Qty</td>
+<td id="d_qty">-</td>
+</tr>
+
+<tr>
+<td>Ekspedisi</td>
+<td id="d_exp">-</td>
+</tr>
+
+</table>
+
+</div>
+
+<div class="card">
+
+<h3>Riwayat Scan</h3>
+
+<div class="history-container">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Resi</th>
+
+<th>Status</th>
+
+</tr>
+
+</thead>
+
+<tbody id="historyBody">
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<div id="notif"></div>
+
+<script src="js/script.js"></script>
+
+</body>
+
+</html>
