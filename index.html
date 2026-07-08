@@ -1,151 +1,191 @@
-
-Percakapan dengan Gemini
-gq mau buat file html yg tampilan hasil seperti inimasing masing masuk fitur nya SRF V3
-
-
-
-Sistem Retur & Fulfillment
-
-
-
-────────────────────────
-
-
-
-📦 Diserahkan ke Ekspedisi
-
-
-
-📥 Upload Retur
-
-
-
-📷 Scan Retur
-
-
-
-❌ Pengiriman Gagal
-
-
-
-📊 Dashboard
-
-
-
-⚙ Pengaturan
-
-
-
-Versi 3.0 buat masuk ke git hub
-
-Tentu, ini adalah file HTML sederhana dengan desain yang bersih dan modern untuk sistem SRF V3 Anda. Anda bisa langsung menggunakan kode ini dan mengunggahnya ke repositori GitHub Anda.
-
-File HTML Anda sudah siap:
-Ikon HTML
-index
- HTML 
-Buka
-
-Cara menggunakan:
-Simpan kode tersebut ke dalam file bernama index.html.
-
-Jika Anda ingin menambahkan fungsi ke menu tersebut (misalnya saat tombol diklik pindah halaman), Anda cukup mengganti tanda # pada bagian href="#" dengan nama file halaman tujuan Anda (contoh: <a href="dashboard.html">📊 Dashboard</a>).
-
-Anda bisa mengunggah file index.html ini ke repositori GitHub Anda melalui terminal atau upload langsung di situs GitHub.
-
-Apakah Anda memerlukan bantuan lebih lanjut untuk menambahkan CSS agar lebih menarik atau menambahkan fungsi JavaScript untuk menu tersebut?
-
-
-
-
-Gemini adalah AI dan dapat melakukan kesalahan.
-
+```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <title>SRF V3 - Sistem Retur & Fulfillment</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
-            display: flex;
-            justify-content: center;
-            padding: 50px;
-        }
-        .container {
-            background-color: #ffffff;
-            width: 400px;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #2c3e50;
-            text-align: center;
-            font-size: 24px;
-            margin-bottom: 5px;
-        }
-        .subtitle {
-            text-align: center;
-            color: #7f8c8d;
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-        hr {
-            border: 0;
-            height: 1px;
-            background: #eee;
-            margin-bottom: 25px;
-        }
-        .menu-list {
-            list-style: none;
-            padding: 0;
-        }
-        .menu-item {
-            margin-bottom: 12px;
-        }
-        .menu-item a {
-            display: block;
-            text-decoration: none;
-            color: #34495e;
-            padding: 12px 15px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            transition: all 0.2s;
-            font-weight: 500;
-            border-left: 4px solid #3498db;
-        }
-        .menu-item a:hover {
-            background: #eef7fe;
-            border-left-color: #2980b9;
-        }
-        .footer {
-            margin-top: 30px;
-            text-align: center;
-            font-size: 12px;
-            color: #95a5a6;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SRF V3</title>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#003399">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    background:#f4f6fb;
+    max-width:500px;
+    margin:auto;
+    padding:15px;
+}
+
+.header{
+    background:#003399;
+    color:#fff;
+    text-align:center;
+    padding:25px 15px;
+    border-radius:16px;
+    margin-bottom:18px;
+}
+
+.header h1{
+    font-size:28px;
+    margin-bottom:6px;
+}
+
+.header p{
+    font-size:14px;
+    opacity:.9;
+}
+
+.version{
+    margin-top:10px;
+    font-size:12px;
+    opacity:.8;
+}
+
+.menu{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.card{
+    display:flex;
+    align-items:center;
+    text-decoration:none;
+    background:#fff;
+    border-radius:14px;
+    padding:18px;
+    color:#111827;
+    box-shadow:0 3px 8px rgba(0,0,0,.08);
+    transition:.2s;
+}
+
+.card:active{
+    transform:scale(.98);
+}
+
+.icon{
+    font-size:34px;
+    width:55px;
+    text-align:center;
+}
+
+.text{
+    flex:1;
+}
+
+.text h3{
+    font-size:17px;
+    margin-bottom:4px;
+}
+
+.text p{
+    font-size:13px;
+    color:#6b7280;
+}
+
+.arrow{
+    font-size:22px;
+    color:#9ca3af;
+}
+
+.footer{
+    margin-top:25px;
+    text-align:center;
+    font-size:12px;
+    color:#64748b;
+}
+</style>
+
 </head>
+
 <body>
 
-<div class="container">
+<div class="header">
     <h1>SRF V3</h1>
-    <div class="subtitle">Sistem Retur & Fulfillment</div>
-    <hr>
-    
-    <ul class="menu-list">
-        <li class="menu-item"><a href="#">📦 Diserahkan ke Ekspedisi</a></li>
-        <li class="menu-item"><a href="#">📥 Upload Retur</a></li>
-        <li class="menu-item"><a href="#">📷 Scan Retur</a></li>
-        <li class="menu-item"><a href="#">❌ Pengiriman Gagal</a></li>
-        <li class="menu-item"><a href="#">📊 Dashboard</a></li>
-        <li class="menu-item"><a href="#">⚙ Pengaturan</a></li>
-    </ul>
+    <p>Sistem Retur & Fulfillment</p>
+    <div class="version">Versi 3.0</div>
+</div>
 
-    <div class="footer">Versi 3.0</div>
+<div class="menu">
+
+<a href="pengiriman.html" class="card">
+<div class="icon">📦</div>
+<div class="text">
+<h3>Diserahkan ke Ekspedisi</h3>
+<p>Scan paket yang siap dikirim</p>
+</div>
+<div class="arrow">›</div>
+</a>
+
+<a href="scanretur.html" class="card">
+<div class="icon">📷</div>
+<div class="text">
+<h3>Scan Retur</h3>
+<p>Scan barang retur yang masuk</p>
+</div>
+<div class="arrow">›</div>
+</a>
+
+<a href="uploadreturjnt.html" class="card">
+<div class="icon">📥</div>
+<div class="text">
+<h3>Upload Retur J&T</h3>
+<p>Import data retur J&T</p>
+</div>
+<div class="arrow">›</div>
+</a>
+
+<a href="uploadreturspx.html" class="card">
+<div class="icon">📥</div>
+<div class="text">
+<h3>Upload Retur SPX</h3>
+<p>Import data retur SPX</p>
+</div>
+<div class="arrow">›</div>
+</a>
+
+<a href="gagal.html" class="card">
+<div class="icon">❌</div>
+<div class="text">
+<h3>Pengiriman Gagal</h3>
+<p>Input paket gagal kirim</p>
+</div>
+<div class="arrow">›</div>
+</a>
+
+<a href="dashboard.html" class="card">
+<div class="icon">📊</div>
+<div class="text">
+<h3>Dashboard</h3>
+<p>Lihat statistik pengiriman</p>
+</div>
+<div class="arrow">›</div>
+</a>
+
+<a href="pengaturan.html" class="card">
+<div class="icon">⚙️</div>
+<div class="text">
+<h3>Pengaturan</h3>
+<p>Konfigurasi aplikasi</p>
+</div>
+<div class="arrow">›</div>
+</a>
+
+</div>
+
+<div class="footer">
+© 2026 SRF V3
 </div>
 
 </body>
 </html>
+```
