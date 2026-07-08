@@ -7,8 +7,35 @@
 // CONFIG
 // ================================
 
-const APP_URL = "https://script.google.com/macros/s/AKfycbydjXLRQNhxPowpfV_XNGIjrD_v9vvKqzj6_IhyfT8j9cjBhnIlNjvpjG1FiTc-1vUwDg/exec";
+// ================================
+// APP SCRIPT URL
+// ================================
 
+function getAppUrl(){
+
+    const url =
+    localStorage.getItem("APP_URL");
+
+    if(!url){
+
+        showNotif(
+            "Atur Apps Script terlebih dahulu",
+            "warning"
+        );
+
+        setTimeout(()=>{
+
+            location.href="pengaturan.html";
+
+        },1000);
+
+        return null;
+
+    }
+
+    return url;
+
+}
 let html5QrCode = null;
 let isProcessing = false;
 
@@ -196,8 +223,11 @@ if(startBtn){
 // ================================
 // SIMPAN RESI
 // ================================
-
 async function saveResi(resi){
+
+    const APP_URL = getAppUrl();
+
+    if(!APP_URL) return;
 
     setLampu("kuning","Mengirim...");
 
@@ -485,99 +515,56 @@ function formatTanggal(date=new Date()){
 }
 
 // ================================
-//spx upload
+// SPX UPLOAD (DIPERBAIKI)
 // ================================
 
-async function uploadReturSPX(){
+async function uploadReturSPX() {
+    const fileInput = document.getElementById("excelFile");
+    const file = fileInput.files[0];
 
-const file =
-document.getElementById("excelFile").files[0];
+    if (!file) {
+        showNotif("Pilih file Excel terlebih dahulu", "warning");
+        return;
+    }
 
-if(!file){
+    const reader = new FileReader();
 
-showNotif(
-"Pilih file Excel terlebih dahulu",
-"warning"
-);
+    // Definisikan apa yang terjadi setelah file dibaca
+    reader.onload = async function (e) {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: "array" });
+        const sheet = workbook.Sheets[workbook.SheetNames[0]];
+        const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
-return;
+        try {
+            const APP_URL = getAppUrl();
+            if (!APP_URL) return;
 
-}
+            setLampu("kuning", "Mengupload...");
 
-const reader = new FileReader();
+            const response = await fetch(APP_URL, {
+                method: "POST",
+                headers: { "Content-Type": "text/plain" },
+                body: JSON.stringify({
+                    source: "uploadreturspx",
+                    rows: rows
+                })
+            });
 
-reader.onload = async function(e){
+            const json = await response.json();
 
-const data =
-new Uint8Array(e.target.result);
+            document.getElementById("totalUpload").innerText = json.total || 0;
+            
+            setLampu("ijo", "Upload Selesai");
+            robotBicara("Upload selesai");
+            showNotif("Upload Berhasil", "success");
 
-const workbook =
-XLSX.read(data,{
-type:"array"
-});
+        } catch (err) {
+            setLampu("merah", "Koneksi Gagal");
+            showNotif("Koneksi Gagal", "error");
+        }
+    };
 
-const sheet =
-workbook.Sheets[
-workbook.SheetNames[0]
-];
-
-const rows =
-XLSX.utils.sheet_to_json(
-sheet,
-{
-header:1
-}
-);
-
-try{
-
-const response =
-await fetch(APP_URL,{
-
-method:"POST",
-
-headers:{
-"Content-Type":"text/plain"
-},
-
-body:JSON.stringify({
-
-source:"uploadreturspx",
-
-rows:rows
-
-})
-
-});
-
-const json =
-await response.json();
-
-document
-.getElementById("totalUpload")
-.innerText =
-json.total || 0;
-
-robotBicara(
-"Upload selesai"
-);
-
-showNotif(
-"Upload Berhasil",
-"success"
-);
-
-}catch(err){
-
-showNotif(
-"Koneksi Gagal",
-"error"
-);
-
-}
-
-};
-
-reader.readAsArrayBuffer(file);
-
+    // Eksekusi pembacaan file
+    reader.readAsArrayBuffer(file);
 }
