@@ -1,0 +1,46 @@
+<!doctype html><html lang='id'><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'>
+<title>Kalkulator Profit Marketplace</title>
+<style>
+body{font-family:Arial;background:#f4f4f4;padding:16px;max-width:700px;margin:auto}
+.card{background:#fff;border-radius:10px;padding:14px;margin:12px 0;box-shadow:0 1px 4px #0002}
+input{width:100%;padding:8px;margin:4px 0 10px;box-sizing:border-box}
+.row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #eee}
+h2,h3{margin:4px 0 10px}
+.status{font-weight:bold;font-size:18px}
+</style>
+<h2>Kalkulator Profit Marketplace</h2>
+<div class=card>
+<label>HPP<input id=hpp type=number value=22000></label>
+<label>Target Untung<input id=untung type=number value=3000></label>
+<label>Potongan Marketplace %<input id=mp type=number value=25></label>
+<label>Promo %<input id=promo type=number value=35></label>
+<label>ROAS<input id=roas type=number value=10></label>
+</div>
+<div class=card><h3>HARGA</h3><div id=harga></div></div>
+<div class=card><h3>MARKETPLACE</h3><div id=market></div></div>
+<div class=card><h3>PROFIT</h3><div id=profit></div></div>
+<div class=card><h3>IKLAN</h3><div id=iklan></div></div>
+<script>
+const rp=n=>"Rp"+Math.round(n).toLocaleString("id-ID");
+function row(a,b){return `<div class=row><div>${a}</div><div>${b}</div></div>`}
+function hitung(){
+let H=+hpp.value,U=+untung.value,M=+mp.value/100,P=+promo.value/100,R=+roas.value;
+let bersih=H+U;
+let hargaJual=bersih/(1-M);
+let hargaCoret=hargaJual/(1-P);
+let promoRp=hargaCoret-hargaJual;
+let potRp=hargaJual*M;
+let diterima=hargaJual-potRp;
+let margin=U/H*100;
+let markup=U/H*100;
+let roasImpas=hargaJual/U;
+let biaya=hargaJual/R;
+let sisa=U-biaya;
+let stat=sisa>=0?"🟢 UNTUNG":"🔴 RUGI";
+harga.innerHTML=row("Harga Sebelum Coret",rp(hargaCoret))+row("Promo ("+(P*100)+"%)","-"+rp(promoRp))+row("Harga Jual",rp(hargaJual));
+market.innerHTML=row("Potongan MP ("+(M*100)+"%)","-"+rp(potRp))+row("Uang Diterima Seller",rp(diterima));
+profit.innerHTML=row("HPP",rp(H))+row("Target Untung",rp(U))+row("Untung Aktual",rp(diterima-H))+row("Margin",margin.toFixed(2)+"%")+row("Markup",markup.toFixed(2)+"%");
+iklan.innerHTML=row("ROAS Impas",roasImpas.toFixed(2))+row("ROAS Input",R)+row("Biaya Iklan",rp(biaya))+row("Untung Setelah Iklan",rp(sisa))+`<p class=status>${stat}</p>`;
+}
+document.querySelectorAll("input").forEach(i=>i.oninput=hitung);hitung();
+</script></html>
