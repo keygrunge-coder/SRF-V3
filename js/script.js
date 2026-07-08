@@ -483,3 +483,101 @@ function formatTanggal(date=new Date()){
     });
 
 }
+
+// ================================
+//spx upload
+// ================================
+
+async function uploadReturSPX(){
+
+const file =
+document.getElementById("excelFile").files[0];
+
+if(!file){
+
+showNotif(
+"Pilih file Excel terlebih dahulu",
+"warning"
+);
+
+return;
+
+}
+
+const reader = new FileReader();
+
+reader.onload = async function(e){
+
+const data =
+new Uint8Array(e.target.result);
+
+const workbook =
+XLSX.read(data,{
+type:"array"
+});
+
+const sheet =
+workbook.Sheets[
+workbook.SheetNames[0]
+];
+
+const rows =
+XLSX.utils.sheet_to_json(
+sheet,
+{
+header:1
+}
+);
+
+try{
+
+const response =
+await fetch(APP_URL,{
+
+method:"POST",
+
+headers:{
+"Content-Type":"text/plain"
+},
+
+body:JSON.stringify({
+
+source:"uploadreturspx",
+
+rows:rows
+
+})
+
+});
+
+const json =
+await response.json();
+
+document
+.getElementById("totalUpload")
+.innerText =
+json.total || 0;
+
+robotBicara(
+"Upload selesai"
+);
+
+showNotif(
+"Upload Berhasil",
+"success"
+);
+
+}catch(err){
+
+showNotif(
+"Koneksi Gagal",
+"error"
+);
+
+}
+
+};
+
+reader.readAsArrayBuffer(file);
+
+}
