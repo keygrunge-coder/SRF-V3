@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Upload Retur J&T</title>
+
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+<div class="header-box">
+
+<h2>📥 Upload Retur J&T</h2>
+
+<a href="index.html" class="btn-nav">
+
+← Menu Utama
+
+</a>
+
+</div>
+
+<div class="card">
+
+<h3>Tempel Data Retur</h3>
+
+<textarea
+id="returText"
+rows="18"
+placeholder="Tempel data retur dari Seller Center J&T di sini...">
+</textarea>
+
+<button
+class="btn btn-primary"
+onclick="uploadReturJNT()">
+
+Upload Sekarang
+
+</button>
+
+</div>
+
+<div class="card">
+
+<h3>Hasil Upload</h3>
+
+<table>
+
+<tr>
+
+<td>Berhasil</td>
+
+<td id="hasilBerhasil">0</td>
+
+</tr>
+
+<tr>
+
+<td>Duplikat</td>
+
+<td id="hasilDuplikat">0</td>
+
+</tr>
+
+</table>
+
+</div>
+
+<div class="card">
+
+<h3>Resi Berhasil</h3>
+
+<textarea
+id="listBerhasil"
+rows="8"
+readonly>
+</textarea>
+
+</div>
+
+<div class="card">
+
+<h3>Resi Duplikat</h3>
+
+<textarea
+id="listDuplikat"
+rows="8"
+readonly>
+</textarea>
+
+</div>
+
+<div id="notif"></div>
+
+<script src="js/script.js"></script>
+
+</body>
+
+</html>
