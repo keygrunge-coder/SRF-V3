@@ -1,0 +1,122 @@
+```html
+<!DOCTYPE html>
+<html lang="id">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Pengiriman - SRF V3</title>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#003399">
+
+<link rel="stylesheet" href="css/style.css">
+
+<script src="https://unpkg.com/html5-qrcode"></script>
+
+</head>
+
+<body>
+
+<div class="header-box">
+
+<h3>📦 Diserahkan ke Ekspedisi</h3>
+
+<a href="index.html" class="btn-nav">← Menu Utama</a>
+
+</div>
+
+<div class="dash-container">
+
+<div class="dash-card">
+<h4>Hari Ini</h4>
+<p id="load-hari-ini">0</p>
+</div>
+
+<div class="dash-card">
+<h4>Kemarin</h4>
+<p id="load-kemarin">0</p>
+</div>
+
+<div class="dash-card">
+<h4>Minggu</h4>
+<p id="load-minggu">0</p>
+</div>
+
+</div>
+
+<div id="bca-indicator"></div>
+
+<div id="status-message">
+Menyalakan Kamera...
+</div>
+
+<div class="card">
+
+<div id="reader"></div>
+
+<button
+id="startBtn"
+class="btn btn-primary">
+
+Aktifkan Kamera
+
+</button>
+
+</div>
+
+<div class="card">
+
+<h3>Input Manual Resi</h3>
+
+<input
+type="text"
+id="manualResi"
+placeholder="Masukkan nomor resi">
+
+<button
+id="manualBtn"
+class="btn btn-primary">
+
+Simpan Resi
+
+</button>
+
+</div>
+
+<div id="notif"></div>
+
+<div class="card">
+
+<h3>Riwayat Scan</h3>
+
+<div class="history-container">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Resi</th>
+
+<th>Status</th>
+
+</tr>
+
+</thead>
+
+<tbody id="historyBody"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<script src="js/script.js"></script>
+
+</body>
+</html>
+```
