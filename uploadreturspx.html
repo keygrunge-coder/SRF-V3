@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Upload Retur SPX</title>
+
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="css/style.css">
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+</head>
+
+<body>
+
+<div class="header-box">
+
+<h2>📥 Upload Retur SPX</h2>
+
+<a href="index.html" class="btn-nav">
+
+← Menu Utama
+
+</a>
+
+</div>
+
+<div class="card">
+
+<h3>Pilih File Excel Shopee</h3>
+
+<input
+type="file"
+id="excelFile"
+accept=".xlsx,.xls">
+
+<button
+class="btn btn-primary"
+onclick="uploadReturSPX()">
+
+Upload Excel
+
+</button>
+
+</div>
+
+<div class="card">
+
+<h3>Hasil Upload</h3>
+
+<table>
+
+<tr>
+
+<td>Total Upload</td>
+
+<td id="totalUpload">0</td>
+
+</tr>
+
+</table>
+
+</div>
+
+<div id="notif"></div>
+
+<script src="js/script.js"></script>
+
+</body>
+
+</html>
