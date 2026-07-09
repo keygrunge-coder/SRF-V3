@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Pengaturan SRF V3</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+
+<div class="header-box">
+
+<h3>⚙ PENGATURAN</h3>
+
+</div>
+
+
+
+<div class="card">
+
+
+<h3>Web App URL</h3>
+
+
+<input 
+id="appUrl"
+type="text"
+placeholder="Paste URL Google Apps Script">
+
+
+<button 
+class="btn btn-primary"
+onclick="simpanUrl()">
+
+Simpan
+
+</button>
+
+
+</div>
+
+
+
+<div class="card">
+
+
+<h3>Reset Riwayat Scan</h3>
+
+
+<button 
+class="btn"
+style="background:#dc2626;color:white"
+onclick="resetScan()">
+
+Reset
+
+</button>
+
+
+</div>
+
+
+
+<div class="card">
+
+
+<h3>Versi</h3>
+
+
+<p>
+SRF V3.0.0
+</p>
+
+
+</div>
+
+
+
+<div class="card">
+
+
+<h3>Tentang</h3>
+
+
+<p>
+Sistem Retur & Fulfillment
+<br>
+Scanner Gudang SRF V3
+</p>
+
+
+</div>
+
+
+
+<div id="notif"></div>
+
+
+
+<script>
+
+
+// =====================
+// LOAD URL
+// =====================
+
+window.onload=function(){
+
+const url =
+localStorage.getItem("APP_URL");
+
+
+if(url){
+
+document.getElementById("appUrl").value=url;
+
+}
+
+}
+
+
+
+// =====================
+// SIMPAN URL
+// =====================
+
+function simpanUrl(){
+
+
+const url =
+document.getElementById("appUrl")
+.value
+.trim();
+
+
+
+if(url===""){
+
+showNotif(
+"URL masih kosong",
+"error"
+);
+
+return;
+
+}
+
+
+
+localStorage.setItem(
+"APP_URL",
+url
+);
+
+
+
+showNotif(
+"URL berhasil disimpan",
+"success"
+);
+
+
+}
+
+
+
+// =====================
+// RESET SCAN
+// =====================
+
+function resetScan(){
+
+
+if(confirm("Hapus semua riwayat scan?")){
+
+
+localStorage.removeItem(
+"scanHistory"
+);
+
+
+
+showNotif(
+"Riwayat scan dihapus",
+"success"
+);
+
+
+}
+
+
+}
+
+
+
+// =====================
+// NOTIF
+// =====================
+
+function showNotif(text,type){
+
+
+const n =
+document.getElementById("notif");
+
+
+n.className=type;
+
+n.innerHTML=text;
+
+n.style.display="block";
+
+
+
+setTimeout(()=>{
+
+n.style.display="none";
+
+},2000);
+
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>
