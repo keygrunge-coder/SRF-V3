@@ -7,7 +7,7 @@
     <style>
         body{font-family:Arial;background:#f4f4f4;padding:16px;max-width:700px;margin:auto}
         .card{background:#fff;border-radius:10px;padding:14px;margin:12px 0;box-shadow:0 1px 4px #0002}
-        input{width:100%;padding:8px;margin:4px 0 10px;box-sizing:border-box}
+        input, select{width:100%;padding:8px;margin:4px 0 10px;box-sizing:border-box}
         .row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #eee}
         h2,h3{margin:4px 0 10px}
         .status{font-weight:bold;font-size:18px;margin-top:10px}
@@ -18,7 +18,15 @@
 <h2>Kalkulator Profit Marketplace</h2>
 <div class=card>
     <label>HPP<input id=hpp type=number value=22000></label>
-    <label>Target Untung<input id=untung type=number value=3000></label>
+    <label>Target Untung
+        <div style="display:flex; gap:10px;">
+            <input id=untung type=number value=3000 style="flex:2">
+            <select id=untungTipe style="flex:1">
+                <option value="rp">Rp</option>
+                <option value="persen">%</option>
+            </select>
+        </div>
+    </label>
     <label>Potongan Marketplace %<input id=mp type=number value=25></label>
     <label>Promo %<input id=promo type=number value=35></label>
     <label>ROAS<input id=roas type=number value=10></label>
@@ -37,6 +45,7 @@ function row(a,b){
 
 const hpp = document.getElementById("hpp");
 const untung = document.getElementById("untung");
+const untungTipe = document.getElementById("untungTipe");
 const mp = document.getElementById("mp");
 const promo = document.getElementById("promo");
 const roas = document.getElementById("roas");
@@ -49,10 +58,13 @@ const iklan = document.getElementById("iklan");
 function hitung(){
 
     const H = Number(hpp.value);
-    const U = Number(untung.value);
+    const U_raw = Number(untung.value);
     const M = Number(mp.value)/100;
     const P = Number(promo.value)/100;
     const R = Number(roas.value);
+
+    // Hitung Target Untung (Rp)
+    const U = untungTipe.value === "persen" ? (H * (U_raw / 100)) : U_raw;
 
     // Harga
     const hargaJual = (H + U) / (1 - M);
@@ -100,7 +112,7 @@ function hitung(){
 
     profit.innerHTML =
         row("HPP", rp(H)) +
-        row("Target Untung", rp(U)) +
+        row("Target Untung", rp(U) + (untungTipe.value === "persen" ? ` (${U_raw}%)` : "")) +
         row("Untung Aktual", rp(untungAktual)) +
         row("Margin", margin.toFixed(2) + "%") +
         row("Markup", markup.toFixed(2) + "%");
@@ -113,7 +125,7 @@ function hitung(){
         `<p class="status">${status}</p>`;
 }
 
-document.querySelectorAll("input").forEach(i=>{
+document.querySelectorAll("input, select").forEach(i=>{
     i.addEventListener("input", hitung);
 });
 
