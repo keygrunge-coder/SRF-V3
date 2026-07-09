@@ -1,236 +1,106 @@
 // =====================================
-// SRF V3
-// pengiriman.js
+// SRF V3 - pengiriman.js
 // =====================================
-
 let html5QrCode = null;
 let isProcessing = false;
+let isSyncing = false;
+let scanHistory = JSON.parse(localStorage.getItem("scanHistory") || "[]");
+let scanQueue = JSON.parse(localStorage.getItem("scanQueue") || "[]");
 
-let scanHistory =
-JSON.parse(localStorage.getItem("scanHistory") || "[]");
-
-// =====================================
-// APP URL
-// =====================================
-
-function getAppUrl(){
-
+// Konfigurasi URL
+function getAppUrl() {
     const url = localStorage.getItem("APP_URL");
-
-    if(!url){
-
+    if (!url) {
         alert("Atur Apps Script di Pengaturan");
-
-        location.href="pengaturan.html";
-
+        location.href = "pengaturan.html";
         return null;
-
     }
-
     return url;
-
 }
 
-// =====================================
-// AUTO START
-// =====================================
-
-window.onload=function(){
-
+// Auto Start
+window.onload = function() {
     renderHistory();
-
     startCamera();
-
+    setInterval(syncQueue, 5000); // Jalan otomatis tiap 5 detik
 };
 
-// =====================================
-// START CAMERA
-// =====================================
-
-function startCamera(){
-
-    if(html5QrCode) return;
-
-    html5QrCode=new Html5Qrcode("reader");
-
+// Scanner
+function startCamera() {
+    if (html5QrCode) return;
+    html5QrCode = new Html5Qrcode("reader");
     html5QrCode.start(
-
-        {facingMode:"environment"},
-
-        {
-
-            fps:15,
-
-            qrbox:220
-
-        },
-
-        function(decodedText){
-
-            if(isProcessing) return;
-
-            isProcessing=true;
-
+        { facingMode: "environment" },
+        { fps: 15, qrbox: 220 },
+        function(decodedText) {
+            if (isProcessing) return;
+            isProcessing = true;
             html5QrCode.pause();
-
-            saveResi(decodedText.trim());
-
+            addQueue(decodedText.trim());
         }
-
     );
-
 }
 
-// =====================================
-// SIMPAN
-// =====================================
-
-async function saveResi(resi){
-
-    const APP_URL=getAppUrl();
-
-    if(!APP_URL) return;
-
-    try{
-
-        const response=await fetch(APP_URL,{
-
-            method:"POST",
-
-            headers:{
-
-                "Content-Type":"text/plain"
-
-            },
-
-            body:JSON.stringify({
-
-                source:"pengiriman",
-
-                resi:resi
-
-            })
-
-        });
-
-        const json=await response.json();
-
-        if(json.status==="success"){
-
-            scanHistory.unshift({
-
-                resi:resi,
-
-                status:"SUKSES"
-
-            });
-
-            showNotif("Berhasil","success");
-
-        }
-
-        else if(json.status==="duplicate"){
-
-            scanHistory.unshift({
-
-                resi:resi,
-
-                status:"DOUBLE RESI"
-
-            });
-
-            showNotif("DOUBLE RESI","warning");
-
-        }
-
-        else{
-
-            scanHistory.unshift({
-
-                resi:resi,
-
-                status:"INVALID"
-
-            });
-
-            showNotif("INVALID","error");
-
-        }
-
-        localStorage.setItem(
-
-            "scanHistory",
-
-            JSON.stringify(scanHistory.slice(0,100))
-
-        );
-
-        renderHistory();
-
-    }
-
-    catch(err){
-
-        showNotif("Server Tidak Terhubung","error");
-
-    }
-
-    setTimeout(()=>{
-
-        isProcessing=false;
-
-        if(html5QrCode){
-
-            html5QrCode.resume();
-
-        }
-
-    },500);
-
+// Input Manual
+function inputManual() {
+    const input = document.getElementById("manualResi");
+    if (!input.value.trim()) return;
+    addQueue(input.value.trim().toUpperCase());
+    input.value = "";
 }
 
-// =====================================
-// HISTORY
-// =====================================
+// Masuk Antrian (Queue)
+function addQueue(resi) {
+    scanQueue.push(resi);
+    localStorage.setItem("scanQueue", JSON.stringify(scanQueue));
+    scanHistory.unshift({ resi: resi, status: "ANTRIAN" });
+    localStorage.setItem("scanHistory", JSON.stringify(scanHistory.slice(0, 100)));
+    renderHistory();
+    
+    isProcessing = false;
+    if (html5QrCode) html5QrCode.resume();
+}
 
-function renderHistory(){
+// Sync ke Google Sheet
+async function syncQueue() {
+    if (isSyncing || scanQueue.length === 0) return;
+    isSyncing = true;
+    
+    const APP_URL = getAppUrl();
+    if (!APP_URL) { isSyncing = false; return; }
 
-    const body=document.getElementById("historyBody");
+    while (scanQueue.length > 0) {
+        const resi = scanQueue[0];
+        try {
+            const response = await fetch(APP_URL, {
+                method: "POST",
+                headers: { "Content-Type": "text/plain" },
+                body: JSON.stringify({ source: "pengiriman", resi: resi })
+            });
+            const json = await response.json();
+            
+            const item = scanHistory.find(x => x.resi === resi && x.status === "ANTRIAN");
+            if (item) {
+                if (json.status === "success") item.status = "SUKSES";
+                else if (json.status === "duplicate") item.status = "DOUBLE RESI";
+                else item.status = "INVALID";
+            }
+            
+            scanQueue.shift();
+            localStorage.setItem("scanQueue", JSON.stringify(scanQueue));
+            localStorage.setItem("scanHistory", JSON.stringify(scanHistory.slice(0, 100)));
+            renderHistory();
+        } catch (err) { break; }
+    }
+    isSyncing = false;
+}
 
-    if(!body) return;
-
-    body.innerHTML="";
-
-    scanHistory.slice(0,20).forEach(item=>{
-
-        body.innerHTML+=`
-
-        <tr>
-
-            <td>${item.resi}</td>
-
-            <td>${item.status}</td>
-
-        </tr>
-
-        `;
-
+// Update Tampilan
+function renderHistory() {
+    const body = document.getElementById("historyBody");
+    if (!body) return;
+    body.innerHTML = "";
+    scanHistory.slice(0, 20).forEach(item => {
+        body.innerHTML += `<tr><td>${item.resi}</td><td>${item.status}</td></tr>`;
     });
-
-}
-
-// =====================================
-// INPUT MANUAL
-// =====================================
-
-function inputManual(){
-
-    const input=document.getElementById("manualResi");
-
-    if(!input.value.trim()) return;
-
-    saveResi(input.value.trim().toUpperCase());
-
-    input.value="";
-
 }
