@@ -1,5 +1,5 @@
 // =====================================
-// SRF V3 - pengiriman.js
+// SRF V3 - FULL VERSION - pengiriman.js
 // =====================================
 let html5QrCode = null;
 let isProcessing = false;
@@ -7,61 +7,72 @@ let isSyncing = false;
 let scanHistory = JSON.parse(localStorage.getItem("scanHistory") || "[]");
 let scanQueue = JSON.parse(localStorage.getItem("scanQueue") || "[]");
 
-// Konfigurasi URL
+// 1. UTILS & ROBOT
+function beep(duration) {
+    const context = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = context.createOscillator();
+    osc.connect(context.destination);
+    osc.start();
+    osc.stop(context.currentTime + (duration / 1000));
+}
+
+function robotBicara(text) {
+    window.speechSynthesis.cancel(); // Stop suara lama biar gak numpuk
+    const msg = new SpeechSynthesisUtterance(text);
+    msg.lang = 'id-ID';
+    window.speechSynthesis.speak(msg);
+}
+
+function setLampu(warna, pesan) {
+    const lampu = document.getElementById("lampuIndikator");
+    if(lampu) {
+        lampu.style.backgroundColor = warna;
+        lampu.innerText = pesan;
+    }
+}
+
 function getAppUrl() {
     const url = localStorage.getItem("APP_URL");
-    if (!url) {
-        alert("Atur Apps Script di Pengaturan");
-        location.href = "pengaturan.html";
-        return null;
-    }
+    if (!url) { alert("Atur Apps Script!"); location.href = "pengaturan.html"; return null; }
     return url;
 }
 
-// Auto Start
+// 2. SCANNER & QUEUE
 window.onload = function() {
     renderHistory();
     startCamera();
-    setInterval(syncQueue, 5000); // Jalan otomatis tiap 5 detik
+    setInterval(syncQueue, 3000); 
 };
 
-// Scanner
 function startCamera() {
     if (html5QrCode) return;
     html5QrCode = new Html5Qrcode("reader");
-    html5QrCode.start(
-        { facingMode: "environment" },
-        { fps: 15, qrbox: 220 },
-        function(decodedText) {
+    html5QrCode.start({ facingMode: "environment" }, { fps: 15, qrbox: 220 },
+        (decodedText) => {
             if (isProcessing) return;
-            isProcessing = true;
-            html5QrCode.pause();
             addQueue(decodedText.trim());
         }
     );
 }
 
-// Input Manual
-function inputManual() {
-    const input = document.getElementById("manualResi");
-    if (!input.value.trim()) return;
-    addQueue(input.value.trim().toUpperCase());
-    input.value = "";
-}
-
-// Masuk Antrian (Queue)
 function addQueue(resi) {
+    isProcessing = true;
+    html5QrCode.pause();
+    
     scanQueue.push(resi);
     localStorage.setItem("scanQueue", JSON.stringify(scanQueue));
     scanHistory.unshift({ resi: resi, status: "ANTRIAN" });
-    localStorage.setItem("scanHistory", JSON.stringify(scanHistory.slice(0, 100)));
+    localStorage.setItem("scanHistory", JSON.stringify(scanHistory.slice(0, 500)));
     renderHistory();
     
-    isProcessing = false;
-    if (html5QrCode) html5QrCode.resume();
+    // Jeda 2 detik sebelum bisa scan lagi
+    setTimeout(() => {
+        isProcessing = false;
+        if (html5QrCode) html5QrCode.resume();
+    }, 2000);
 }
 
-// Sync ke Google Sheet
+// 3. SYNC & ROBOT LOGIC
 async function syncQueue() {
     if (isSyncing || scanQueue.length === 0) return;
     isSyncing = true;
@@ -78,29 +89,38 @@ async function syncQueue() {
                 body: JSON.stringify({ source: "pengiriman", resi: resi })
             });
             const json = await response.json();
-            
             const item = scanHistory.find(x => x.resi === resi && x.status === "ANTRIAN");
-            if (item) {
-                if (json.status === "success") item.status = "SUKSES";
-                else if (json.status === "duplicate") item.status = "DOUBLE RESI";
-                else item.status = "INVALID";
+
+            if (json.status === "success") {
+                beep(1000);
+                robotBicara("Berhasil");
+                setLampu("green", "BERHASIL");
+                if (item) item.status = "SUKSES";
+            } else if (json.status === "duplicate") {
+                beep(350);
+                robotBicara("Sudah pernah scan");
+                setLampu("red", "DOUBLE RESI");
+                if (item) item.status = "DOUBLE RESI";
+            } else {
+                beep(200);
+                robotBicara("Resi tidak ditemukan");
+                setLampu("yellow", "TIDAK DITEMUKAN");
+                if (item) item.status = "INVALID";
             }
             
             scanQueue.shift();
             localStorage.setItem("scanQueue", JSON.stringify(scanQueue));
-            localStorage.setItem("scanHistory", JSON.stringify(scanHistory.slice(0, 100)));
+            localStorage.setItem("scanHistory", JSON.stringify(scanHistory.slice(0, 500)));
             renderHistory();
         } catch (err) { break; }
     }
     isSyncing = false;
 }
 
-// Update Tampilan
 function renderHistory() {
     const body = document.getElementById("historyBody");
     if (!body) return;
-    body.innerHTML = "";
-    scanHistory.slice(0, 20).forEach(item => {
-        body.innerHTML += `<tr><td>${item.resi}</td><td>${item.status}</td></tr>`;
-    });
+    body.innerHTML = scanHistory.slice(0, 20).map(item => 
+        `<tr><td>${item.resi}</td><td>${item.status}</td></tr>`
+    ).join('');
 }
