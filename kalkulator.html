@@ -20,10 +20,10 @@
     <label>HPP<input id=hpp type=number value=22000></label>
     <label>Target Untung
         <div style="display:flex; gap:10px;">
-            <input id=untung type=number value=3000 style="flex:2">
+            <input id=untung type=number value=50 style="flex:2">
             <select id=untungTipe style="flex:1">
                 <option value="rp">Rp</option>
-                <option value="persen">%</option>
+                <option value="persen" selected>%</option>
             </select>
         </div>
     </label>
@@ -36,6 +36,7 @@
 <div class=card><h3>MARKETPLACE</h3><div id=market></div></div>
 <div class=card><h3>PROFIT</h3><div id=profit></div></div>
 <div class=card><h3>IKLAN</h3><div id=iklan></div></div>
+
 <script>
 const rp = n => "Rp" + Math.round(n).toLocaleString("id-ID");
 
@@ -56,14 +57,13 @@ const profit = document.getElementById("profit");
 const iklan = document.getElementById("iklan");
 
 function hitung(){
-
     const H = Number(hpp.value);
     const U_raw = Number(untung.value);
     const M = Number(mp.value)/100;
     const P = Number(promo.value)/100;
     const R = Number(roas.value);
 
-    // Hitung Target Untung (Rp)
+    // LOGIKA DIUBAH: Jika Persen, hitung sebagai Markup dari HPP
     const U = untungTipe.value === "persen" ? (H * (U_raw / 100)) : U_raw;
 
     // Harga
@@ -77,24 +77,12 @@ function hitung(){
 
     // Profit
     const untungAktual = diterima - H;
-
-    const margin = hargaJual > 0
-        ? (untungAktual / hargaJual) * 100
-        : 0;
-
-    const markup = H > 0
-        ? (untungAktual / H) * 100
-        : 0;
+    const margin = hargaJual > 0 ? (untungAktual / hargaJual) * 100 : 0;
+    const markup = H > 0 ? (U / H) * 100 : 0;
 
     // ROAS
-    const roasImpas = untungAktual > 0
-        ? hargaJual / untungAktual
-        : 0;
-
-    const biaya = R > 0
-        ? hargaJual / R
-        : 0;
-
+    const roasImpas = untungAktual > 0 ? hargaJual / untungAktual : 0;
+    const biaya = R > 0 ? hargaJual / R : 0;
     const sisa = untungAktual - biaya;
 
     let status = "🟡 IMPAS";
@@ -112,7 +100,7 @@ function hitung(){
 
     profit.innerHTML =
         row("HPP", rp(H)) +
-        row("Target Untung", rp(U) + (untungTipe.value === "persen" ? ` (${U_raw}%)` : "")) +
+        row("Target Untung", (untungTipe.value === "persen" ? U_raw + "% Markup" : rp(U))) +
         row("Untung Aktual", rp(untungAktual)) +
         row("Margin", margin.toFixed(2) + "%") +
         row("Markup", markup.toFixed(2) + "%");
