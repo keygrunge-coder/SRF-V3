@@ -1,4 +1,3 @@
-name=js/pengiriman.js url=https://github.com/keygrunge-coder/SRF-V3/blob/main/js/pengiriman.js
 // =====================================
 // SRF V3 - SCAN PENGIRIMAN (IMPROVED)
 // =====================================
@@ -10,6 +9,7 @@ let scanQueue = JSON.parse(localStorage.getItem("scanQueue") || "[]");
 let scanHistory = JSON.parse(localStorage.getItem("scanHistory") || "[]");
 
 const SCAN_DELAY = 1500;
+let APP_URL = null;
 
 // =====================================
 // HELPER: SUARA & BEEP
@@ -65,20 +65,24 @@ function showNotif(text, type) {
 }
 
 // =====================================
-// HELPER: APP URL & COUNTER
+// HELPER: LOAD CONFIG
 // =====================================
-function getAppUrl() {
-    const url = localStorage.getItem("APP_URL");
-    if (!url) {
-        showNotif("Atur Apps Script di Pengaturan", "warning");
-        setTimeout(() => {
-            location.href = "pengaturan.html";
-        }, 1500);
+async function loadConfig() {
+    try {
+        const response = await fetch("config.json");
+        const config = await response.json();
+        APP_URL = config.APP_URL;
+        return APP_URL;
+    } catch (err) {
+        console.error("Config Load Error:", err);
+        showNotif("❌ Konfigurasi tidak ditemukan", "error");
         return null;
     }
-    return url;
 }
 
+// =====================================
+// HELPER: COUNTER
+// =====================================
 function countByDate(days = 0) {
     const target = new Date();
     target.setDate(target.getDate() - days);
@@ -95,9 +99,13 @@ function countByDate(days = 0) {
 }
 
 function updateCounter() {
-    document.getElementById("load-hari-ini").innerText = countByDate(0);
-    document.getElementById("load-kemarin").innerText = countByDate(1);
-    document.getElementById("load-minggu").innerText = 
+    const hariIni = document.getElementById("load-hari-ini");
+    const kemarin = document.getElementById("load-kemarin");
+    const minggu = document.getElementById("load-minggu");
+    
+    if (hariIni) hariIni.innerText = countByDate(0);
+    if (kemarin) kemarin.innerText = countByDate(1);
+    if (minggu) minggu.innerText = 
         scanHistory.filter(x => x.status === "SUKSES").slice(0, 7).length;
 }
 
@@ -146,6 +154,7 @@ function startCamera() {
     }).catch(err => {
         console.error("Camera Error:", err);
         setLampu("merah", "Kamera Gagal Diakses");
+        showNotif("❌ KAMERA TIDAK BISA DIAKSES", "error");
     });
 }
 
@@ -213,13 +222,12 @@ function inputManual() {
 async function syncQueue() {
     if (isSyncing || scanQueue.length === 0) return;
     
-    isSyncing = true;
-    const APP_URL = getAppUrl();
     if (!APP_URL) {
-        isSyncing = false;
-        return;
+        await loadConfig();
+        if (!APP_URL) return;
     }
     
+    isSyncing = true;
     const resi = scanQueue[0];
     setLampu("kuning", `Kirim ${resi}...`);
     
@@ -240,7 +248,7 @@ async function syncQueue() {
                 robotBicara("Berhasil");
                 setLampu("hijau", `✓ ${resi} Berhasil`);
                 showNotif("✓ BERHASIL DISIMPAN", "success");
-            } else if (json.status === "double_resi") {
+            } else if (json.status === "duplicate") {
                 item.status = "DOUBLE";
                 beep(350);
                 robotBicara("Resi dobel");
@@ -279,7 +287,8 @@ async function syncQueue() {
 // =====================================
 // EVENT LISTENERS
 // =====================================
-window.onload = () => {
+window.onload = async () => {
+    await loadConfig();
     renderHistory();
     startCamera();
     
