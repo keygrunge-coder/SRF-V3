@@ -1,0 +1,138 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    background:#f4f6fb;
+    max-width:500px;
+    margin:auto;
+    padding:15px;
+}
+
+.header{
+    background:#003399;
+    color:#fff;
+    text-align:center;
+    padding:25px 15px;
+    border-radius:16px;
+    margin-bottom:18px;
+}
+
+.header h1, .header h2{
+    font-size:24px;
+    margin-bottom:6px;
+}
+
+.header p{
+    font-size:14px;
+    opacity:.9;
+}
+
+.version{
+    margin-top:10px;
+    font-size:12px;
+    opacity:.8;
+}
+
+.btn-back{
+    display:inline-block;
+    background:#fff;
+    color:#003399;
+    padding:6px 12px;
+    border-radius:8px;
+    text-decoration:none;
+    font-size:13px;
+    font-weight:bold;
+}
+
+.menu{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.card{
+    display:flex;
+    align-items:center;
+    text-decoration:none;
+    background:#fff;
+    border-radius:14px;
+    padding:18px;
+    color:#111827;
+    box-shadow:0 3px 8px rgba(0,0,0,.08);
+    transition:.2s;
+}
+
+.card:active{
+    transform:scale(.98);
+}
+
+.icon{
+    font-size:34px;
+    width:55px;
+    text-align:center;
+}
+
+.text{
+    flex:1;
+}
+
+.text h3{
+    font-size:17px;
+    margin-bottom:4px;
+}
+
+.text p{
+    font-size:13px;
+    color:#6b7280;
+}
+
+.arrow{
+    font-size:22px;
+    color:#9ca3af;
+}
+
+input, select, button{
+    width:100%;
+    padding:12px;
+    margin-top:8px;
+    border:1px solid #d1d5db;
+    border-radius:8px;
+    font-size:14px;
+}
+
+button{
+    background:#003399;
+    color:#fff;
+    border:none;
+    font-weight:bold;
+    cursor:pointer;
+    margin-top:12px;
+}
+
+button:active{
+    opacity:.85;
+}
+
+.log-box{
+    background:#1e293b;
+    color:#38bdf8;
+    padding:12px;
+    border-radius:8px;
+    font-family:monospace;
+    font-size:13px;
+    min-height:100px;
+    max-height:200px;
+    overflow-y:auto;
+    margin-top:10px;
+}
+
+.footer{
+    margin-top:25px;
+    text-align:center;
+    font-size:12px;
+    color:#64748b;
+}
