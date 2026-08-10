@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Upload Retur J&T - SRF PROJECT</title>
+
+<!-- PWA & Styling Eksternal -->
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="style.css">
+<meta name="theme-color" content="#003399">
+</head>
+<body>
+
+<div class="header-page" style="display:flex; align-items:center; justify-content:space-between; text-align:left; padding:15px;">
+    <h2>Upload Retur J&T</h2>
+    <a href="index.html" class="btn-back">Kembali</a>
+</div>
+
+<div class="card" style="box-shadow:0 3px 8px rgba(0,0,0,.08);">
+    <label for="dataJnt">Tempel Data Resi Retur J&T:</label>
+    <textarea id="dataJnt" rows="6" placeholder="Paste data atau daftar resi retur J&T di sini..." style="width:100%; padding:12px; margin-top:8px; border:1px solid #d1d5db; border-radius:8px; font-size:14px; font-family:monospace;"></textarea>
+    
+    <button id="btnProsesJnt">Proses Data J&T</button>
+</div>
+
+<div class="card" style="box-shadow:0 3px 8px rgba(0,0,0,.08);">
+    <h3>Log Proses J&T</h3>
+    <div id="logJnt" class="log-box">Menunggu data J&T...</div>
+</div>
+
+<!-- Script Eksternal Terpisah -->
+<script src="config.js"></script>
+<script src="tts.js"></script>
+<script src="uploadreturjnt.js"></script>
+
+</body>
+</html>
