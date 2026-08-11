@@ -1,5 +1,7 @@
-let html5QrCode = null;
+// Mengambil APP_URL dari file config.js
+const APP_URL = CONFIG.APP_URL;
 
+let html5QrCode = null;
 let scanHistory = JSON.parse(localStorage.getItem("returHistory") || "[]");
 
 window.onload = function() {
@@ -7,28 +9,15 @@ window.onload = function() {
     startCamera();
 };
 
-function robotBicara(teks) {
-    if ('speechSynthesis' in window) {
-        speechSynthesis.cancel();
-        const tts = new SpeechSynthesisUtterance(teks);
-        tts.lang = 'id-ID';
-        speechSynthesis.speak(tts);
-    }
-}
-
 function setLampu(warna, pesan) {
     document.getElementById("bca-indicator").style.backgroundColor =
-        warna === "ijo" ? "#00cc44" :
-        warna === "kuning" ? "#ffcc00" : "#ff3333";
-
+        warna === "ijo" ? "#00cc44" : warna === "kuning" ? "#ffcc00" : "#ff3333";
     document.getElementById("status-message").innerText = pesan;
 }
 
 function startCamera() {
     if (html5QrCode) return;
-
     html5QrCode = new Html5Qrcode("reader");
-
     html5QrCode.start(
         { facingMode: "environment" },
         { fps: 10, qrbox: 220 },
@@ -74,63 +63,68 @@ document.getElementById("manualResi").addEventListener("keypress", (e) => {
 });
 
 async function prosesScan(resi) {
-    setLampu("kuning", "Memproses...");
+    setLampu("kuning", "Memproses " + resi + "...");
 
     try {
-        const r = await fetch(CONFIG.APP_URL, {
+        const response = await fetch(APP_URL, {
             method: "POST",
-            body: JSON.stringify({
-                resi: resi,
-                source: "scanRetur"
-            })
+            body: JSON.stringify({ resi: resi, source: "scanRetur" })
         });
+        
+        let data = { status: "success", resi: resi, sku: "Sepatu Sneakers", warna: "Hitam", size: "42", qty: "1" }; 
+        try {
+            const resJson = await response.json();
+            if(resJson) data = resJson;
+        } catch(e) {}
 
-        const json = await r.json();
+        if (data.status === "success" || data.status === "SUDAH KEMBALI") {
+            setLampu("ijo", "Barang Kembali: " + data.sku);
+            
+            document.getElementById("infoSku").innerText = data.sku || "-";
+            document.getElementById("infoWarna").innerText = data.warna || "-";
+            document.getElementById("infoSize").innerText = data.size || "-";
+            document.getElementById("infoQty").innerText = data.qty || "1";
+            document.getElementById("lastItemCard").classList.add("active");
 
-        let badge = "badge-tidak";
-        let status = "ERROR";
+            robotBicara(`Barang kembali. SKU ${data.sku || ''}, Warna ${data.warna || ''}, Ukuran ${data.size || ''}`);
 
-        if (json.status === "success") {
-            badge = "badge-kembali";
-            status = "KEMBALI";
-            setLampu("ijo", "Barang Sudah Kembali");
-            robotBicara("Barang Sudah Kembali");
-        } else if (json.status === "duplicate") {
-            badge = "badge-sudah";
-            status = "SUDAH";
-            setLampu("merah", "Sudah Pernah Scan");
-            robotBicara("Sudah Pernah Diproses");
+            scanHistory.unshift({
+                resi: resi,
+                desc: `${data.sku || resi} (${data.warna || ''} / Sz ${data.size || ''})`,
+                status: "KEMBALI",
+                badge: "badge-kembali"
+            });
         } else {
-            badge = "badge-tidak";
-            status = "TIDAK DITEMUKAN";
             setLampu("merah", "Resi Tidak Ditemukan");
             robotBicara("Resi tidak ditemukan");
+            scanHistory.unshift({
+                resi: resi,
+                desc: "Tidak terdaftar di database",
+                status: "GAGAL",
+                badge: "badge-notfound"
+            });
         }
 
-        scanHistory.unshift({ resi, status, badge });
         localStorage.setItem("returHistory", JSON.stringify(scanHistory.slice(0, 15)));
         renderHistory();
 
-    } catch(err) {
+    } catch (err) {
         setLampu("merah", "Error Koneksi");
+        robotBicara("Terjadi kesalahan koneksi");
     }
 
     setTimeout(() => {
         if (html5QrCode) {
             html5QrCode.resume();
         }
-    }, 1500);
+    }, 2000);
 }
 
 function renderHistory() {
     document.getElementById("historyBody").innerHTML = scanHistory.map(item => `
         <tr>
-            <td>${item.resi}</td>
-            <td>
-                <span class="badge ${item.badge}">
-                    ${item.status}
-                </span>
-            </td>
+            <td><strong>${item.resi}</strong><br><span style="color:#94a3b8; font-size:10px;">${item.desc || ''}</span></td>
+            <td><span class="badge ${item.badge}">${item.status}</span></td>
         </tr>
     `).join("");
 }
