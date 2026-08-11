@@ -2,225 +2,232 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="theme-color" content="#111827">
-    <meta name="description" content="SRF V3 Warehouse Scanner">
-    <title>SRF V3 - Warehouse Scanner</title>
-
-    <!-- PWA -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SRF V3 - Pusat Komando</title>
+    
     <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="css/theme.css">
-    <link rel="stylesheet" href="css/layout.css">
-    <link rel="stylesheet" href="css/scanner.css">
-    <link rel="stylesheet" href="css/queue.css">
-    <link rel="stylesheet" href="css/setting.css">
-    <link rel="stylesheet" href="css/responsive.css">
+    <!-- Memanggil file CSS dari folder css -->
+    <link rel="stylesheet" href="css/style.css">
 
-    <!-- HTML5 QR Code Library -->
-    <script src="https://unpkg.com/html5-qrcode"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        body {
+            background: #0f172a;
+            color: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Header Bergaya Mobile App */
+        .app-bar {
+            background: #1e293b;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #334155;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        .app-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .app-title h1 {
+            font-size: 15px;
+            font-weight: 700;
+            color: #f8fafc;
+            letter-spacing: 0.5px;
+        }
+
+        .app-title span {
+            font-size: 11px;
+            color: #38bdf8;
+            font-weight: 600;
+        }
+
+        /* Container Menu Utama */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-width: 500px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+
+        /* Card Menu */
+        .menu-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 14px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-decoration: none;
+            color: white;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .menu-card:active {
+            transform: scale(0.98);
+            background: #273548;
+        }
+
+        .menu-info {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .menu-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        /* Warna Ikon */
+        .icon-blue { background: rgba(37, 99, 235, 0.15); color: #3b82f6; border: 1px solid rgba(37, 99, 235, 0.3); }
+        .icon-green { background: rgba(5, 150, 105, 0.15); color: #34d399; border: 1px solid rgba(5, 150, 105, 0.3); }
+        .icon-orange { background: rgba(238, 77, 45, 0.15); color: #ff5722; border: 1px solid rgba(238, 77, 45, 0.3); }
+        .icon-purple { background: rgba(139, 92, 246, 0.15); color: #a78bfa; border: 1px solid rgba(139, 92, 246, 0.3); }
+
+        .menu-text h3 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #f8fafc;
+            margin-bottom: 2px;
+        }
+
+        .menu-text p {
+            font-size: 11px;
+            color: #94a3b8;
+        }
+
+        .menu-arrow {
+            color: #64748b;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .app-footer {
+            text-align: center;
+            padding: 12px;
+            font-size: 11px;
+            color: #64748b;
+            border-top: 1px solid #1e293b;
+        }
+    </style>
 </head>
-
 <body>
 
-    <div id="app">
+    <div class="app-bar">
+        <div class="app-brand">
+            <div class="app-title">
+                <h1>SRF V3</h1>
+                <span>Pusat Komando Warehouse</span>
+            </div>
+        </div>
+    </div>
 
-        <!-- HEADER -->
-        <header class="app-header">
-            <div class="header-left">
-                <div class="app-logo">SRF</div>
-                <div class="app-title">
-                    <h1>SRF V3</h1>
-                    <span>Warehouse Scanner</span>
+    <div class="main-content">
+        
+        <div class="section-label">Menu Utama Ekspedisi</div>
+
+        <!-- Pengiriman -->
+        <a href="pengiriman.html" class="menu-card">
+            <div class="menu-info">
+                <div class="menu-icon icon-blue">📦</div>
+                <div class="menu-text">
+                    <h3>Paket Keluar (Pengiriman)</h3>
+                    <p>Scan resi paket harian keluar</p>
                 </div>
             </div>
-            <div class="header-right">
-                <div id="connectionStatus" class="connection-status online" aria-label="Status koneksi">
-                    <span class="status-dot"></span>
-                    <span class="status-text">Online</span>
+            <div class="menu-arrow">›</div>
+        </a>
+
+        <!-- Scan Retur -->
+        <a href="scanretur.html" class="menu-card">
+            <div class="menu-info">
+                <div class="menu-icon icon-green">🔄</div>
+                <div class="menu-text">
+                    <h3>Scan Retur Masuk</h3>
+                    <p>Verifikasi barang returan kembali</p>
                 </div>
             </div>
-        </header>
+            <div class="menu-arrow">›</div>
+        </a>
 
-        <!-- MAIN CONTENT -->
-        <main id="mainContent" class="main-content">
+        <div class="section-label" style="margin-top: 10px;">Pusat Data & Upload</div>
 
-            <!-- HOME VIEW (Scanner & Mode) -->
-            <section id="viewHome" class="app-view active" data-view="home">
-                
-                <div class="section-header">
-                    <div>
-                        <span class="section-label">MODE AKTIF</span>
-                        <h2 id="currentModeLabel">Pengiriman</h2>
-                    </div>
+        <!-- Upload JNT -->
+        <a href="uploadreturjnt.html" class="menu-card">
+            <div class="menu-info">
+                <div class="menu-icon icon-blue">📥</div>
+                <div class="menu-text">
+                    <h3>Upload Data Retur JNT</h3>
+                    <p>Sinkronisasi data sheet JNT</p>
                 </div>
+            </div>
+            <div class="menu-arrow">›</div>
+        </a>
 
-                <!-- Mode Selector -->
-                <div class="mode-grid">
-                    <button type="button" class="mode-card active" data-mode="pengiriman">
-                        <span class="mode-icon">📦</span>
-                        <span class="mode-name">Pengiriman</span>
-                    </button>
-                    <button type="button" class="mode-card" data-mode="retur">
-                        <span class="mode-icon">↩</span>
-                        <span class="mode-name">Scan Retur</span>
-                    </button>
-                    <button type="button" class="mode-card" data-mode="upload">
-                        <span class="mode-icon">↑</span>
-                        <span class="mode-name">Upload Retur</span>
-                    </button>
-                    <button type="button" class="mode-card" data-mode="gagal">
-                        <span class="mode-icon">!</span>
-                        <span class="mode-name">Pengiriman Gagal</span>
-                    </button>
+        <!-- Upload SPX -->
+        <a href="uploadreturspx.html" class="menu-card">
+            <div class="menu-info">
+                <div class="menu-icon icon-orange">📥</div>
+                <div class="menu-text">
+                    <h3>Upload Data Retur SPX</h3>
+                    <p>Sinkronisasi data sheet Shopee / SPX</p>
                 </div>
+            </div>
+            <div class="menu-arrow">›</div>
+        </a>
 
-                <!-- Scanner -->
-                <div class="scanner-card">
-                    <div class="scanner-header">
-                        <div>
-                            <span class="section-label">SCANNER</span>
-                            <h2>Scan Barcode</h2>
-                        </div>
-                        <button type="button" id="cameraToggleButton" class="icon-button" aria-label="Aktifkan kamera">
-                            Kamera
-                        </button>
-                    </div>
-
-                    <div id="scannerContainer" class="scanner-container">
-                        <!-- Elemen viewport kamera untuk html5-qrcode -->
-                        <div id="reader" style="width: 100%; height: 100%;"></div>
-                        <div id="scannerViewport" class="scanner-viewport" style="display:none;">
-                            <div class="scanner-frame">
-                                <span class="corner top-left"></span>
-                                <span class="corner top-right"></span>
-                                <span class="corner bottom-left"></span>
-                                <span class="corner bottom-right"></span>
-                                <div class="scanner-line"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Manual Input -->
-                    <div class="manual-scan">
-                        <label for="manualResi">Input Resi Manual</label>
-                        <div class="manual-input-row">
-                            <input type="text" id="manualResi" name="manualResi" placeholder="Masukkan nomor resi" autocomplete="off" autocapitalize="characters" spellcheck="false">
-                            <button type="button" id="manualScanButton" class="primary-button">OK</button>
-                        </div>
-                    </div>
+        <!-- Kalkulator / Tambahan jika ada -->
+        <a href="kalkulator.html" class="menu-card">
+            <div class="menu-info">
+                <div class="menu-icon icon-purple">🧮</div>
+                <div class="menu-text">
+                    <h3>Kalkulator Gudang</h3>
+                    <p>Alat hitung operasional cepat</p>
                 </div>
-
-                <!-- Last Result -->
-                <div id="lastResultCard" class="result-card" data-status="empty">
-                    <div class="result-icon">—</div>
-                    <div class="result-content">
-                        <span class="result-label">HASIL TERAKHIR</span>
-                        <strong id="lastResultResi" class="result-resi">Belum ada scan</strong>
-                        <span id="lastResultMessage" class="result-message">Siap melakukan scan</span>
-                    </div>
-                </div>
-
-                <!-- Queue Summary -->
-                <div class="summary-grid">
-                    <div class="summary-card">
-                        <span class="summary-label">QUEUE</span>
-                        <strong id="queueCount" class="summary-value">0</strong>
-                        <span class="summary-description">Belum upload</span>
-                    </div>
-                    <div class="summary-card">
-                        <span class="summary-label">HARI INI</span>
-                        <strong id="todayScanCount" class="summary-value">0</strong>
-                        <span class="summary-description">Total scan</span>
-                    </div>
-                </div>
-            </section>
-
-            <!-- QUEUE VIEW -->
-            <section id="viewQueue" class="app-view" data-view="queue" hidden>
-                <div class="page-header">
-                    <span class="section-label">PENGIRIMAN</span>
-                    <h2>Queue Upload</h2>
-                    <p>Data yang belum berhasil dikirim ke Google Sheet.</p>
-                </div>
-                <div class="queue-summary">
-                    <div>
-                        <span>Belum Upload</span>
-                        <strong id="queuePageCount">0</strong>
-                    </div>
-                </div>
-                <div id="queueList" class="queue-list">
-                    <div class="empty-state">
-                        <div class="empty-icon">✓</div>
-                        <strong>Queue kosong</strong>
-                        <span>Semua data sudah tersinkronisasi.</span>
-                    </div>
-                </div>
-                <div class="queue-actions">
-                    <button type="button" id="sendAllQueueButton" class="primary-button full-width">Kirim Semua</button>
-                </div>
-            </section>
-
-            <!-- HISTORY VIEW -->
-            <section id="viewHistory" class="app-view" data-view="history" hidden>
-                <div class="page-header">
-                    <span class="section-label">AKTIVITAS</span>
-                    <h2>History Scan</h2>
-                    <p>Riwayat scan terbaru.</p>
-                </div>
-                <div id="historyList" class="history-list">
-                    <div class="empty-state">
-                        <div class="empty-icon">—</div>
-                        <strong>Belum ada riwayat</strong>
-                        <span>Aktivitas scan akan muncul di sini.</span>
-                    </div>
-                </div>
-            </section>
-
-            <!-- SETTINGS VIEW -->
-            <section id="viewSettings" class="app-view" data-view="settings" hidden>
-                <div class="page-header">
-                    <span class="section-label">SISTEM</span>
-                    <h2>Pengaturan</h2>
-                    <p>Atur koneksi dan perilaku aplikasi.</p>
-                </div>
-                <div class="settings-list">
-                    <div class="setting-placeholder">
-                        <strong>Pengaturan SRF V3</strong>
-                        <span>Modul pengaturan sistem.</span>
-                    </div>
-                </div>
-            </section>
-
-        </main>
-
-        <!-- BOTTOM NAVIGATION -->
-        <nav id="bottomNavigation" class="bottom-navigation" aria-label="Navigasi utama">
-            <button type="button" class="nav-item active" data-route="home">
-                <span class="nav-icon">⌂</span>
-                <span class="nav-label">Scan</span>
-            </button>
-            <button type="button" class="nav-item" data-route="queue">
-                <span class="nav-icon">□</span>
-                <span class="nav-label">Queue</span>
-                <span id="queueBadge" class="nav-badge" hidden>0</span>
-            </button>
-            <button type="button" class="nav-item" data-route="history">
-                <span class="nav-icon">≡</span>
-                <span class="nav-label">History</span>
-            </button>
-            <button type="button" class="nav-item" data-route="settings">
-                <span class="nav-icon">⚙</span>
-                <span class="nav-label">Pengaturan</span>
-            </button>
-        </nav>
+            </div>
+            <div class="menu-arrow">›</div>
+        </a>
 
     </div>
 
-    <!-- CONFIG & SCRIPTS -->
-    <script src="api/config.js"></script>
-    <script type="module" src="js/core/app.js"></script>
+    <div class="app-footer">
+        SRF V3 System • Ready Offline
+    </div>
 
     <script>
     if ("serviceWorker" in navigator) {
