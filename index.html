@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SRF Scanner - Menu Utama</title>
+    
+    <!-- Memanggil file CSS bersama -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#003399">
+
+    <style>
+        /* Style tambahan khusus untuk menu utama */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: #0f172a;
+        }
+        .menu-container {
+            width: 100%;
+            max-width: 400px;
+            background: #1e293b;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            border: 1px solid #334155;
+            text-align: center;
+        }
+        .menu-container h2 {
+            color: #f8fafc;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        .menu-btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            margin: 10px 0;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: background 0.2s;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        .menu-btn:hover {
+            background: #1d4ed8;
+        }
+        .menu-btn.retur {
+            background: #059669;
+        }
+        .menu-btn.retur:hover {
+            background: #047857;
+        }
+        .menu-btn.shopee {
+            background: #EE4D2D;
+        }
+        .menu-btn.shopee:hover {
+            background: #d73d1a;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="menu-container">
+        <h2>🚀 SRF SCANNER PUSAT KOMANDO</h2>
+        
+        <a href="pengiriman.html" class="menu-btn">📦 Paket Keluar (Pengiriman)</a>
+        <a href="scanretur.html" class="menu-btn retur">🔄 Scan Retur Masuk</a>
+        <a href="uploadjnt.html" class="menu-btn">📥 Upload Data Retur JNT</a>
+        <a href="uploadspx.html" class="menu-btn shopee">📥 Upload Data Retur SPX</a>
+    </div>
+
+    <!-- Pendaftaran Service Worker untuk Offline Mode -->
+    <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("sw.js");
+    }
+    </script>
+</body>
+</html>

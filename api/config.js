@@ -1,0 +1,3 @@
+const CONFIG = {
+    APP_URL: "MASUKKAN_URL_WEB_APP_ANDA_DISINI"
+};

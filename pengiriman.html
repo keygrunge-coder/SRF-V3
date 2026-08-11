@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SEKARFOOTWEAR - PUSAT KOMANDO V5</title>
+    
+    <!-- Memanggil file CSS dari folder css -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#003399">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <script src="https://unpkg.com/html5-qrcode"></script>
+</head>
+<body>
+
+    <div class="app-header">
+        <h3>📦 PAKET KELUAR V5</h3>
+        <div class="header-links">
+            <a href="scanretur.html" class="btn-nav">🔄 Retur</a>
+           
+        </div>
+    </div>
+
+    <div class="dash-container">
+        <div class="dash-card"><h4>Hari Ini</h4><p id="load-hari-ini">0</p></div>
+        <div class="dash-card"><h4>Hari Lalu</h4><p id="load-kemarin">0</p></div>
+        <div class="dash-card"><h4>Minggu Ini</h4><p id="load-minggu">0</p></div>
+    </div>
+
+    <div id="notif"></div>
+
+    <div class="scanner-wrapper">
+        <div class="camera-overlay-top">
+            <div class="status-pill-floating">
+                <div id="bca-indicator"></div>
+                <span id="status-message">Menyalakan Kamera...</span>
+            </div>
+        </div>
+
+        <div id="reader"></div>
+
+        <div class="floating-actions">
+            <button class="float-slot" onclick="downloadOfflineData()">📥 HP: <span id="local-slot">0</span></button>
+            <button class="float-btn" onclick="toggleManualModal(true)">⌨ Input Manual</button>
+        </div>
+    </div>
+
+    <div class="bottom-drawer" id="bottomDrawer">
+        <div class="drawer-toggle" onclick="toggleDrawer()">
+            <span>📋 Riwayat Terakhir</span>
+            <span id="drawerArrow">▼</span>
+        </div>
+        <div class="drawer-content">
+            <table class="compact-table">
+                <thead>
+                    <tr>
+                        <th>Resi</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="historyBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="manualModal">
+        <div class="modal-box">
+            <h3>Input Manual Resi</h3>
+            <input type="text" id="manualResi" placeholder="Masukkan nomor resi...">
+            <div class="modal-buttons">
+                <button class="btn-modal btn-secondary" onclick="toggleManualModal(false)">Batal</button>
+                <button class="btn-modal btn-primary" id="manualBtn">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <button id="startBtn" style="display:none;"></button>
+
+    <!-- Memanggil file config dari folder api dan script pengiriman dari folder js -->
+    <script src="api/config.js"></script>
+    <script src="js/pengiriman.js"></script>
+
+    <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("sw.js");
+    }
+    </script>
+</body>
+</html>

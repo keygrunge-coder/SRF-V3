@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>Scanner Retur</title>
+
+<!-- Memanggil file CSS dari folder css -->
+<link rel="stylesheet" href="css/style.css">
+
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#003399">
+</head>
+
+<body>
+
+<div class="app-header">
+    <a href="index.html">← Menu</a>
+    <h3>🔄 SCANNER RETUR</h3>
+    <button class="refresh-btn" onclick="location.reload()">🔄 Refresh</button>
+</div>
+
+<div class="scanner-wrapper">
+    <div class="camera-overlay-top">
+        <div class="status-pill-floating">
+            <div id="bca-indicator"></div>
+            <span id="status-message">Menyalakan Kamera...</span>
+        </div>
+    </div>
+
+    <div id="reader"></div>
+
+    <div class="floating-actions">
+        <button class="float-btn" onclick="toggleManualModal(true)">⌨ Input Manual</button>
+    </div>
+</div>
+
+<div class="bottom-drawer" id="bottomDrawer">
+    <div class="drawer-toggle" onclick="toggleDrawer()">
+        <span>📋 Riwayat Retur</span>
+        <span id="drawerArrow">▼</span>
+    </div>
+    <div class="drawer-content">
+        <table class="compact-table">
+            <thead>
+                <tr>
+                    <th>Resi</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="historyBody"></tbody>
+        </table>
+    </div>
+</div>
+
+<div id="manualModal">
+    <div class="modal-box">
+        <h3>Input Manual Resi Retur</h3>
+        <input type="text" id="manualResi" placeholder="Ketik nomor resi...">
+        <div class="modal-buttons">
+            <button class="btn btn-secondary" onclick="toggleManualModal(false)">Batal</button>
+            <button class="btn btn-primary" onclick="submitManual()">Simpan</button>
+        </div>
+    </div>
+</div>
+
+<button id="startBtn" style="display:none;"></button>
+
+<!-- Memanggil file config dari folder api dan script dari folder js -->
+<script src="api/config.js"></script>
+<script src="js/scanretur.js"></script>
+
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js");
+}
+</script>
+</body>
+</html>

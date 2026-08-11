@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Upload Retur JNT</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="container">
+
+<div class="header-box">
+<h3> <B>UPLOAD RETUR JNT TIKTOK TOKOPEDIA</B> </h3>
+<a href="uploadspx.html" class="btn-nav">UPLOAD RETUR SPX</a>
+</div>
+
+<div class="card">
+<h3>Tempel Data Retur</h3>
+<textarea id="rawData" placeholder="Paste data TikTok / Shopee di sini"></textarea>
+</div>
+
+<button onclick="uploadRetur()">
+Upload ke Sheet
+</button>
+
+<!-- Kotak Hasil Ringkasan -->
+<div class="card">
+<h3>Hasil Upload</h3>
+<table>
+<tr>
+<td>Berhasil</td>
+<td id="hasilBerhasil">0</td>
+</tr>
+<tr>
+<td>Duplikat</td>
+<td id="hasilDuplikat">0</td>
+</tr>
+</table>
+</div>
+
+<!-- Kotak Resi Berhasil -->
+<div class="card">
+<h3>Resi Berhasil</h3>
+<textarea id="listBerhasil" readonly placeholder="Daftar resi berhasil akan muncul di sini..."></textarea>
+</div>
+
+<!-- Kotak Resi Duplikat -->
+<div class="card">
+<h3>Resi Duplikat</h3>
+<textarea id="listDuplikat" readonly placeholder="Daftar resi duplikat akan muncul di sini..."></textarea>
+</div>
+
+</div>
+
+<!-- Memanggil file config dari folder api dan script dari folder js -->
+<script src="api/config.js"></script>
+<script src="js/uploadreturjnt.js"></script>
+
+</body>
+</html>
