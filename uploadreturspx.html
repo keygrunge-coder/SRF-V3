@@ -4,7 +4,108 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Upload Retur Shopee</title>
-<link rel="stylesheet" href="css/style.css">
+
+<style>
+.header-box {
+    background: #EE4D2D; /* Warna Oranye Khas Shopee */
+    color: #fff;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.btn-nav {
+    background: #333; /* Warna tombol navigasi */
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    margin: 5px; /* Memberi jarak antar tombol */
+    font-size: 13px;
+}
+    
+body{
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    padding: 20px;
+}
+
+.container{
+    max-width: 900px;
+    margin: auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+/* Card pembungkus kotak baru */
+.card {
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.card h3 {
+    margin-top: 0;
+    font-size: 15px;
+    color: #333;
+}
+
+textarea{
+    width: 100%;
+    height: 350px;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Textarea khusus list hasil yang lebih kecil */
+.card textarea {
+    height: 150px;
+}
+
+button{
+    width: 100%;
+    padding: 15px;
+    margin-top: 10px;
+    background: #EE4D2D; /* Tombol utama warna Shopee */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #d73d1a;
+}
+
+/* Style tabel hasil ringkasan */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table td {
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+table td:last-child {
+    text-align: right;
+    font-weight: bold;
+}
+</style>
+
 </head>
 <body>
 
@@ -54,9 +155,58 @@ Upload ke Sheet
 
 </div>
 
-<!-- Memanggil file config dari folder api dan script dari folder js -->
+<!-- Memanggil file config.js sebelum script utama -->
 <script src="api/config.js"></script>
-<script src="js/uploadreturspx.js"></script>
+
+<script>
+// Shortcut Ctrl + Enter untuk langsung upload
+document.getElementById("rawData").addEventListener("keydown", function(event) {
+    if (event.key === "Enter" && event.ctrlKey) {
+        event.preventDefault();
+        uploadRetur();
+    }
+});
+
+async function uploadRetur(){
+
+    const text = document.getElementById("rawData").value.trim();
+
+    if(!text){
+        alert("Paste data dulu");
+        return;
+    }
+
+    document.getElementById("hasilBerhasil").innerText = "...";
+    document.getElementById("hasilDuplikat").innerText = "...";
+    document.getElementById("listBerhasil").value = "Sedang memproses...";
+    document.getElementById("listDuplikat").value = "Sedang memproses...";
+
+    try{
+
+        const r = await fetch(CONFIG.APP_URL,{
+            method:"POST",
+            body:JSON.stringify({
+                source:"uploadReturShopee",
+                text:text
+            })
+        });
+
+        const json = await r.json();
+
+        document.getElementById("hasilBerhasil").innerText = json.berhasil || 0;
+        document.getElementById("hasilDuplikat").innerText = json.duplikat || 0;
+        
+        document.getElementById("listBerhasil").value = (json.listBerhasil || []).join("\n");
+        document.getElementById("listDuplikat").value = (json.listDuplikat || []).join("\n");
+
+    }catch(err){
+
+        document.getElementById("listBerhasil").value = err.toString();
+        document.getElementById("listDuplikat").value = err.toString();
+
+    }
+}
+</script>
 
 </body>
 </html>
