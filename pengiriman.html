@@ -127,6 +127,13 @@
 
     <script src="config.js"></script>
     <script>
+        // Mendukung variabel APP_URL langsung ataupun dari objek CONFIG
+        function getTargetUrl() {
+            if (typeof APP_URL !== 'undefined') return APP_URL;
+            if (typeof CONFIG !== 'undefined' && CONFIG.APP_URL) return CONFIG.APP_URL;
+            return null;
+        }
+
         window.onload = function() { startCamera(); muatDataDashboardAwal(); };
 
         let html5QrCode = null;
@@ -185,8 +192,9 @@
         }
 
         function muatDataDashboardAwal() {
-            if (typeof APP_URL === 'undefined') return;
-            fetch(`${APP_URL}?action=getDashboard`)
+            let url = getTargetUrl();
+            if (!url) return;
+            fetch(`${url}?action=getDashboard`)
             .then(res => res.json())
             .then(data => { 
                 if(data.status === 'success') { 
@@ -259,7 +267,7 @@
             if (isDuplicate) {
                 beepDuplicate();
                 setLampuBca('merah', 'Dobel di HP!');
-                robotBicara("sudah di scan");
+                robotBicara("Dobel");
                 showNotif("⚠ RESI DOBEL (LOKAL)", "warning");
                 scanHistory.unshift({ resi, display: "DOBEL" });
             } else {
@@ -314,7 +322,7 @@
                 updateCounters();
                 renderHistory();
                 setLampuBca('ijo', 'Data bersih!');
-                robotBicara("Data Dibersihkan");
+                robotBicara("Bersih");
             }
         }
 
@@ -323,7 +331,9 @@
                 alert("Tidak ada data untuk disinkronkan.");
                 return;
             }
-            if(typeof APP_URL === 'undefined') {
+            
+            let url = getTargetUrl();
+            if(!url) {
                 alert("URL Apps Script belum diatur di config.js!");
                 return;
             }
@@ -341,7 +351,7 @@
                 setLampuBca('kuning', `Sync (${i+1}/${localData.length}): ${resi}`);
 
                 try {
-                    let r = await fetch(APP_URL, { 
+                    let r = await fetch(url, { 
                         method: "POST", 
                         mode: "cors", 
                         headers: { "Content-Type": "text/plain;charset=utf-8" }, 
