@@ -231,12 +231,13 @@
 </div>
 
 <script>
-// Kata buangan standar (Elemen UI Shopee & Kata promosi umum)
+// Kata buangan standar (UI Shopee, sampah HTML, & kata promosi umum)
 const DEFAULT_STOP = new Set(`
 dan yang untuk dari dengan di ke pada anak ini itu terbaru model
 atau serta ada all the a an of by i harga rp terjual bln hari besok kab kabupaten kota 
 produk serupa viral kekinian grosir murah promo diskon gratis ongkir cod toko star seller
 sepatu pakaian baju celana tas aksesoris original berkualitas premium import lokal
+flag label flag-label flag-labelsandal search item card shopping cart seller centre
 `.trim().split(/\s+/));
 
 let globalFilteredKeywords = [];
@@ -285,44 +286,59 @@ function ngrams(words, n, stopSet){
   return a;
 }
 
-// LOGIKA BARU: Menyusun judul secara terstruktur dan logis
+// LOGIKA GENERATOR: Menyusun judul terstruktur, logis, dan tidak menumpuk kata
 function generateStructuredTitle() {
   if(!globalFilteredKeywords.length) return;
 
   const pool = globalFilteredKeywords.map(x => x[0]);
 
-  // Kategori kata spesifik produk sandal
-  const targetWords = pool.filter(w => ['pria', 'wanita', 'cowok', 'cewek', 'anak', 'dewasa', 'bayi', 'balita'].includes(w));
-  const featureWords = pool.filter(w => ['karet', 'jelly', 'empuk', 'ringan', 'antislip', 'anti-slip', 'tebal', 'soft', 'nyaman', 'tahan'].includes(w));
-  const modelWords = pool.filter(w => ['slop', 'baim', 'tali', 'jepit', 'gozal', 'kodok', 'slide', 'crocs', 'selop', 'gunung', 'heels', 'wedges', 'flat'].includes(w));
-  
-  // Kata-kata pendukung lainnya
+  // 1. Pengelompokan Kategori Kata
+  const modelWords = pool.filter(w => ['slop', 'baim', 'tali', 'jepit', 'kodok', 'slide', 'selop', 'gunung', 'heels', 'wedges'].includes(w));
+  const targetWords = pool.filter(w => ['pria', 'wanita', 'cowok', 'cewek', 'anak', 'dewasa', 'laki-laki', 'perempuan', 'bayi', 'balita'].includes(w));
+  const featureWords = pool.filter(w => ['karet', 'jelly', 'empuk', 'ringan', 'antislip', 'anti', 'slip', 'eva', 'nyaman', 'tebal'].includes(w));
+  const themeWords = pool.filter(w => ['roblox', 'minecraft', 'sonic', 'spider', 'spiderman', 'dino', 'dinosaurus', 'lucu', 'karakter', 'kartun'].includes(w));
+
+  // Kata pendukung sisa
   const extraWords = pool.filter(w => 
     !['sandal', 'sendal'].includes(w) && 
     !targetWords.includes(w) && 
     !featureWords.includes(w) && 
-    !modelWords.includes(w)
+    !modelWords.includes(w) &&
+    !themeWords.includes(w)
   );
 
   const getRandom = (arr) => arr.length ? arr[Math.floor(Math.random() * arr.length)] : '';
 
+  // 2. Ambil Sampel per Kategori
   const model = getRandom(modelWords);
-  const target = getRandom(targetWords);
-  const feature = getRandom(featureWords);
-  const extra1 = getRandom(extraWords);
-  const extra2 = getRandom(extraWords.filter(w => w !== extra1));
+  let target = getRandom(targetWords);
+  
+  // Normalisasi sebutan target/gender agar tidak aneh
+  if(!target && pool.includes('laki')) target = 'Anak Laki-Laki';
+  if(target === 'laki-laki' || target === 'laki') target = 'Anak Laki-Laki';
+  if(target === 'perempuan') target = 'Anak Perempuan';
 
-  // Pola Baku E-Commerce: [Kata Utama] + [Model] + [Target/Gender] + [Bahan/Fitur] + [Kata Kunci Tambahan]
+  let feature = getRandom(featureWords);
+  if(feature === 'anti' || feature === 'slip') feature = 'Anti Slip';
+
+  const theme = getRandom(themeWords);
+  const extra = getRandom(extraWords);
+
+  // 3. Susun Formulasi Judul Baku E-Commerce: [Sandal] + [Model] + [Target] + [Fitur] + [Tema/Sifat] + [Ekstra]
   let titleParts = ['Sandal'];
 
   if (model) titleParts.push(model);
   if (target) titleParts.push(target);
   if (feature) titleParts.push(feature);
-  if (extra1) titleParts.push(extra1);
-  if (extra2) titleParts.push(extra2);
+  if (theme) titleParts.push(theme);
+  if (extra) titleParts.push(extra);
 
-  // Capitalize setiap kata
-  let result = titleParts.join(' ').replace(/\b\w/g, x => x.toUpperCase());
+  // Capitalize & Rapikan Karakter
+  let result = titleParts.join(' ')
+    .replace(/\b\w/g, x => x.toUpperCase())
+    .replace(/Anti Slip/i, 'Anti Slip')
+    .replace(/Anak Laki-Laki/i, 'Anak Laki-Laki')
+    .replace(/Anak Perempuan/i, 'Anak Perempuan');
 
   document.getElementById('generatedTitle').innerText = result;
   document.getElementById('charCount').innerText = result.length;
@@ -389,7 +405,7 @@ function analyze(){
 
     <div class="card">
       <h2>✨ Generator Judul SEO Terstruktur</h2>
-      <div class="muted">Kombinasi terstruktur berdasar pola e-commerce (Sandal + Model + Target + Bahan + Kata Kunci).</div>
+      <div class="muted">Kombinasi terstruktur berdasar pola e-commerce (Sandal + Model + Target + Fitur + Karakter).</div>
       
       <div class="titlebox">
         <div class="generated-title" id="generatedTitle">-</div>
