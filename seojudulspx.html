@@ -205,9 +205,9 @@
   <!-- Input Form Card -->
   <div class="card">
     <h1>👡 SEO Keyword Analyzer Sandal</h1>
-    <div class="muted">Salin data pencarian Shopee (Tab Terlaris), tempel di bawah untuk menemukan kata kunci paling sering digunakan.</div>
+    <div class="muted">Salin data pencarian Shopee (Tab Terlaris), tempel di bawah untuk menemukan kata kunci populer dan menyusun judul produk.</div>
     
-    <textarea id="input" placeholder="Tempel teks hasil pencarian Shopee di sini..."></textarea>
+    <textarea id="input" placeholder="Tempel teks mentah hasil pencarian Shopee di sini..."></textarea>
     
     <div class="filter-grid">
       <div class="field-group">
@@ -231,9 +231,9 @@
 </div>
 
 <script>
-// Kata buangan standar (UI Shopee & kata umum non-spesifik)
+// Kata buangan standar (Elemen UI Shopee & Kata promosi umum)
 const DEFAULT_STOP = new Set(`
-dan yang untuk dari dengan di ke pada anak ini itu terbaru model laki perempuan cowok cewek
+dan yang untuk dari dengan di ke pada anak ini itu terbaru model
 atau serta ada all the a an of by i harga rp terjual bln hari besok kab kabupaten kota 
 produk serupa viral kekinian grosir murah promo diskon gratis ongkir cod toko star seller
 sepatu pakaian baju celana tas aksesoris original berkualitas premium import lokal
@@ -285,33 +285,43 @@ function ngrams(words, n, stopSet){
   return a;
 }
 
-function shuffleArray(array) {
-  let arr = [...array];
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-}
-
-function generateRandomTitle() {
+// LOGIKA BARU: Menyusun judul secara terstruktur dan logis
+function generateStructuredTitle() {
   if(!globalFilteredKeywords.length) return;
 
   const pool = globalFilteredKeywords.map(x => x[0]);
-  let shuffled = shuffleArray(pool).slice(0, 6);
 
-  let titleParts = [];
-  if(pool.includes('sandal')) {
-    titleParts.push('Sandal');
-    shuffled = shuffled.filter(w => w !== 'sandal' && w !== 'sendal');
-  } else if(pool.includes('sendal')) {
-    titleParts.push('Sendal');
-    shuffled = shuffled.filter(w => w !== 'sandal' && w !== 'sendal');
-  } else {
-    titleParts.push('Sandal');
-  }
+  // Kategori kata spesifik produk sandal
+  const targetWords = pool.filter(w => ['pria', 'wanita', 'cowok', 'cewek', 'anak', 'dewasa', 'bayi', 'balita'].includes(w));
+  const featureWords = pool.filter(w => ['karet', 'jelly', 'empuk', 'ringan', 'antislip', 'anti-slip', 'tebal', 'soft', 'nyaman', 'tahan'].includes(w));
+  const modelWords = pool.filter(w => ['slop', 'baim', 'tali', 'jepit', 'gozal', 'kodok', 'slide', 'crocs', 'selop', 'gunung', 'heels', 'wedges', 'flat'].includes(w));
+  
+  // Kata-kata pendukung lainnya
+  const extraWords = pool.filter(w => 
+    !['sandal', 'sendal'].includes(w) && 
+    !targetWords.includes(w) && 
+    !featureWords.includes(w) && 
+    !modelWords.includes(w)
+  );
 
-  titleParts = titleParts.concat(shuffled);
+  const getRandom = (arr) => arr.length ? arr[Math.floor(Math.random() * arr.length)] : '';
+
+  const model = getRandom(modelWords);
+  const target = getRandom(targetWords);
+  const feature = getRandom(featureWords);
+  const extra1 = getRandom(extraWords);
+  const extra2 = getRandom(extraWords.filter(w => w !== extra1));
+
+  // Pola Baku E-Commerce: [Kata Utama] + [Model] + [Target/Gender] + [Bahan/Fitur] + [Kata Kunci Tambahan]
+  let titleParts = ['Sandal'];
+
+  if (model) titleParts.push(model);
+  if (target) titleParts.push(target);
+  if (feature) titleParts.push(feature);
+  if (extra1) titleParts.push(extra1);
+  if (extra2) titleParts.push(extra2);
+
+  // Capitalize setiap kata
   let result = titleParts.join(' ').replace(/\b\w/g, x => x.toUpperCase());
 
   document.getElementById('generatedTitle').innerText = result;
@@ -337,7 +347,7 @@ function analyze(){
     document.getElementById('result').innerHTML = `
       <div class="card">
         <h2>⚠️ Judul Produk Tidak Terbaca</h2>
-        <p class="muted">Sistem tidak menemukan judul produk. Pastikan Anda menyalin seluruh teks dari halaman pencarian Shopee dengan lengkap.</p>
+        <p class="muted">Sistem tidak menemukan judul produk terlaris. Pastikan Anda menyalin seluruh teks dari halaman pencarian Shopee dengan lengkap.</p>
       </div>`;
     return;
   }
@@ -354,7 +364,7 @@ function analyze(){
 
   const rank = o => Object.entries(o).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
   
-  // Filter berdasarkan minimal kemunculan (default >= 2 kali)
+  // Filter kata kunci yang lolos batas minimal frekuensi
   globalFilteredKeywords = rank(one).filter(item => item[1] >= minFreq);
   const top2 = rank(two).filter(item => item[1] >= minFreq).slice(0, 15);
   const top3 = rank(three).filter(item => item[1] >= minFreq).slice(0, 10);
@@ -378,8 +388,8 @@ function analyze(){
     </div>
 
     <div class="card">
-      <h2>✨ Random SEO Title Generator</h2>
-      <div class="muted">Kombinasi otomatis dari kata kunci teratas yang muncul minimal ${minFreq} kali.</div>
+      <h2>✨ Generator Judul SEO Terstruktur</h2>
+      <div class="muted">Kombinasi terstruktur berdasar pola e-commerce (Sandal + Model + Target + Bahan + Kata Kunci).</div>
       
       <div class="titlebox">
         <div class="generated-title" id="generatedTitle">-</div>
@@ -387,14 +397,14 @@ function analyze(){
       </div>
 
       <div class="actions" style="margin-top:0;">
-        <button class="primary" onclick="generateRandomTitle()">🔀 Acak Variasi Judul</button>
+        <button class="primary" onclick="generateStructuredTitle()">🔀 Buat Variasi Judul</button>
         <button class="success" onclick="copyTitle()">📋 Salin Judul</button>
       </div>
     </div>
 
     <div class="card">
       <h2>🏆 Kata Kunci Tunggal (Unigram)</h2>
-      <div class="muted" style="margin-bottom:12px;">Daftar kata kunci yang sering diulang oleh kompetitor.</div>
+      <div class="muted" style="margin-bottom:12px;">Daftar kata terbanyak yang sering diulang oleh kompetitor terlaris.</div>
       ${renderTable(globalFilteredKeywords.slice(0, 30), 'Kata Kunci', 'Frekuensi Muncul')}
     </div>
 
@@ -406,12 +416,12 @@ function analyze(){
 
     <div class="card">
       <h2>🔗 Frasa 3 Kata (Trigram)</h2>
-      <div class="muted" style="margin-bottom:12px;">Kombinasi 3 kata populer untuk deskripsi/pencarian panjang.</div>
+      <div class="muted" style="margin-bottom:12px;">Kombinasi 3 kata populer untuk pencarian spesifik.</div>
       ${renderTable(top3, 'Frasa 3 Kata', 'Frekuensi Muncul')}
     </div>
   `;
 
-  generateRandomTitle();
+  generateStructuredTitle();
 }
 
 function renderTable(data, col1, col2){
