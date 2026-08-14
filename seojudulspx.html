@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SEO Keyword Analyzer & Title Generator - Sandal</title>
+<title>SEO Keyword Analyzer & Title Generator - SEKAR OFFICIAL</title>
 <style>
   :root {
     --bg-color: #f8fafc;
@@ -205,9 +205,9 @@
   <!-- Input Form Card -->
   <div class="card">
     <h1>👡 SEO Keyword Analyzer Sandal</h1>
-    <div class="muted">Salin data pencarian Shopee (Tab Terlaris), tempel di bawah untuk menemukan kata kunci populer dan menyusun judul produk.</div>
+    <div class="muted">Copas hasil pencarian Shopee (Tab Terlaris), tempel di bawah untuk menganalisis kata kunci populer dan menyusun judul rapi.</div>
     
-    <textarea id="input" placeholder="Tempel teks mentah hasil pencarian Shopee di sini..."></textarea>
+    <textarea id="input" placeholder="Tempel teks mentah hasil copas Shopee di sini..."></textarea>
     
     <div class="filter-grid">
       <div class="field-group">
@@ -231,7 +231,7 @@
 </div>
 
 <script>
-// Kata buangan standar (UI Shopee, sampah HTML, & kata promosi umum)
+// Filter kata buangan standar (UI Shopee, Tag HTML, Kata promosi umum)
 const DEFAULT_STOP = new Set(`
 dan yang untuk dari dengan di ke pada anak ini itu terbaru model
 atau serta ada all the a an of by i harga rp terjual bln hari besok kab kabupaten kota 
@@ -286,19 +286,18 @@ function ngrams(words, n, stopSet){
   return a;
 }
 
-// LOGIKA GENERATOR: Menyusun judul terstruktur, logis, dan tidak menumpuk kata
+// LOGIKA GENERATOR JUDUL TERSTRUKTUR & RAPI
 function generateStructuredTitle() {
   if(!globalFilteredKeywords.length) return;
 
   const pool = globalFilteredKeywords.map(x => x[0]);
 
-  // 1. Pengelompokan Kategori Kata
-  const modelWords = pool.filter(w => ['slop', 'baim', 'tali', 'jepit', 'kodok', 'slide', 'selop', 'gunung', 'heels', 'wedges'].includes(w));
-  const targetWords = pool.filter(w => ['pria', 'wanita', 'cowok', 'cewek', 'anak', 'dewasa', 'laki-laki', 'perempuan', 'bayi', 'balita'].includes(w));
-  const featureWords = pool.filter(w => ['karet', 'jelly', 'empuk', 'ringan', 'antislip', 'anti', 'slip', 'eva', 'nyaman', 'tebal'].includes(w));
-  const themeWords = pool.filter(w => ['roblox', 'minecraft', 'sonic', 'spider', 'spiderman', 'dino', 'dinosaurus', 'lucu', 'karakter', 'kartun'].includes(w));
+  // Kategori kata spesifik produk sandal
+  const modelWords = pool.filter(w => ['slop', 'baim', 'tali', 'jepit', 'kodok', 'slide', 'selop', 'gunung', 'fuji', 'ban'].includes(w));
+  const targetWords = pool.filter(w => ['pria', 'wanita', 'cowok', 'cewek', 'anak', 'dewasa', 'laki-laki', 'perempuan', 'bayi', 'balita', 'tanggung'].includes(w));
+  const featureWords = pool.filter(w => ['karet', 'jelly', 'empuk', 'ringan', 'antislip', 'anti', 'slip', 'eva', 'nyaman', 'tebal', 'licin'].includes(w));
+  const themeWords = pool.filter(w => ['roblox', 'minecraft', 'sonic', 'spider', 'spiderman', 'batman', 'labubu', 'dino', 'dinosaurus', 'lucu', 'karakter', 'kartun', 'jibbitz'].includes(w));
 
-  // Kata pendukung sisa
   const extraWords = pool.filter(w => 
     !['sandal', 'sendal'].includes(w) && 
     !targetWords.includes(w) && 
@@ -309,36 +308,37 @@ function generateStructuredTitle() {
 
   const getRandom = (arr) => arr.length ? arr[Math.floor(Math.random() * arr.length)] : '';
 
-  // 2. Ambil Sampel per Kategori
+  // Ambil elemen per kategori
   const model = getRandom(modelWords);
   let target = getRandom(targetWords);
-  
-  // Normalisasi sebutan target/gender agar tidak aneh
-  if(!target && pool.includes('laki')) target = 'Anak Laki-Laki';
-  if(target === 'laki-laki' || target === 'laki') target = 'Anak Laki-Laki';
-  if(target === 'perempuan') target = 'Anak Perempuan';
+
+  // Penormalan sebutan target agar rapi dan hemat karakter
+  if (!target && (pool.includes('laki') || pool.includes('cowok'))) target = 'Anak Laki-Laki';
+  if (target === 'laki-laki' || target === 'laki' || target === 'cowok') target = 'Anak Laki-Laki';
+  if (target === 'perempuan' || target === 'cewek') target = 'Anak Perempuan';
 
   let feature = getRandom(featureWords);
-  if(feature === 'anti' || feature === 'slip') feature = 'Anti Slip';
+  if (feature === 'anti' || feature === 'slip' || feature === 'licin') feature = 'Anti Slip';
 
   const theme = getRandom(themeWords);
   const extra = getRandom(extraWords);
 
-  // 3. Susun Formulasi Judul Baku E-Commerce: [Sandal] + [Model] + [Target] + [Fitur] + [Tema/Sifat] + [Ekstra]
+  // Formulasi Baku: Sandal + Model + Target + Karakter/Tema + Fitur/Bahan + Kata Ekstra
   let titleParts = ['Sandal'];
 
   if (model) titleParts.push(model);
   if (target) titleParts.push(target);
-  if (feature) titleParts.push(feature);
   if (theme) titleParts.push(theme);
+  if (feature) titleParts.push(feature);
   if (extra) titleParts.push(extra);
 
-  // Capitalize & Rapikan Karakter
+  // Rapikan kapitalisasi kata (Title Case)
   let result = titleParts.join(' ')
     .replace(/\b\w/g, x => x.toUpperCase())
     .replace(/Anti Slip/i, 'Anti Slip')
     .replace(/Anak Laki-Laki/i, 'Anak Laki-Laki')
-    .replace(/Anak Perempuan/i, 'Anak Perempuan');
+    .replace(/Anak Perempuan/i, 'Anak Perempuan')
+    .replace(/Eva/i, 'EVA');
 
   document.getElementById('generatedTitle').innerText = result;
   document.getElementById('charCount').innerText = result.length;
@@ -380,7 +380,6 @@ function analyze(){
 
   const rank = o => Object.entries(o).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
   
-  // Filter kata kunci yang lolos batas minimal frekuensi
   globalFilteredKeywords = rank(one).filter(item => item[1] >= minFreq);
   const top2 = rank(two).filter(item => item[1] >= minFreq).slice(0, 15);
   const top3 = rank(three).filter(item => item[1] >= minFreq).slice(0, 10);
@@ -405,7 +404,7 @@ function analyze(){
 
     <div class="card">
       <h2>✨ Generator Judul SEO Terstruktur</h2>
-      <div class="muted">Kombinasi terstruktur berdasar pola e-commerce (Sandal + Model + Target + Fitur + Karakter).</div>
+      <div class="muted">Kombinasi terstruktur berdasar pola e-commerce terlaris (Sandal + Model + Target + Karakter + Fitur).</div>
       
       <div class="titlebox">
         <div class="generated-title" id="generatedTitle">-</div>
@@ -420,7 +419,7 @@ function analyze(){
 
     <div class="card">
       <h2>🏆 Kata Kunci Tunggal (Unigram)</h2>
-      <div class="muted" style="margin-bottom:12px;">Daftar kata terbanyak yang sering diulang oleh kompetitor terlaris.</div>
+      <div class="muted" style="margin-bottom:12px;">Daftar kata terbanyak yang paling sering diulang oleh kompetitor terlaris.</div>
       ${renderTable(globalFilteredKeywords.slice(0, 30), 'Kata Kunci', 'Frekuensi Muncul')}
     </div>
 
