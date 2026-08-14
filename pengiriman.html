@@ -27,6 +27,7 @@
     box-sizing:border-box;
     margin:0;
     padding:0;
+
     font-family:
         -apple-system,
         BlinkMacSystemFont,
@@ -38,13 +39,17 @@
 
 html,
 body{
+
     width:100%;
     height:100%;
+
     overflow:hidden;
+
     background:#0f172a;
 }
 
 body{
+
     display:flex;
     flex-direction:column;
 }
@@ -55,10 +60,13 @@ body{
 ========================================================= */
 
 .header{
+
     height:52px;
+
     flex-shrink:0;
 
     background:#1e293b;
+
     color:white;
 
     display:flex;
@@ -71,17 +79,21 @@ body{
 }
 
 .header-title{
+
     font-size:15px;
     font-weight:800;
 }
 
 .header-actions{
+
     display:flex;
     gap:5px;
 }
 
 .header-btn{
+
     border:0;
+
     color:white;
 
     padding:7px 9px;
@@ -92,18 +104,22 @@ body{
     font-weight:800;
 
     cursor:pointer;
+
     touch-action:manipulation;
 }
 
 .refresh{
+
     background:#d97706;
 }
 
 .clear{
+
     background:#dc2626;
 }
 
 .sync{
+
     background:#2563eb;
 }
 
@@ -113,13 +129,17 @@ body{
 ========================================================= */
 
 .stats{
+
     height:52px;
+
     flex-shrink:0;
 
     background:#334155;
+
     color:white;
 
     display:flex;
+
     justify-content:space-around;
     align-items:center;
 
@@ -127,11 +147,14 @@ body{
 }
 
 .stat{
+
     font-size:10px;
+
     color:#cbd5e1;
 }
 
 .stat strong{
+
     display:block;
 
     color:#38bdf8;
@@ -143,13 +166,15 @@ body{
 
 
 /* =========================================================
-   SCANNER
+   SCANNER AREA
 ========================================================= */
 
 .scanner{
+
     position:relative;
 
     flex:1;
+
     min-height:0;
 
     background:#000;
@@ -158,6 +183,7 @@ body{
 }
 
 #reader{
+
     position:absolute;
 
     inset:0;
@@ -171,6 +197,7 @@ body{
 }
 
 #reader video{
+
     width:100%!important;
     height:100%!important;
 
@@ -178,14 +205,17 @@ body{
 }
 
 #reader img{
+
     display:none!important;
 }
 
 #reader__dashboard{
+
     display:none!important;
 }
 
 #reader__scan_region{
+
     width:100%!important;
     height:100%!important;
 }
@@ -196,6 +226,7 @@ body{
 ========================================================= */
 
 .status-box{
+
     position:absolute;
 
     top:12px;
@@ -213,6 +244,7 @@ body{
     padding:10px 12px;
 
     display:flex;
+
     align-items:center;
 
     gap:9px;
@@ -221,6 +253,7 @@ body{
 }
 
 .lamp{
+
     width:13px;
     height:13px;
 
@@ -230,11 +263,14 @@ body{
 
     background:#facc15;
 
-    box-shadow:0 0 10px currentColor;
+    box-shadow:
+        0 0 10px currentColor;
 }
 
 .status-text{
+
     font-size:13px;
+
     font-weight:700;
 
     overflow:hidden;
@@ -250,9 +286,11 @@ body{
 ========================================================= */
 
 .notif{
+
     position:absolute;
 
     top:75px;
+
     left:50%;
 
     transform:translateX(-50%);
@@ -264,28 +302,148 @@ body{
     border-radius:25px;
 
     font-size:13px;
+
     font-weight:800;
 
     display:none;
 
     white-space:nowrap;
 
-    box-shadow:0 5px 15px rgba(0,0,0,.35);
+    box-shadow:
+        0 5px 15px rgba(0,0,0,.35);
 }
 
 .notif.success{
+
     background:#16a34a;
     color:white;
 }
 
 .notif.warning{
+
     background:#f59e0b;
     color:white;
 }
 
 .notif.error{
+
     background:#dc2626;
     color:white;
+}
+
+
+/* =========================================================
+   TOMBOL ANTREAN RESI
+========================================================= */
+
+.queue-button{
+
+    position:absolute;
+
+    right:15px;
+
+    bottom:86px;
+
+    width:54px;
+    height:54px;
+
+    border:0;
+
+    border-radius:50%;
+
+    background:#2563eb;
+
+    color:white;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    font-size:24px;
+
+    font-weight:900;
+
+    z-index:30;
+
+    box-shadow:
+        0 5px 12px rgba(0,0,0,.4);
+
+    cursor:pointer;
+
+    touch-action:manipulation;
+
+    user-select:none;
+}
+
+.queue-button:active{
+
+    transform:scale(.94);
+}
+
+.queue-icon{
+
+    line-height:1;
+}
+
+.queue-count{
+
+    position:absolute;
+
+    top:-4px;
+    right:-3px;
+
+    min-width:20px;
+    height:20px;
+
+    padding:0 5px;
+
+    border-radius:10px;
+
+    background:#dc2626;
+
+    color:white;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    font-size:10px;
+
+    font-weight:900;
+
+    border:2px solid #000;
+}
+
+
+/* =========================================================
+   LABEL ANTREAN
+========================================================= */
+
+.queue-label{
+
+    position:absolute;
+
+    right:12px;
+
+    bottom:66px;
+
+    z-index:29;
+
+    background:rgba(15,23,42,.85);
+
+    color:white;
+
+    padding:3px 7px;
+
+    border-radius:5px;
+
+    font-size:9px;
+
+    font-weight:800;
+
+    pointer-events:none;
 }
 
 
@@ -294,6 +452,7 @@ body{
 ========================================================= */
 
 .scan-area{
+
     position:absolute;
 
     left:14px;
@@ -305,6 +464,7 @@ body{
 }
 
 .scan-button{
+
     width:100%;
 
     height:58px;
@@ -318,6 +478,7 @@ body{
     color:white;
 
     font-size:15px;
+
     font-weight:900;
 
     box-shadow:
@@ -328,14 +489,17 @@ body{
     touch-action:none;
 
     user-select:none;
+
     -webkit-user-select:none;
 }
 
 .scan-button.active{
+
     background:#16a34a;
 }
 
 .scan-button:active{
+
     transform:scale(.98);
 }
 
@@ -345,10 +509,12 @@ body{
 ========================================================= */
 
 .drawer{
+
     position:absolute;
 
     left:0;
     right:0;
+
     bottom:0;
 
     height:52vh;
@@ -357,7 +523,8 @@ body{
 
     background:white;
 
-    border-radius:17px 17px 0 0;
+    border-radius:
+        17px 17px 0 0;
 
     z-index:35;
 
@@ -371,14 +538,17 @@ body{
         0 -5px 20px rgba(0,0,0,.25);
 
     display:flex;
+
     flex-direction:column;
 }
 
 .drawer.open{
+
     transform:translateY(0);
 }
 
 .drawer-header{
+
     height:48px;
 
     flex-shrink:0;
@@ -386,13 +556,15 @@ body{
     display:flex;
 
     align-items:center;
+
     justify-content:space-between;
 
     padding:0 15px;
 
     background:#e2e8f0;
 
-    border-radius:17px 17px 0 0;
+    border-radius:
+        17px 17px 0 0;
 
     font-size:12px;
 
@@ -404,6 +576,7 @@ body{
 }
 
 .drawer-content{
+
     flex:1;
 
     overflow:auto;
@@ -417,6 +590,7 @@ body{
 ========================================================= */
 
 table{
+
     width:100%;
 
     border-collapse:collapse;
@@ -425,6 +599,7 @@ table{
 }
 
 th{
+
     background:#f8fafc;
 
     color:#64748b;
@@ -441,6 +616,7 @@ th{
 }
 
 td{
+
     padding:9px;
 
     border-bottom:
@@ -450,6 +626,7 @@ td{
 }
 
 .badge{
+
     display:inline-block;
 
     padding:3px 7px;
@@ -462,12 +639,16 @@ td{
 }
 
 .badge-spx{
+
     background:#dbeafe;
+
     color:#1d4ed8;
 }
 
 .badge-jnt{
+
     background:#dcfce7;
+
     color:#166534;
 }
 
@@ -479,23 +660,44 @@ td{
 @media(max-width:380px){
 
     .header-title{
+
         font-size:13px;
     }
 
     .header-btn{
+
         padding:6px;
+
         font-size:10px;
     }
 
     .status-text{
+
         font-size:12px;
     }
 
     .scan-button{
+
         height:54px;
+
         font-size:14px;
     }
 
+    .queue-button{
+
+        width:50px;
+        height:50px;
+
+        right:12px;
+
+        bottom:84px;
+    }
+
+    .queue-label{
+
+        right:9px;
+        bottom:64px;
+    }
 }
 
 </style>
@@ -633,23 +835,40 @@ td{
     </div>
 
 
-    <!-- SCAN BUTTON -->
+    <!-- =====================================================
+         TOMBOL ANTREAN RESI
 
-    <div class="scan-area">
+         Input manual sudah DIHAPUS.
+    ====================================================== -->
 
-        <button
-            id="scanButton"
-            class="scan-button">
+    <button
+        id="queueButton"
+        class="queue-button"
+        onclick="openQueue()"
+        title="Antrean Resi">
 
-            TAHAN UNTUK SCAN
+        <span class="queue-icon">
+            ☷
+        </span>
 
-        </button>
+        <span
+            id="queueButtonCount"
+            class="queue-count">
+            0
+        </span>
+
+    </button>
+
+
+    <div class="queue-label">
+
+        Antrean Resi
 
     </div>
 
 
     <!-- =====================================================
-         ANTREAN
+         DRAWER ANTREAN
     ====================================================== -->
 
     <div
@@ -710,6 +929,22 @@ td{
 
         </div>
 
+    </div>
+
+
+    <!-- =====================================================
+         SCAN BUTTON
+    ====================================================== -->
+
+    <div class="scan-area">
+
+        <button
+            id="scanButton"
+            class="scan-button">
+
+            📷 TAHAN UNTUK SCAN
+
+        </button>
 
     </div>
 
@@ -718,7 +953,21 @@ td{
 
 
 <!-- =========================================================
-     CONFIG
+     CONFIG.JS
+
+     File config.js harus berada satu folder
+     dengan file HTML ini.
+
+     Bisa berisi:
+
+     const APP_URL = "URL_APPS_SCRIPT";
+
+     ATAU:
+
+     const CONFIG = {
+         APP_URL:"URL_APPS_SCRIPT"
+     };
+
 ========================================================= -->
 
 <script src="config.js"></script>
@@ -726,116 +975,15 @@ td{
 
 <script>
 
-
 /* =========================================================
-   ROBOT CONFIG
    =========================================================
-
-   SEMUA SUARA ROBOT DIATUR DI SINI.
-
-   Bahasa DIKUNCI ke Indonesia:
-   id-ID
-
-   Tidak ada pilihan bahasa lain.
-
-========================================================= */
-
-const ROBOT_CONFIG = {
-
-    enabled:true,
-
-    language:"id-ID",
-
-    rate:1.15,
-
-    pitch:1.0,
-
-    volume:1.0,
-
-
-    /* =====================================================
-       HASIL SCAN
-    ===================================================== */
-
-    scanSuccessJNT:
-        "J&T berhasil",
-
-    scanSuccessSPX:
-        "S P X berhasil",
-
-
-    /* =====================================================
-       RESI DOUBLE
-
-       Pilihan teks yang bisa kamu ubah:
-
-       "Resi double"
-       "Scan ulang"
-       "Resi sudah terdaftar"
-
-    ===================================================== */
-
-    scanDouble:
-        "Resi double",
-
-
-    /* =====================================================
-       RESI TIDAK DIKENAL
-    ===================================================== */
-
-    unknownResi:
-        "Resi tidak dikenal",
-
-
-    /* =====================================================
-       KAMERA
-    ===================================================== */
-
-    cameraStarting:
-        "Menyalakan kamera",
-
-    cameraReady:
-        "Kamera siap scan",
-
-    cameraStopped:
-        "Scanner berhenti",
-
-    cameraError:
-        "Kamera gagal dibuka",
-
-
-    /* =====================================================
-       SYNC
-    ===================================================== */
-
-    syncSuccess:
-        "Sinkronisasi berhasil",
-
-    syncEmpty:
-        "Antrean kosong",
-
-    syncFailed:
-        "Sinkronisasi gagal",
-
-    syncNoResult:
-        "Tidak ada resi yang berhasil disinkronkan",
-
-
-    /* =====================================================
-       ANTREAN
-    ===================================================== */
-
-    queueAdded:
-        "Resi masuk antrean",
-
-    queueCleared:
-        "Antrean dibersihkan"
-
-};
+   KONFIGURASI UTAMA
+   =========================================================
+   ========================================================= */
 
 
 /* =========================================================
-   CONFIG READER
+   CONFIG APPS SCRIPT
 ========================================================= */
 
 function getTargetUrl(){
@@ -877,6 +1025,136 @@ function getTargetUrl(){
     return "";
 
 }
+
+
+/* =========================================================
+   ROBOT / iROBOT
+   =========================================================
+
+   BAHASA DIKUNCI INDONESIA.
+
+   Jangan ubah:
+
+   bahasa:"id-ID"
+
+   Semua suara bisa diubah dari sini.
+
+========================================================= */
+
+const ROBOT_CONFIG = {
+
+    enabled:true,
+
+    bahasa:"id-ID",
+
+    rate:1.15,
+
+    pitch:1.0,
+
+    volume:1.0,
+
+
+    /* =====================================================
+       PESAN ROBOT
+    ===================================================== */
+
+    pesan:{
+
+        siap:
+            "Scanner siap",
+
+        kameraAktif:
+            "Kamera aktif, siap scan",
+
+        kameraBerhenti:
+            "Scanner berhenti",
+
+        kameraGagal:
+            "Tidak dapat membuka kamera",
+
+        resiTidakDikenal:
+            "Resi tidak dikenal",
+
+        doubleScan:
+            "Resi sudah di scan",
+
+        spxBerhasil:
+            "S P X, berhasil",
+
+        jntBerhasil:
+            "J dan T, berhasil",
+
+        resiMasukAntrean:
+            "Resi masuk antrean",
+
+        syncMulai:
+            "Memulai sinkronisasi",
+
+        syncBerhasil:
+            "Resi berhasil disinkronkan",
+
+        syncGagal:
+            "Sinkronisasi gagal",
+
+        antreanKosong:
+            "Antrean kosong",
+
+        antreanDibersihkan:
+            "Antrean berhasil dibersihkan"
+
+    }
+
+};
+
+
+/* =========================================================
+   PENGATURAN SCAN
+   =========================================================
+
+   Bagian ini bisa kamu ubah.
+
+   allowDoubleScan:
+
+   false = resi yang sama ditolak
+
+   true = resi yang sama boleh discan lagi
+
+========================================================= */
+
+const SCAN_CONFIG = {
+
+    allowDoubleScan:false,
+
+    doubleScanMode:"tolak",
+
+    processingDelay:1200,
+
+    beepSuccess:true,
+
+    beepError:true,
+
+    beepDouble:true
+
+};
+
+
+/* =========================================================
+   MODE DOUBLE SCAN
+
+   Kalau nanti mau ubah perilaku double:
+
+   "tolak"
+   "izinkan"
+
+========================================================= */
+
+const DOUBLE_SCAN_MODE = {
+
+    TOLAK:"tolak",
+
+    IZINKAN:"izinkan"
+
+};
 
 
 /* =========================================================
@@ -954,7 +1232,7 @@ window.addEventListener(
 
         setStatus(
             "yellow",
-            "Scanner siap"
+            ROBOT_CONFIG.pesan.siap
         );
 
     }
@@ -967,16 +1245,26 @@ window.addEventListener(
 
 function updateUI(){
 
+    const count =
+        localData.length;
+
+
     document.getElementById(
         "syncCount"
     ).innerText =
-        localData.length;
+        count;
 
 
     document.getElementById(
         "queueCount"
     ).innerText =
-        localData.length;
+        count;
+
+
+    document.getElementById(
+        "queueButtonCount"
+    ).innerText =
+        count;
 
 }
 
@@ -1132,7 +1420,8 @@ function beep(
 
 
 /* =========================================================
-   ROBOT BICARA
+   iROBOT
+   BAHASA INDONESIA SAJA
 ========================================================= */
 
 function speak(text){
@@ -1166,9 +1455,9 @@ function speak(text){
             );
 
 
-        /* =================================================
-           BAHASA DIKUNCI INDONESIA
-        ================================================= */
+        /*
+         * BAHASA DIKUNCI ID
+         */
 
         voice.lang =
             "id-ID";
@@ -1193,7 +1482,7 @@ function speak(text){
     }catch(e){
 
         console.error(
-            "VOICE ERROR:",
+            "ROBOT VOICE ERROR:",
             e
         );
 
@@ -1206,17 +1495,15 @@ function speak(text){
    EKSPEDISI
 ========================================================= */
 
-function getEkspedisi(resi){
+function getEkspedisi(
+    resi
+){
 
     const r =
         String(resi)
         .trim()
         .toUpperCase();
 
-
-    /* =====================================================
-       SPX
-    ===================================================== */
 
     if(
         r.startsWith("SPX")
@@ -1226,10 +1513,6 @@ function getEkspedisi(resi){
 
     }
 
-
-    /* =====================================================
-       J&T
-    ===================================================== */
 
     if(
         r.startsWith("JX") ||
@@ -1248,10 +1531,27 @@ function getEkspedisi(resi){
 
 
 /* =========================================================
-   SIMPAN HASIL SCAN
+   CEK DOUBLE
 ========================================================= */
 
-function simpanLokal(resi){
+function cekDouble(
+    resi
+){
+
+    return localData.includes(
+        resi
+    );
+
+}
+
+
+/* =========================================================
+   SIMPAN RESI LOKAL
+========================================================= */
+
+function simpanLokal(
+    resi
+){
 
     resi =
         String(resi || "")
@@ -1267,24 +1567,32 @@ function simpanLokal(resi){
 
 
     const ekspedisi =
-        getEkspedisi(resi);
+        getEkspedisi(
+            resi
+        );
 
 
     /* =====================================================
-       RESI TIDAK DIKENAL
+       FORMAT RESI TIDAK DIKENAL
     ===================================================== */
 
     if(!ekspedisi){
 
-        beep(
-            250,
-            .25
-        );
+        if(
+            SCAN_CONFIG.beepError
+        ){
+
+            beep(
+                250,
+                .25
+            );
+
+        }
 
 
         setStatus(
             "red",
-            "Format resi tidak dikenal"
+            ROBOT_CONFIG.pesan.resiTidakDikenal
         );
 
 
@@ -1295,7 +1603,7 @@ function simpanLokal(resi){
 
 
         speak(
-            ROBOT_CONFIG.unknownResi
+            ROBOT_CONFIG.pesan.resiTidakDikenal
         );
 
 
@@ -1309,39 +1617,57 @@ function simpanLokal(resi){
     ===================================================== */
 
     if(
-        localData.includes(resi)
+        cekDouble(resi)
     ){
 
-        beep(
-            300,
-            .35
-        );
+        /*
+         * MODE TOLAK
+         */
+
+        if(
+            !SCAN_CONFIG.allowDoubleScan ||
+            SCAN_CONFIG.doubleScanMode ===
+                DOUBLE_SCAN_MODE.TOLAK
+        ){
+
+            if(
+                SCAN_CONFIG.beepDouble
+            ){
+
+                beep(
+                    300,
+                    .35
+                );
+
+            }
 
 
-        setStatus(
-            "red",
-            ROBOT_CONFIG.scanDouble
-        );
+            setStatus(
+                "red",
+                ROBOT_CONFIG.pesan.doubleScan
+            );
 
 
-        showNotif(
-            "RESI DOUBLE",
-            "warning"
-        );
+            showNotif(
+                "RESI DOBEL",
+                "warning"
+            );
 
 
-        speak(
-            ROBOT_CONFIG.scanDouble
-        );
+            speak(
+                ROBOT_CONFIG.pesan.doubleScan
+            );
 
 
-        return false;
+            return false;
+
+        }
 
     }
 
 
     /* =====================================================
-       TAMBAH KE ANTREAN
+       TAMBAHKAN KE ANTREAN
     ===================================================== */
 
     localData.push(
@@ -1393,45 +1719,51 @@ function simpanLokal(resi){
        FEEDBACK
     ===================================================== */
 
-    beep(
-        750,
-        .08
+    if(
+        SCAN_CONFIG.beepSuccess
+    ){
+
+        beep(
+            750,
+            .08
+        );
+
+    }
+
+
+    setStatus(
+        "green",
+        ekspedisi === "SPX"
+            ? "SPX • berhasil"
+            : "J&T • berhasil"
     );
 
+
+    showNotif(
+        "✓ RESI MASUK ANTREAN",
+        "success"
+    );
+
+
+    /*
+     * SUARA BERDASARKAN EKSPEDISI
+     */
 
     if(
         ekspedisi === "SPX"
     ){
 
-        setStatus(
-            "green",
-            "SPX berhasil"
+        speak(
+            ROBOT_CONFIG.pesan.spxBerhasil
         );
 
+    }else{
+
         speak(
-            ROBOT_CONFIG.scanSuccessSPX
+            ROBOT_CONFIG.pesan.jntBerhasil
         );
 
     }
-
-    else{
-
-        setStatus(
-            "green",
-            "J&T berhasil"
-        );
-
-        speak(
-            ROBOT_CONFIG.scanSuccessJNT
-        );
-
-    }
-
-
-    showNotif(
-        "RESI MASUK ANTREAN",
-        "success"
-    );
 
 
     updateUI();
@@ -1450,7 +1782,9 @@ function simpanLokal(resi){
 
 async function mulaiScan(){
 
-    if(cameraRunning){
+    if(
+        cameraRunning
+    ){
 
         return;
 
@@ -1473,12 +1807,12 @@ async function mulaiScan(){
 
 
     btn.innerText =
-        "LEPASKAN UNTUK BERHENTI";
+        "🔴 LEPASKAN UNTUK BERHENTI";
 
 
     setStatus(
         "yellow",
-        ROBOT_CONFIG.cameraStarting
+        "Menyalakan kamera..."
     );
 
 
@@ -1506,8 +1840,10 @@ async function mulaiScan(){
                 fps:15,
 
                 qrbox:{
+
                     width:280,
                     height:180
+
                 },
 
                 aspectRatio:
@@ -1541,7 +1877,7 @@ async function mulaiScan(){
                             false;
 
                     },
-                    1200
+                    SCAN_CONFIG.processingDelay
                 );
 
             }
@@ -1551,7 +1887,12 @@ async function mulaiScan(){
 
         setStatus(
             "green",
-            ROBOT_CONFIG.cameraReady
+            ROBOT_CONFIG.pesan.kameraAktif
+        );
+
+
+        speak(
+            ROBOT_CONFIG.pesan.kameraAktif
         );
 
 
@@ -1573,12 +1914,12 @@ async function mulaiScan(){
 
 
         btn.innerText =
-            "TAHAN UNTUK SCAN";
+            "📷 TAHAN UNTUK SCAN";
 
 
         setStatus(
             "red",
-            ROBOT_CONFIG.cameraError
+            ROBOT_CONFIG.pesan.kameraGagal
         );
 
 
@@ -1589,7 +1930,7 @@ async function mulaiScan(){
 
 
         speak(
-            ROBOT_CONFIG.cameraError
+            ROBOT_CONFIG.pesan.kameraGagal
         );
 
     }
@@ -1603,7 +1944,9 @@ async function mulaiScan(){
 
 async function berhentiScan(){
 
-    if(!cameraRunning){
+    if(
+        !cameraRunning
+    ){
 
         return;
 
@@ -1626,7 +1969,7 @@ async function berhentiScan(){
 
 
     btn.innerText =
-        "TAHAN UNTUK SCAN";
+        "📷 TAHAN UNTUK SCAN";
 
 
     try{
@@ -1642,7 +1985,7 @@ async function berhentiScan(){
 
     setStatus(
         "yellow",
-        ROBOT_CONFIG.cameraStopped
+        ROBOT_CONFIG.pesan.kameraBerhenti
     );
 
 }
@@ -1704,6 +2047,35 @@ scanButton.addEventListener(
 
     }
 );
+
+
+/* =========================================================
+   BUKA ANTREAN
+========================================================= */
+
+function openQueue(){
+
+    const drawer =
+        document.getElementById(
+            "drawer"
+        );
+
+
+    const arrow =
+        document.getElementById(
+            "drawerArrow"
+        );
+
+
+    drawer.classList.add(
+        "open"
+    );
+
+
+    arrow.innerText =
+        "▼";
+
+}
 
 
 /* =========================================================
@@ -1785,6 +2157,12 @@ function renderHistory(){
     }
 
 
+    /*
+     * Hanya tampilkan resi
+     * yang masih berada
+     * di antrean.
+     */
+
     const data =
         scanHistory.filter(
             function(item){
@@ -1819,11 +2197,9 @@ function renderHistory(){
                 <td>
 
                     <strong>
-
                         ${escapeHTML(
                             item.resi
                         )}
-
                     </strong>
 
                 </td>
@@ -1860,7 +2236,9 @@ function renderHistory(){
    ESCAPE HTML
 ========================================================= */
 
-function escapeHTML(text){
+function escapeHTML(
+    text
+){
 
     return String(text)
 
@@ -1903,19 +2281,19 @@ async function syncKeServer(){
     ){
 
         showNotif(
-            "ANTREAN KOSONG",
+            ROBOT_CONFIG.pesan.antreanKosong,
             "warning"
         );
 
 
         setStatus(
             "yellow",
-            "Tidak ada antrean"
+            ROBOT_CONFIG.pesan.antreanKosong
         );
 
 
         speak(
-            ROBOT_CONFIG.syncEmpty
+            ROBOT_CONFIG.pesan.antreanKosong
         );
 
 
@@ -1960,10 +2338,19 @@ async function syncKeServer(){
     );
 
 
+    speak(
+        ROBOT_CONFIG.pesan.syncMulai
+    );
+
+
     let sisa = [];
 
     let berhasil = 0;
 
+
+    /*
+     * COPY ARRAY
+     */
 
     const daftarSync =
         [...localData];
@@ -2078,9 +2465,6 @@ async function syncKeServer(){
 
             /* =================================================
                DUPLICATE
-
-               Tetap dianggap selesai karena
-               data sudah ada di server.
             ================================================= */
 
             else if(
@@ -2092,6 +2476,10 @@ async function syncKeServer(){
 
             }
 
+
+            /* =================================================
+               ERROR
+            ================================================= */
 
             else{
 
@@ -2133,8 +2521,8 @@ async function syncKeServer(){
 
 
     /* =====================================================
-       SIMPAN ANTREAN YANG GAGAL
-    ================================================= */
+       SIMPAN ANTREAN SISA
+    ===================================================== */
 
     localData =
         sisa;
@@ -2174,7 +2562,8 @@ async function syncKeServer(){
 
 
         speak(
-            `${berhasil} resi berhasil disinkronkan`
+            `${berhasil} ` +
+            ROBOT_CONFIG.pesan.syncBerhasil
         );
 
     }
@@ -2183,7 +2572,7 @@ async function syncKeServer(){
 
         setStatus(
             "red",
-            "Sync gagal"
+            "Tidak ada resi yang tersinkron"
         );
 
 
@@ -2194,7 +2583,7 @@ async function syncKeServer(){
 
 
         speak(
-            ROBOT_CONFIG.syncNoResult
+            ROBOT_CONFIG.pesan.syncGagal
         );
 
     }
@@ -2269,7 +2658,7 @@ async function loadDashboard(){
 
 
 /* =========================================================
-   CLEAR ANTREAN
+   CLEAR ANTREAN LOKAL
 ========================================================= */
 
 function clearLocal(){
@@ -2317,7 +2706,7 @@ function clearLocal(){
 
     setStatus(
         "green",
-        "Antrean lokal dibersihkan"
+        ROBOT_CONFIG.pesan.antreanDibersihkan
     );
 
 
@@ -2328,7 +2717,7 @@ function clearLocal(){
 
 
     speak(
-        ROBOT_CONFIG.queueCleared
+        ROBOT_CONFIG.pesan.antreanDibersihkan
     );
 
 }
