@@ -13,10 +13,11 @@
         header { background: #1e293b; color: #fff; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); z-index: 10; }
         header h1 { font-size: 16px; font-weight: 600; }
         
-        .header-btns { display: flex; gap: 8px; }
-        .btn-header { border: none; padding: 6px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; color: #fff; }
+        .header-btns { display: flex; gap: 6px; }
+        .btn-header { border: none; padding: 6px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; color: #fff; }
         .btn-sync { background: #2563eb; }
         .btn-download { background: #059669; }
+        .btn-clear { background: #dc2626; }
 
         .dashboard-stats { display: flex; background: #334155; padding: 8px 16px; justify-content: space-around; color: #fff; font-size: 13px; text-align: center; }
         .stat-item span { font-weight: bold; color: #38bdf8; display: block; font-size: 15px; }
@@ -32,7 +33,6 @@
         .notif-banner { position: absolute; top: 75px; left: 50%; transform: translateX(-50%); padding: 10px 20px; border-radius: 20px; font-weight: bold; font-size: 14px; display: none; z-index: 6; box-shadow: 0 4px 12px rgba(0,0,0,0.3); text-align: center; }
         .notif-banner.success { background: #22c55e; color: #fff; }
         .notif-banner.warning { background: #f59e0b; color: #fff; }
-        .notif-banner.error { background: #ef4444; color: #fff; }
 
         .floating-actions { position: absolute; bottom: 70px; right: 15px; display: flex; flex-direction: column; gap: 10px; z-index: 5; }
         .float-btn { width: 50px; height: 50px; border-radius: 25px; background: #2563eb; color: #fff; border: none; font-size: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); display: flex; justify-content: center; align-items: center; cursor: pointer; }
@@ -64,10 +64,11 @@
 <body>
 
     <header>
-        <h1>Scan Resi Cepat (Offline)</h1>
+        <h1>Scan Resi Cepat</h1>
         <div class="header-btns">
             <button class="btn-header btn-sync" onclick="syncKeServer()">☁️ Sync (<span id="sync-count">0</span>)</button>
-            <button class="btn-header btn-download" onclick="downloadOfflineData()">📥 HP (<span id="local-slot">0</span>)</button>
+            <button class="btn-header btn-download" onclick="downloadOfflineData()">📥 (<span id="local-slot">0</span>)</button>
+            <button class="btn-header btn-clear" onclick="clearDataLokal()" title="Bersihkan Cache">🗑️</button>
         </div>
     </header>
 
@@ -105,9 +106,7 @@
                         <th>Ekspedisi</th>
                     </tr>
                 </thead>
-                <tbody id="historyBody">
-                    <!-- Data riwayat masuk dinamis -->
-                </tbody>
+                <tbody id="historyBody"></tbody>
             </table>
         </div>
     </div>
@@ -124,21 +123,17 @@
         </div>
     </div>
 
-    <!-- Konfigurasi URL Apps Script -->
     <script src="config.js"></script>
-    
-    <!-- Skrip Utama (Offline-First Super Cepat) -->
     <script>
         window.onload = function() { startCamera(); muatDataDashboardAwal(); };
 
         let html5QrCode = null;
         let isProcessing = false;
         
-        // Memuat data lokal (penyimpanan HP)
-        let localData = JSON.parse(localStorage.getItem('harian_offline_cache')) || [];
+        // Menggunakan nama kunci khusus versi baru agar bersih dari cache lama
+        let localData = JSON.parse(localStorage.getItem('resi_offline_v2')) || [];
+        let scanHistory = JSON.parse(localStorage.getItem("scanHistory_v2") || "[]");
         updateCounters();
-
-        let scanHistory = JSON.parse(localStorage.getItem("scanHistory") || "[]");
         renderHistory();
 
         function beep(freq, duration){ 
@@ -216,7 +211,7 @@
                     } 
                 }
             ).then(() => { 
-                setLampuBca('ijo', 'Siap Scan Cepat (Offline)!'); 
+                setLampuBca('ijo', 'Siap Scan Cepat!'); 
                 robotBicara("Sistem Siap"); 
             }).catch(err => { 
                 setLampuBca('merah', 'Kamera Gagal'); 
@@ -254,12 +249,10 @@
             }
         });
 
-        // ⚡ PROSES SIMPAN LOKAL (INSTAN TANPA TUNGGU INTERNET)
         function simpanLokal(resi) {
             let resiUpper = resi.toUpperCase();
             let ekspedisi = resiUpper.startsWith("SPX") ? "SPX" : "J&T";
 
-            // Cek apakah resi sudah ada di riwayat lokal HP (Cek Duplikat Instan)
             let isDuplicate = localData.includes(resi);
 
             if (isDuplicate) {
@@ -274,22 +267,20 @@
                 robotBicara(`${ekspedisi}, Oke.`);
                 showNotif("✓ TERSIMPAN LOKAL", "success");
 
-                // Masukkan ke memori lokal HP
                 localData.push(resi);
-                localStorage.setItem('harian_offline_cache', JSON.stringify(localData));
+                localStorage.setItem('resi_offline_v2', JSON.stringify(localData));
 
                 scanHistory.unshift({ resi, display: ekspedisi });
             }
 
-            localStorage.setItem("scanHistory", JSON.stringify(scanHistory.slice(0, 100)));
+            localStorage.setItem("scanHistory_v2", JSON.stringify(scanHistory.slice(0, 100)));
             updateCounters();
             renderHistory();
 
-            // Jeda singkat agar kamera bisa langsung lanjut scan berikutnya dengan sangat cepat
             setTimeout(() => {
                 isProcessing = false;
                 if(html5QrCode) html5QrCode.resume();
-            }, 300); // Jeda dipercepat jadi 0.3 detik saja!
+            }, 300);
         }
 
         function renderHistory(){ 
@@ -303,7 +294,7 @@
 
         function downloadOfflineData() { 
             if(localData.length === 0) {
-                alert("Belum ada data tersimpan di HP.");
+                alert("Belum ada data tersimpan.");
                 return;
             }
             let blob = new Blob([localData.join("\n")], { type: "text/plain" }); 
@@ -313,25 +304,35 @@
             a.click(); 
         }
 
-        // ☁️ FUNGSI SYNC (KIRIM KE SHEET SEKALIGUS KETIKA INTERNET BAGUS)
+        function clearDataLokal() {
+            if(confirm("Hapus semua data scan lokal di HP?")) {
+                localStorage.removeItem('resi_offline_v2');
+                localStorage.removeItem('scanHistory_v2');
+                localData = [];
+                scanHistory = [];
+                updateCounters();
+                renderHistory();
+                setLampuBca('ijo', 'Data bersih!');
+                robotBicara("Bersih");
+            }
+        }
+
         async function syncKeServer() {
             if(localData.length === 0) {
                 alert("Tidak ada data untuk disinkronkan.");
                 return;
             }
             if(typeof APP_URL === 'undefined') {
-                alert("URL Apps Script belum diatur di config.js!");
+                alert("URL Apps Script belum diatur!");
                 return;
             }
 
-            if(!confirm(`Akan menyinkronkan ${localData.length} data ke Google Sheet. Lanjutkan?`)) return;
+            if(!confirm(`Kirim ${localData.length} data ke Google Sheet?`)) return;
 
-            setLampuBca('kuning', 'Sedang Sync ke Server...');
-            robotBicara("Sinkronisasi data.");
+            setLampuBca('kuning', 'Sedang Sync...');
+            robotBicara("Sinkronisasi.");
 
             try {
-                // Anda bisa mengirimnya satu-persatu secara latar belakang atau batch
-                // Contoh pengiriman beruntun:
                 let suksesCount = 0;
                 for (let i = 0; i < localData.length; i++) {
                     let resi = localData[i];
@@ -347,25 +348,22 @@
                             suksesCount++;
                         }
                     } catch(innerErr) {
-                        // Jika koneksi terputus di tengah jalan
                         break;
                     }
                 }
 
                 if(suksesCount > 0) {
-                    alert(`Berhasil mensinkronkan ${suksesCount} data ke Google Sheet!`);
-                    // Bersihkan cache lokal jika sudah sukses terkirim semua
+                    alert(`Berhasil sync ${suksesCount} data!`);
                     localData = [];
-                    localStorage.removeItem('harian_offline_cache');
+                    localStorage.removeItem('resi_offline_v2');
                     updateCounters();
                     setLampuBca('ijo', 'Sync Selesai!');
-                    robotBicara("Sinkronisasi selesai.");
+                    robotBicara("Selesai");
                 } else {
-                    setLampuBca('merah', 'Sync Gagal (Cek Koneksi)');
-                    robotBicara("Gagal sinkronisasi.");
+                    setLampuBca('merah', 'Sync Gagal');
                 }
             } catch(err) {
-                setLampuBca('merah', 'Gagal Koneksi Server');
+                setLampuBca('merah', 'Koneksi Error');
             }
         }
     </script>
