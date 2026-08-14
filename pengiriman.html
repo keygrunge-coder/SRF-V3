@@ -3,108 +3,444 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Scanner Pro - Push-to-Scan</title>
+    <title>Sistem Scan Resi Cepat</title>
+    <!-- Library Html5-Qrcode -->
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; }
-        body { background: #0f172a; color: #fff; height: 100vh; overflow: hidden; user-select: none; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: #f4f6f9; color: #333; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         
-        .scanner-container { position: relative; height: 100vh; width: 100vw; display: flex; flex-direction: column; }
-        #reader { flex: 1; width: 100%; background: #000; }
+        header { background: #1e293b; color: #fff; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); z-index: 10; }
+        header h1 { font-size: 15px; font-weight: 600; }
         
-        /* Status Bar Atas */
-        .status-top { position: absolute; top: 15px; left: 15px; right: 15px; padding: 12px; background: rgba(0,0,0,0.7); border-radius: 10px; font-size: 14px; text-align: center; backdrop-filter: blur(5px); }
-        
-        /* Tombol Tahan & Scan */
-        .hold-btn-area { position: absolute; bottom: 40px; left: 0; right: 0; padding: 20px; }
-        #holdScanBtn { 
-            width: 100%; height: 80px; border-radius: 40px; border: none; 
-            background: #334155; color: #94a3b8; font-size: 18px; font-weight: bold; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5); transition: all 0.2s;
-        }
-        #holdScanBtn.active { background: #2563eb; color: #fff; transform: scale(0.95); }
+        .header-btns { display: flex; gap: 5px; }
+        .btn-header { border: none; padding: 6px 7px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; color: #fff; display: flex; align-items: center; gap: 2px; }
+        .btn-sync { background: #2563eb; }
+        .btn-download { background: #059669; }
+        .btn-refresh { background: #d97706; }
+        .btn-clear { background: #dc2626; }
 
-        .btn-sync { position: absolute; top: 70px; right: 20px; background: #059669; border: none; padding: 10px 15px; border-radius: 20px; color: #fff; font-weight: bold; }
+        .dashboard-stats { display: flex; background: #334155; padding: 8px 16px; justify-content: space-around; color: #fff; font-size: 13px; text-align: center; }
+        .stat-item span { font-weight: bold; color: #38bdf8; display: block; font-size: 15px; }
+
+        .scanner-container { flex: 1; position: relative; background: #000; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+        #reader { width: 100% !important; height: 100% !important; border: none !important; }
+        #reader video { object-fit: cover !important; width: 100% !important; height: 100% !important; }
+
+        .indicator-box { position: absolute; top: 15px; left: 15px; right: 15px; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(4px); padding: 10px 14px; border-radius: 8px; display: flex; align-items: center; gap: 10px; z-index: 5; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
+        #bca-indicator { width: 14px; height: 14px; border-radius: 50%; background-color: #ffcc00; box-shadow: 0 0 8px currentColor; transition: background-color 0.3s; }
+        #status-message { color: #fff; font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .notif-banner { position: absolute; top: 75px; left: 50%; transform: translateX(-50%); padding: 10px 20px; border-radius: 20px; font-weight: bold; font-size: 14px; display: none; z-index: 6; box-shadow: 0 4px 12px rgba(0,0,0,0.3); text-align: center; }
+        .notif-banner.success { background: #22c55e; color: #fff; }
+        .notif-banner.warning { background: #f59e0b; color: #fff; }
+
+        .floating-actions { position: absolute; bottom: 90px; right: 15px; display: flex; flex-direction: column; gap: 10px; z-index: 5; }
+        .float-btn { width: 50px; height: 50px; border-radius: 25px; background: #2563eb; color: #fff; border: none; font-size: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); display: flex; justify-content: center; align-items: center; cursor: pointer; }
+
+        /* AREA TOMBOL TAHAN UNTUK SCAN */
+        .scan-action-area { position: absolute; bottom: 15px; left: 15px; right: 15px; z-index: 5; }
+        #holdScanBtn { width: 100%; padding: 15px; border-radius: 30px; border: none; background: #334155; color: #fff; font-size: 15px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.4); cursor: pointer; transition: background 0.2s; }
+        #holdScanBtn.active { background: #16a34a; }
+
+        .bottom-drawer { position: absolute; bottom: 0; left: 0; right: 0; background: #fff; border-top-left-radius: 16px; border-top-right-radius: 16px; box-shadow: 0 -4px 10px rgba(0,0,0,0.15); transition: transform 0.3s ease; transform: translateY(calc(100% - 45px)); z-index: 10; display: flex; flex-direction: column; max-height: 50vh; }
+        .bottom-drawer.open { transform: translateY(0); }
+        .drawer-handle { height: 45px; display: flex; justify-content: space-between; align-items: center; padding: 0 16px; font-weight: 600; font-size: 13px; background: #e2e8f0; border-top-left-radius: 16px; border-top-right-radius: 16px; cursor: pointer; }
+        .drawer-content { overflow-y: auto; padding: 10px 16px; flex: 1; }
+
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid #f1f5f9; }
+        th { background: #f8fafc; color: #64748b; font-weight: 600; }
+        
+        .badge { padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; }
+        .badge-keluar { background: #dcfce7; color: #166534; }
+        .badge-duplikat { background: #fef9c3; color: #854d0e; }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(2px); z-index: 100; display: none; justify-content: center; align-items: center; padding: 20px; }
+        .modal-box { background: #fff; width: 100%; max-width: 320px; padding: 20px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .modal-box h3 { font-size: 16px; margin-bottom: 12px; color: #1e293b; }
+        .modal-box input { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; margin-bottom: 15px; outline: none; }
+        .modal-box input:focus { border-color: #2563eb; }
+        .modal-btns { display: flex; justify-content: flex-end; gap: 8px; }
+        .modal-btns button { padding: 8px 14px; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; }
+        .btn-cancel { background: #e2e8f0; color: #475569; }
+        .btn-submit { background: #2563eb; color: #fff; }
     </style>
 </head>
 <body>
 
-<div class="scanner-container">
-    <div id="reader"></div>
-    <div class="status-top" id="statusMsg">Tekan & Tahan tombol di bawah untuk scan.</div>
-    <button class="btn-sync" onclick="syncKeServer()">☁️ Sync (<span id="sync-count">0</span>)</button>
-    
-    <div class="hold-btn-area">
-        <button id="holdScanBtn">TAHAN UNTUK SCAN</button>
+    <header>
+        <h1>Scan Resi Cepat</h1>
+        <div class="header-btns">
+            <button class="btn-header btn-refresh" onclick="window.location.reload()" title="Refresh Halaman">🔄</button>
+            <button class="btn-header btn-sync" onclick="syncKeServer()">☁️ Sync (<span id="sync-count">0</span>)</button>
+            <button class="btn-header btn-download" onclick="downloadOfflineData()" title="Download TXT">📥(<span id="local-slot">0</span>)</button>
+            <button class="btn-header btn-clear" onclick="clearDataLokal()" title="Bersihkan Cache">🗑️</button>
+        </div>
+    </header>
+
+    <div class="dashboard-stats">
+        <div class="stat-item">Hari Ini <span id="load-hari-ini">0</span></div>
+        <div class="stat-item">Kemarin <span id="load-kemarin">0</span></div>
+        <div class="stat-item">Minggu Ini <span id="load-minggu">0</span></div>
     </div>
-</div>
 
-<script src="config.js"></script>
-<script>
-    let html5QrCode = new Html5Qrcode("reader");
-    let isProcessing = false;
-    let localData = JSON.parse(localStorage.getItem('resi_data') || "[]");
-    document.getElementById('sync-count').innerText = localData.length;
+    <div class="scanner-container">
+        <div id="reader"></div>
+        
+        <div class="indicator-box">
+            <div id="bca-indicator"></div>
+            <div id="status-message">Tekan & Tahan tombol di bawah untuk scan</div>
+        </div>
 
-    const btn = document.getElementById('holdScanBtn');
-    const statusMsg = document.getElementById('statusMsg');
+        <div id="notif" class="notif-banner"></div>
 
-    function startScanner() {
-        btn.classList.add('active');
-        statusMsg.innerText = "Arahkan kamera ke resi...";
-        html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: 250 }, (decodedText) => {
-            if (!isProcessing) {
-                isProcessing = true;
-                handleScan(decodedText.trim());
+        <div class="floating-actions">
+            <button class="float-btn" onclick="toggleManualModal(true)" title="Input Manual">⌨️</button>
+        </div>
+
+        <!-- TOMBOL PUSH-TO-SCAN TAMBAHAN -->
+        <div class="scan-action-area">
+            <button id="holdScanBtn">📷 TAHAN UNTUK SCAN</button>
+        </div>
+    </div>
+
+    <div class="bottom-drawer" id="bottomDrawer">
+        <div class="drawer-handle" onclick="toggleDrawer()">
+            <span>Antrean Belum Sinkron (<span id="history-count">0</span>)</span>
+            <span id="drawerArrow">▲</span>
+        </div>
+        <div class="drawer-content">
+            <table>
+                <thead>
+                    <tr>
+                        <th>No. Resi</th>
+                        <th>Ekspedisi</th>
+                    </tr>
+                </thead>
+                <tbody id="historyBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal Input Manual -->
+    <div class="modal-overlay" id="manualModal">
+        <div class="modal-box">
+            <h3>Input Resi Manual</h3>
+            <input type="text" id="manualResi" placeholder="Ketik atau scan nomor resi...">
+            <div class="modal-btns">
+                <button class="btn-cancel" onclick="toggleManualModal(false)">Batal</button>
+                <button class="btn-submit" id="manualBtn">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script>
+        function getTargetUrl() {
+            if (typeof APP_URL !== 'undefined') return APP_URL;
+            if (typeof CONFIG !== 'undefined' && CONFIG.APP_URL) return CONFIG.APP_URL;
+            return null;
+        }
+
+        window.onload = function() { 
+            muatDataDashboardAwal(); 
+        };
+
+        let html5QrCode = null;
+        let isProcessing = false;
+        let isCameraRunning = false;
+        
+        let localData = JSON.parse(localStorage.getItem('resi_offline_v2')) || [];
+        let scanHistory = JSON.parse(localStorage.getItem("scanHistory_v2") || "[]");
+        updateCounters();
+        renderHistory();
+
+        function beep(freq, duration){ 
+            try { 
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                const ctx = new AudioContext(); 
+                const osc = ctx.createOscillator(); 
+                osc.frequency.value = freq; 
+                osc.connect(ctx.destination); 
+                osc.start(); 
+                osc.stop(ctx.currentTime + duration);
+                setTimeout(() => ctx.close(), duration * 1000 + 100);
+            } catch(e){} 
+        }
+        function beepSuccess(){ beep(500, 0.08); }
+        function beepDuplicate(){ beep(350, 0.4); } 
+
+        function robotBicara(teks) { 
+            if ('speechSynthesis' in window) { 
+                window.speechSynthesis.cancel(); 
+                let tts = new SpeechSynthesisUtterance(teks); 
+                tts.lang = 'id-ID'; 
+                tts.rate = 1.1; 
+                window.speechSynthesis.speak(tts); 
+            } 
+        }
+
+        function setLampuBca(warna, pesan) { 
+            const indikator = document.getElementById('bca-indicator'); 
+            document.getElementById('status-message').innerText = pesan; 
+            if(warna === 'ijo') indikator.style.backgroundColor = '#00cc44'; 
+            if(warna === 'kuning') indikator.style.backgroundColor = '#ffcc00'; 
+            if(warna === 'merah') indikator.style.backgroundColor = '#ff3333'; 
+        }
+
+        function showNotif(text, type){ 
+            const n = document.getElementById("notif"); 
+            n.style.display = "block"; 
+            n.className = type === "warning" ? "notif-banner warning" : "notif-banner success"; 
+            n.innerHTML = text; 
+            setTimeout(()=>{ n.style.display="none"; }, 2000); 
+        }
+
+        function updateCounters() {
+            document.getElementById('local-slot').innerText = localData.length;
+            document.getElementById('sync-count').innerText = localData.length;
+            document.getElementById('history-count').innerText = localData.length;
+        }
+
+        function muatDataDashboardAwal() {
+            let url = getTargetUrl();
+            if (!url) return;
+            fetch(`${url}?action=getDashboard`)
+            .then(res => res.json())
+            .then(data => { 
+                if(data.status === 'success') { 
+                    document.getElementById('load-hari-ini').innerText = data.hariIni; 
+                    document.getElementById('load-kemarin').innerText = data.kemarin; 
+                    document.getElementById('load-minggu').innerText = data.mingguIni; 
+                } 
+            }).catch(e => {});
+        }
+
+        // --- LOGIKA PUSH-TO-SCAN (TEKAN & TAHAN) ---
+        const holdBtn = document.getElementById("holdScanBtn");
+
+        function mulaiScan() {
+            if (isCameraRunning) return;
+            isCameraRunning = true;
+            holdBtn.classList.add('active');
+            holdBtn.innerText = "🔴 LEPASKAN UNTUK BERHENTI";
+
+            if (!html5QrCode) {
+                html5QrCode = new Html5Qrcode("reader");
+            }
+            
+            html5QrCode.start(
+                { facingMode: "environment" }, 
+                { fps: 15, qrbox: 220 }, 
+                (decodedText) => { 
+                    if(!isProcessing) { 
+                        isProcessing = true; 
+                        simpanLokal(decodedText.trim()); 
+                        setTimeout(() => { isProcessing = false; }, 1000);
+                    } 
+                }
+            ).then(() => { 
+                setLampuBca('ijo', 'Kamera Aktif - Silakan Scan'); 
+            }).catch(err => { 
+                setLampuBca('merah', 'Kamera Gagal');
+                isCameraRunning = false;
+                holdBtn.classList.remove('active');
+                holdBtn.innerText = "📷 TAHAN UNTUK SCAN";
+            });
+        }
+
+        function berhentiScan() {
+            if (!isCameraRunning) return;
+            isCameraRunning = false;
+            holdBtn.classList.remove('active');
+            holdBtn.innerText = "📷 TAHAN UNTUK SCAN";
+
+            if (html5QrCode) {
+                html5QrCode.stop().then(() => {
+                    setLampuBca('kuning', 'Scanner Berhenti');
+                }).catch(err => {
+                    // Abaikan error jika sudah berhenti
+                });
+            }
+        }
+
+        // Event Listener Tombol Tekan & Tahan
+        holdBtn.addEventListener("touchstart", (e) => { e.preventDefault(); mulaiScan(); });
+        holdBtn.addEventListener("touchend", (e) => { e.preventDefault(); berhentiScan(); });
+        holdBtn.addEventListener("mousedown", (e) => { e.preventDefault(); mulaiScan(); });
+        holdBtn.addEventListener("mouseup", (e) => { e.preventDefault(); berhentiScan(); });
+        holdBtn.addEventListener("mouseleave", (e) => { berhentiScan(); });
+
+        function toggleDrawer() {
+            const drawer = document.getElementById("bottomDrawer");
+            const arrow = document.getElementById("drawerArrow");
+            drawer.classList.toggle("open");
+            arrow.innerText = drawer.classList.contains("open") ? "▲" : "▼";
+        }
+
+        function toggleManualModal(show) {
+            const modal = document.getElementById("manualModal");
+            modal.style.display = show ? "flex" : "none";
+            if (show) {
+                setTimeout(() => document.getElementById("manualResi").focus(), 100);
+            }
+        }
+
+        document.getElementById("manualBtn").onclick = function() {
+            const input = document.getElementById("manualResi");
+            const val = input.value.trim();
+            if(!val) return;
+            simpanLokal(val);
+            input.value = "";
+            toggleManualModal(false);
+        };
+
+        document.getElementById("manualResi").addEventListener("keypress", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                document.getElementById("manualBtn").click();
             }
         });
-    }
 
-    function stopScanner() {
-        btn.classList.remove('active');
-        statusMsg.innerText = "Tekan & Tahan tombol di bawah untuk scan.";
-        html5QrCode.stop();
-    }
+        function simpanLokal(resi) {
+            let resiUpper = resi.toUpperCase();
+            
+            let ekspedisiLabel = (resiUpper.startsWith("SPX") || resiUpper.startsWith("SPXID")) ? "SPX" : "Je En Te";
+            let suaraEkspedisi = (ekspedisiLabel === "SPX") ? "S P X" : "Je En Te";
 
-    function handleScan(resi) {
-        if (localData.includes(resi)) {
-            statusMsg.innerText = "Resi sudah ada di antrean!";
-        } else {
-            localData.push(resi);
-            localStorage.setItem('resi_data', JSON.stringify(localData));
-            document.getElementById('sync-count').innerText = localData.length;
-            statusMsg.innerText = "Sukses: " + resi;
+            let isDuplicate = localData.includes(resi);
+
+            if (isDuplicate) {
+                beepDuplicate();
+                setLampuBca('merah', 'Dobel di HP!');
+                robotBicara("Dobel");
+                showNotif("⚠ RESI DOBEL (SUDAH ADA DI ANTREAN)", "warning");
+            } else {
+                beepSuccess();
+                setLampuBca('ijo', `Tersimpan! ${ekspedisiLabel}`);
+                robotBicara(`${suaraEkspedisi}, SUKSES.`);
+                showNotif("✓ TERSIMPAN LOKAL", "success");
+
+                localData.push(resi);
+                localStorage.setItem('resi_offline_v2', JSON.stringify(localData));
+
+                scanHistory.unshift({ resi, display: ekspedisiLabel });
+                localStorage.setItem("scanHistory_v2", JSON.stringify(scanHistory.slice(0, 100)));
+            }
+
+            updateCounters();
+            renderHistory();
         }
-        setTimeout(() => isProcessing = false, 1000);
-    }
 
-    // Event Listener Push-to-Scan
-    btn.addEventListener("touchstart", (e) => { e.preventDefault(); startScanner(); });
-    btn.addEventListener("touchend", (e) => { e.preventDefault(); stopScanner(); });
-    btn.addEventListener("mousedown", startScanner);
-    btn.addEventListener("mouseup", stopScanner);
+        function renderHistory(){ 
+            const body = document.getElementById("historyBody"); 
+            body.innerHTML = ""; 
+            
+            let currentAntrean = scanHistory.filter(item => localData.includes(item.resi));
+            
+            if(currentAntrean.length === 0) {
+                body.innerHTML = `<tr><td colspan="2" style="text-align:center; color:#94a3b8; padding: 15px;">Belum ada antrean resi baru.</td></tr>`;
+                return;
+            }
 
-    async function syncKeServer() {
-        if(localData.length === 0) return alert("Antrean kosong");
-        statusMsg.innerText = "Sinkronisasi sedang berjalan...";
-        
-        for (let resi of localData) {
-            try {
-                let res = await fetch(APP_URL, { 
-                    method: "POST", 
-                    mode: "cors", 
-                    body: JSON.stringify({ resi: resi, source: "pengiriman" }) 
-                });
-                let data = await res.json();
-                if(data.status === "success") {
-                    localData = localData.filter(r => r !== resi);
+            currentAntrean.slice(0, 20).forEach(item => { 
+                let badge = "badge-keluar"; 
+                body.innerHTML += `<tr><td style="font-weight:600;">${item.resi}</td><td><span class="badge ${badge}">${item.display}</span></td></tr>`; 
+            }); 
+        }
+
+        function downloadOfflineData() { 
+            if(localData.length === 0) {
+                alert("Belum ada data tersimpan.");
+                return;
+            }
+            let blob = new Blob([localData.join("\n")], { type: "text/plain" }); 
+            let a = document.createElement("a"); 
+            a.href = URL.createObjectURL(blob); 
+            a.download = "data_scan_offline.txt"; 
+            a.click(); 
+        }
+
+        function clearDataLokal() {
+            if(confirm("Hapus semua data scan lokal di HP?")) {
+                localStorage.removeItem('resi_offline_v2');
+                localStorage.removeItem('scanHistory_v2');
+                localData = [];
+                scanHistory = [];
+                updateCounters();
+                renderHistory();
+                setLampuBca('ijo', 'Data bersih!');
+                robotBicara("Bersih");
+            }
+        }
+
+        async function syncKeServer() {
+            if(localData.length === 0) {
+                alert("Tidak ada data untuk disinkronkan.");
+                return;
+            }
+            
+            let url = getTargetUrl();
+            if(!url) {
+                alert("URL Apps Script belum diatur di config.js!");
+                return;
+            }
+
+            if(!confirm(`Akan menyinkronkan ${localData.length} data ke Google Sheet. Lanjutkan?`)) return;
+
+            setLampuBca('kuning', `Memulai Sync (0/${localData.length})...`);
+            robotBicara("Memulai sinkronisasi data.");
+
+            let suksesCount = 0;
+            let sisaData = [...localData];
+
+            for (let i = 0; i < localData.length; i++) {
+                let resi = localData[i];
+                setLampuBca('kuning', `Sync (${i+1}/${localData.length}): ${resi}`);
+
+                try {
+                    let r = await fetch(url, { 
+                        method: "POST", 
+                        mode: "cors", 
+                        headers: { "Content-Type": "text/plain;charset=utf-8" }, 
+                        body: JSON.stringify({ resi: resi, source: "pengiriman" }) 
+                    });
+                    
+                    let textRes = await r.text();
+                    let json = JSON.parse(textRes);
+
+                    if(json.status === "success" || json.status === "duplicate") {
+                        suksesCount++;
+                        sisaData = sisaData.filter(item => item !== resi);
+                    }
+                } catch(innerErr) {
+                    break;
                 }
-            } catch(e) {}
+
+                await new Promise(resolve => setTimeout(resolve, 300));
+            }
+
+            localData = sisaData;
+            if(localData.length === 0) {
+                localStorage.removeItem('resi_offline_v2');
+            } else {
+                localStorage.setItem('resi_offline_v2', JSON.stringify(localData));
+            }
+            
+            updateCounters();
+            renderHistory();
+
+            if(suksesCount > 0) {
+                setLampuBca('ijo', `Sync Selesai (${suksesCount} terkirim)!`);
+                robotBicara("Sinkronisasi selesai.");
+                alert(`Berhasil mengirim ${suksesCount} data ke Google Sheet!${localData.length > 0 ? '\nSisa data gagal terkirim tetap tersimpan di HP.' : ''}`);
+            } else {
+                setLampuBca('merah', 'Sync Gagal (Cek Koneksi)');
+                robotBicara("Gagal sinkronisasi.");
+                alert("Gagal mengirim data. Pastikan koneksi internet stabil dan URL Apps Script benar.");
+            }
         }
-        localStorage.setItem('resi_data', JSON.stringify(localData));
-        document.getElementById('sync-count').innerText = localData.length;
-        statusMsg.innerText = "Sinkronisasi selesai.";
-    }
-</script>
+    </script>
 </body>
 </html>
