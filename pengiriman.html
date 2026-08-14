@@ -1,22 +1,43 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+>
 
 <title>SRF - Pengiriman</title>
 
-<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+<script
+    src="https://unpkg.com/html5-qrcode"
+    type="text/javascript">
+</script>
 
 <style>
+
+/* =========================================================
+   RESET
+========================================================= */
+
 *{
     box-sizing:border-box;
     margin:0;
     padding:0;
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
 }
 
-html,body{
+html,
+body{
     width:100%;
     height:100%;
     overflow:hidden;
@@ -28,23 +49,30 @@ body{
     flex-direction:column;
 }
 
-/* ================= HEADER ================= */
+
+/* =========================================================
+   HEADER
+========================================================= */
 
 .header{
     height:52px;
     flex-shrink:0;
+
     background:#1e293b;
     color:white;
+
     display:flex;
     align-items:center;
     justify-content:space-between;
+
     padding:0 10px;
-    z-index:20;
+
+    z-index:50;
 }
 
 .header-title{
     font-size:15px;
-    font-weight:700;
+    font-weight:800;
 }
 
 .header-actions{
@@ -55,11 +83,16 @@ body{
 .header-btn{
     border:0;
     color:white;
+
     padding:7px 9px;
+
     border-radius:6px;
+
     font-size:11px;
-    font-weight:700;
+    font-weight:800;
+
     cursor:pointer;
+    touch-action:manipulation;
 }
 
 .refresh{
@@ -74,16 +107,22 @@ body{
     background:#2563eb;
 }
 
-/* ================= STATS ================= */
+
+/* =========================================================
+   STATS
+========================================================= */
 
 .stats{
     height:52px;
     flex-shrink:0;
+
     background:#334155;
     color:white;
+
     display:flex;
     justify-content:space-around;
     align-items:center;
+
     text-align:center;
 }
 
@@ -94,36 +133,50 @@ body{
 
 .stat strong{
     display:block;
+
     color:#38bdf8;
+
     font-size:16px;
+
     margin-top:1px;
 }
 
-/* ================= SCANNER ================= */
+
+/* =========================================================
+   SCANNER
+========================================================= */
 
 .scanner{
     position:relative;
+
     flex:1;
     min-height:0;
+
     background:#000;
+
     overflow:hidden;
 }
 
 #reader{
     position:absolute;
+
     inset:0;
+
     width:100%!important;
     height:100%!important;
+
     border:0!important;
+
+    background:#000;
 }
 
 #reader video{
     width:100%!important;
     height:100%!important;
+
     object-fit:cover!important;
 }
 
-/* hilangkan UI bawaan html5-qrcode yang mengganggu */
 #reader img{
     display:none!important;
 }
@@ -137,23 +190,31 @@ body{
     height:100%!important;
 }
 
-/* ================= STATUS ================= */
+
+/* =========================================================
+   STATUS
+========================================================= */
 
 .status-box{
     position:absolute;
+
     top:12px;
     left:12px;
     right:12px;
-    z-index:10;
+
+    z-index:20;
 
     background:rgba(15,23,42,.88);
+
     backdrop-filter:blur(8px);
 
     border-radius:10px;
+
     padding:10px 12px;
 
     display:flex;
     align-items:center;
+
     gap:9px;
 
     color:white;
@@ -162,37 +223,51 @@ body{
 .lamp{
     width:13px;
     height:13px;
+
     min-width:13px;
+
     border-radius:50%;
+
     background:#facc15;
+
     box-shadow:0 0 10px currentColor;
 }
 
 .status-text{
     font-size:13px;
-    font-weight:600;
+    font-weight:700;
+
     overflow:hidden;
+
     white-space:nowrap;
+
     text-overflow:ellipsis;
 }
 
-/* ================= NOTIF ================= */
+
+/* =========================================================
+   NOTIFICATION
+========================================================= */
 
 .notif{
     position:absolute;
+
     top:75px;
     left:50%;
+
     transform:translateX(-50%);
 
-    z-index:30;
+    z-index:40;
 
     padding:10px 18px;
+
     border-radius:25px;
 
     font-size:13px;
     font-weight:800;
 
     display:none;
+
     white-space:nowrap;
 
     box-shadow:0 5px 15px rgba(0,0,0,.35);
@@ -213,34 +288,47 @@ body{
     color:white;
 }
 
-/* ================= SCAN BUTTON ================= */
+
+/* =========================================================
+   SCAN BUTTON
+========================================================= */
 
 .scan-area{
     position:absolute;
+
     left:14px;
     right:14px;
+
     bottom:14px;
 
-    z-index:15;
+    z-index:30;
 }
 
 .scan-button{
     width:100%;
-    height:56px;
+
+    height:58px;
 
     border:0;
+
     border-radius:30px;
 
     background:#334155;
+
     color:white;
 
     font-size:15px;
-    font-weight:800;
+    font-weight:900;
 
-    box-shadow:0 5px 15px rgba(0,0,0,.45);
+    box-shadow:
+        0 5px 15px rgba(0,0,0,.45);
 
     cursor:pointer;
+
     touch-action:none;
+
+    user-select:none;
+    -webkit-user-select:none;
 }
 
 .scan-button.active{
@@ -251,51 +339,36 @@ body{
     transform:scale(.98);
 }
 
-/* ================= MANUAL ================= */
 
-.manual-button{
-    position:absolute;
-    right:15px;
-    bottom:86px;
-
-    width:50px;
-    height:50px;
-
-    border:0;
-    border-radius:50%;
-
-    background:#2563eb;
-    color:white;
-
-    font-size:20px;
-
-    z-index:15;
-
-    box-shadow:0 5px 12px rgba(0,0,0,.4);
-}
-
-/* ================= DRAWER ================= */
+/* =========================================================
+   DRAWER ANTREAN
+========================================================= */
 
 .drawer{
     position:absolute;
+
     left:0;
     right:0;
     bottom:0;
 
     height:52vh;
+
     max-height:430px;
 
     background:white;
 
     border-radius:17px 17px 0 0;
 
-    z-index:25;
+    z-index:35;
 
-    transform:translateY(calc(100% - 48px));
+    transform:
+        translateY(calc(100% - 48px));
 
-    transition:transform .25s ease;
+    transition:
+        transform .25s ease;
 
-    box-shadow:0 -5px 20px rgba(0,0,0,.25);
+    box-shadow:
+        0 -5px 20px rgba(0,0,0,.25);
 
     display:flex;
     flex-direction:column;
@@ -307,9 +380,11 @@ body{
 
 .drawer-header{
     height:48px;
+
     flex-shrink:0;
 
     display:flex;
+
     align-items:center;
     justify-content:space-between;
 
@@ -319,43 +394,70 @@ body{
 
     border-radius:17px 17px 0 0;
 
-    font-size:13px;
-    font-weight:800;
+    font-size:12px;
+
+    font-weight:900;
 
     cursor:pointer;
+
+    user-select:none;
 }
 
 .drawer-content{
     flex:1;
+
     overflow:auto;
+
     padding:8px 12px;
 }
 
+
+/* =========================================================
+   TABLE
+========================================================= */
+
 table{
     width:100%;
+
     border-collapse:collapse;
+
     font-size:12px;
 }
 
 th{
     background:#f8fafc;
+
     color:#64748b;
+
     text-align:left;
+
     padding:9px;
+
     position:sticky;
+
     top:0;
+
+    z-index:2;
 }
 
 td{
     padding:9px;
-    border-bottom:1px solid #e2e8f0;
+
+    border-bottom:
+        1px solid #e2e8f0;
+
+    word-break:break-all;
 }
 
 .badge{
     display:inline-block;
+
     padding:3px 7px;
+
     border-radius:5px;
+
     font-size:10px;
+
     font-weight:800;
 }
 
@@ -369,78 +471,10 @@ td{
     color:#166534;
 }
 
-/* ================= MODAL ================= */
 
-.modal{
-    position:fixed;
-    inset:0;
-
-    background:rgba(0,0,0,.65);
-    backdrop-filter:blur(3px);
-
-    z-index:100;
-
-    display:none;
-    align-items:center;
-    justify-content:center;
-
-    padding:20px;
-}
-
-.modal.show{
-    display:flex;
-}
-
-.modal-box{
-    width:100%;
-    max-width:330px;
-
-    background:white;
-
-    border-radius:14px;
-    padding:20px;
-}
-
-.modal-box h3{
-    font-size:16px;
-    margin-bottom:13px;
-}
-
-.modal-box input{
-    width:100%;
-    padding:12px;
-
-    border:1px solid #cbd5e1;
-    border-radius:8px;
-
-    outline:none;
-    font-size:14px;
-}
-
-.modal-buttons{
-    display:flex;
-    justify-content:flex-end;
-    gap:8px;
-    margin-top:15px;
-}
-
-.modal-buttons button{
-    border:0;
-    border-radius:7px;
-    padding:9px 14px;
-    font-weight:700;
-}
-
-.cancel{
-    background:#e2e8f0;
-}
-
-.save{
-    background:#2563eb;
-    color:white;
-}
-
-/* ================= RESPONSIVE ================= */
+/* =========================================================
+   MOBILE
+========================================================= */
 
 @media(max-width:380px){
 
@@ -458,169 +492,102 @@ td{
     }
 
     .scan-button{
-        height:52px;
+        height:54px;
         font-size:14px;
     }
+
 }
+
 </style>
+
 </head>
+
 
 <body>
 
-<!-- ================= HEADER ================= -->
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
 
 <header class="header">
 
     <div class="header-title">
+
         SRF • Pengiriman
+
     </div>
+
 
     <div class="header-actions">
 
-        <button class="header-btn refresh" onclick="refreshApp()">
+        <button
+            class="header-btn refresh"
+            onclick="refreshApp()">
+
             ↻ Refresh
+
         </button>
 
-        <button class="header-btn sync" onclick="syncKeServer()">
-            ☁ Sync <span id="syncCount">0</span>
+
+        <button
+            class="header-btn sync"
+            onclick="syncKeServer()">
+
+            ☁ Sync
+            <span id="syncCount">0</span>
+
         </button>
 
-        <button class="header-btn clear" onclick="clearLocal()">
+
+        <button
+            class="header-btn clear"
+            onclick="clearLocal()">
+
             Clear
+
         </button>
 
     </div>
 
 </header>
 
-<!-- ================= STATS ================= -->
+
+<!-- =========================================================
+     DASHBOARD
+========================================================= -->
 
 <div class="stats">
 
     <div class="stat">
+
         Hari Ini
-        <strong id="hariIni">0</strong>
+
+        <strong id="hariIni">
+            0
+        </strong>
+
     </div>
 
+
     <div class="stat">
+
         Kemarin
-        <strong id="kemarin">0</strong>
+
+        <strong id="kemarin">
+            0
+        </strong>
+
     </div>
+
 
     <div class="stat">
+
         Minggu Ini
-        <strong id="mingguIni">0</strong>
-    </div>
 
-</div>
-
-<!-- ================= SCANNER ================= -->
-
-<div class="scanner">
-
-    <div id="reader"></div>
-
-    <div class="status-box">
-
-        <div id="lamp" class="lamp"></div>
-
-        <div id="statusText" class="status-text">
-            Tekan dan tahan untuk mulai scan
-        </div>
-
-    </div>
-
-    <div id="notif" class="notif"></div>
-
-    <!-- Manual -->
-    <button
-        class="manual-button"
-        onclick="openManual()"
-        title="Input manual">
-        ⌨
-    </button>
-
-    <!-- Tombol scan -->
-    <div class="scan-area">
-
-        <button
-            id="scanButton"
-            class="scan-button">
-
-            📷 TAHAN UNTUK SCAN
-
-        </button>
-
-    </div>
-
-</div>
-
-<!-- ================= DRAWER ================= -->
-
-<div id="drawer" class="drawer">
-
-    <div
-        class="drawer-header"
-        onclick="toggleDrawer()">
-
-        <span>
-            Antrean Belum Sinkron
-            (<span id="queueCount">0</span>)
-        </span>
-
-        <span id="drawerArrow">
-            ▲
-        </span>
-
-    </div>
-
-    <div class="drawer-content">
-
-        <table>
-
-            <thead>
-                <tr>
-                    <th>Resi</th>
-                    <th>Ekspedisi</th>
-                </tr>
-            </thead>
-
-            <tbody id="historyBody"></tbody>
-
-        </table>
-
-    </div>
-
-</div>
-
-<!-- ================= MODAL MANUAL ================= -->
-
-<div id="manualModal" class="modal">
-
-    <div class="modal-box">
-
-        <h3>Input Resi Manual</h3>
-
-        <input
-            id="manualInput"
-            type="text"
-            placeholder="Masukkan nomor resi">
-
-        <div class="modal-buttons">
-
-            <button
-                class="cancel"
-                onclick="closeManual()">
-                Batal
-            </button>
-
-            <button
-                class="save"
-                onclick="saveManual()">
-                Simpan
-            </button>
-
-        </div>
+        <strong id="mingguIni">
+            0
+        </strong>
 
     </div>
 
@@ -628,40 +595,287 @@ td{
 
 
 <!-- =========================================================
-     PENTING:
-     CONFIG DARI FILE config.js TETAP DIPAKAI
+     SCANNER
+========================================================= -->
+
+<div class="scanner">
+
+
+    <div id="reader"></div>
+
+
+    <!-- STATUS -->
+
+    <div class="status-box">
+
+        <div
+            id="lamp"
+            class="lamp">
+        </div>
+
+
+        <div
+            id="statusText"
+            class="status-text">
+
+            Tekan dan tahan untuk mulai scan
+
+        </div>
+
+    </div>
+
+
+    <!-- NOTIF -->
+
+    <div
+        id="notif"
+        class="notif">
+    </div>
+
+
+    <!-- SCAN BUTTON -->
+
+    <div class="scan-area">
+
+        <button
+            id="scanButton"
+            class="scan-button">
+
+            TAHAN UNTUK SCAN
+
+        </button>
+
+    </div>
+
+
+    <!-- =====================================================
+         ANTREAN
+    ====================================================== -->
+
+    <div
+        id="drawer"
+        class="drawer">
+
+
+        <div
+            class="drawer-header"
+            onclick="toggleDrawer()">
+
+
+            <span>
+
+                ANTREAN BELUM SINKRON
+                (<span id="queueCount">0</span>)
+
+            </span>
+
+
+            <span id="drawerArrow">
+
+                ▲
+
+            </span>
+
+        </div>
+
+
+        <div class="drawer-content">
+
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Resi
+                        </th>
+
+                        <th>
+                            Ekspedisi
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody
+                    id="historyBody">
+                </tbody>
+
+            </table>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+<!-- =========================================================
+     CONFIG
 ========================================================= -->
 
 <script src="config.js"></script>
 
+
 <script>
+
+
+/* =========================================================
+   ROBOT CONFIG
+   =========================================================
+
+   SEMUA SUARA ROBOT DIATUR DI SINI.
+
+   Bahasa DIKUNCI ke Indonesia:
+   id-ID
+
+   Tidak ada pilihan bahasa lain.
+
+========================================================= */
+
+const ROBOT_CONFIG = {
+
+    enabled:true,
+
+    language:"id-ID",
+
+    rate:1.15,
+
+    pitch:1.0,
+
+    volume:1.0,
+
+
+    /* =====================================================
+       HASIL SCAN
+    ===================================================== */
+
+    scanSuccessJNT:
+        "J&T berhasil",
+
+    scanSuccessSPX:
+        "S P X berhasil",
+
+
+    /* =====================================================
+       RESI DOUBLE
+
+       Pilihan teks yang bisa kamu ubah:
+
+       "Resi double"
+       "Scan ulang"
+       "Resi sudah terdaftar"
+
+    ===================================================== */
+
+    scanDouble:
+        "Resi double",
+
+
+    /* =====================================================
+       RESI TIDAK DIKENAL
+    ===================================================== */
+
+    unknownResi:
+        "Resi tidak dikenal",
+
+
+    /* =====================================================
+       KAMERA
+    ===================================================== */
+
+    cameraStarting:
+        "Menyalakan kamera",
+
+    cameraReady:
+        "Kamera siap scan",
+
+    cameraStopped:
+        "Scanner berhenti",
+
+    cameraError:
+        "Kamera gagal dibuka",
+
+
+    /* =====================================================
+       SYNC
+    ===================================================== */
+
+    syncSuccess:
+        "Sinkronisasi berhasil",
+
+    syncEmpty:
+        "Antrean kosong",
+
+    syncFailed:
+        "Sinkronisasi gagal",
+
+    syncNoResult:
+        "Tidak ada resi yang berhasil disinkronkan",
+
+
+    /* =====================================================
+       ANTREAN
+    ===================================================== */
+
+    queueAdded:
+        "Resi masuk antrean",
+
+    queueCleared:
+        "Antrean dibersihkan"
+
+};
+
 
 /* =========================================================
    CONFIG READER
-
-   Mendukung:
-   1. const APP_URL = "..."
-   2. const CONFIG = { APP_URL:"..." }
 ========================================================= */
 
 function getTargetUrl(){
 
-    if(
-        typeof APP_URL !== "undefined" &&
-        APP_URL
-    ){
-        return String(APP_URL).trim();
+    try{
+
+        if(
+            typeof APP_URL !== "undefined" &&
+            APP_URL
+        ){
+
+            return String(APP_URL).trim();
+
+        }
+
+
+        if(
+            typeof CONFIG !== "undefined" &&
+            CONFIG &&
+            CONFIG.APP_URL
+        ){
+
+            return String(
+                CONFIG.APP_URL
+            ).trim();
+
+        }
+
+    }catch(e){
+
+        console.error(
+            "CONFIG ERROR:",
+            e
+        );
+
     }
 
-    if(
-        typeof CONFIG !== "undefined" &&
-        CONFIG &&
-        CONFIG.APP_URL
-    ){
-        return String(CONFIG.APP_URL).trim();
-    }
 
     return "";
+
 }
 
 
@@ -669,20 +883,48 @@ function getTargetUrl(){
    STORAGE
 ========================================================= */
 
-const STORAGE_DATA = "srf_pengiriman_queue_v3";
+const STORAGE_DATA =
+    "srf_pengiriman_queue_v3";
 
-const STORAGE_HISTORY = "srf_pengiriman_history_v3";
+const STORAGE_HISTORY =
+    "srf_pengiriman_history_v3";
 
 
-let localData =
-    JSON.parse(
-        localStorage.getItem(STORAGE_DATA) || "[]"
-    );
+let localData = [];
 
-let scanHistory =
-    JSON.parse(
-        localStorage.getItem(STORAGE_HISTORY) || "[]"
-    );
+let scanHistory = [];
+
+
+try{
+
+    localData =
+        JSON.parse(
+            localStorage.getItem(
+                STORAGE_DATA
+            ) || "[]"
+        );
+
+}catch(e){
+
+    localData = [];
+
+}
+
+
+try{
+
+    scanHistory =
+        JSON.parse(
+            localStorage.getItem(
+                STORAGE_HISTORY
+            ) || "[]"
+        );
+
+}catch(e){
+
+    scanHistory = [];
+
+}
 
 
 /* =========================================================
@@ -700,15 +942,23 @@ let processing = false;
    INIT
 ========================================================= */
 
-window.addEventListener("load", function(){
+window.addEventListener(
+    "load",
+    function(){
 
-    updateUI();
+        updateUI();
 
-    renderHistory();
+        renderHistory();
 
-    loadDashboard();
+        loadDashboard();
 
-});
+        setStatus(
+            "yellow",
+            "Scanner siap"
+        );
+
+    }
+);
 
 
 /* =========================================================
@@ -717,82 +967,132 @@ window.addEventListener("load", function(){
 
 function updateUI(){
 
-    document.getElementById("syncCount").innerText =
+    document.getElementById(
+        "syncCount"
+    ).innerText =
         localData.length;
 
-    document.getElementById("queueCount").innerText =
+
+    document.getElementById(
+        "queueCount"
+    ).innerText =
         localData.length;
-
-}
-
-
-function setStatus(type,text){
-
-    const lamp =
-        document.getElementById("lamp");
-
-    const status =
-        document.getElementById("statusText");
-
-
-    status.innerText = text;
-
-
-    if(type === "green"){
-
-        lamp.style.background = "#22c55e";
-        lamp.style.color = "#22c55e";
-
-    }
-
-    else if(type === "red"){
-
-        lamp.style.background = "#ef4444";
-        lamp.style.color = "#ef4444";
-
-    }
-
-    else{
-
-        lamp.style.background = "#facc15";
-        lamp.style.color = "#facc15";
-
-    }
-
-}
-
-
-function showNotif(text,type="success"){
-
-    const el =
-        document.getElementById("notif");
-
-
-    el.innerText = text;
-
-    el.className =
-        "notif " + type;
-
-    el.style.display = "block";
-
-
-    clearTimeout(window.notifTimer);
-
-    window.notifTimer =
-        setTimeout(function(){
-
-            el.style.display = "none";
-
-        },1800);
 
 }
 
 
 /* =========================================================
-   SOUND
+   STATUS
 ========================================================= */
 
-function beep(freq=600,duration=.08){
+function setStatus(
+    type,
+    text
+){
+
+    const lamp =
+        document.getElementById(
+            "lamp"
+        );
+
+
+    const status =
+        document.getElementById(
+            "statusText"
+        );
+
+
+    status.innerText =
+        text;
+
+
+    if(type === "green"){
+
+        lamp.style.background =
+            "#22c55e";
+
+        lamp.style.color =
+            "#22c55e";
+
+    }
+
+    else if(type === "red"){
+
+        lamp.style.background =
+            "#ef4444";
+
+        lamp.style.color =
+            "#ef4444";
+
+    }
+
+    else{
+
+        lamp.style.background =
+            "#facc15";
+
+        lamp.style.color =
+            "#facc15";
+
+    }
+
+}
+
+
+/* =========================================================
+   NOTIFICATION
+========================================================= */
+
+function showNotif(
+    text,
+    type="success"
+){
+
+    const el =
+        document.getElementById(
+            "notif"
+        );
+
+
+    el.innerText =
+        text;
+
+
+    el.className =
+        "notif " + type;
+
+
+    el.style.display =
+        "block";
+
+
+    clearTimeout(
+        window.notifTimer
+    );
+
+
+    window.notifTimer =
+        setTimeout(
+            function(){
+
+                el.style.display =
+                    "none";
+
+            },
+            1800
+        );
+
+}
+
+
+/* =========================================================
+   BEEP
+========================================================= */
+
+function beep(
+    freq=600,
+    duration=.08
+){
 
     try{
 
@@ -800,21 +1100,30 @@ function beep(freq=600,duration=.08){
             window.AudioContext ||
             window.webkitAudioContext;
 
+
         const ctx =
             new AudioContext();
+
 
         const osc =
             ctx.createOscillator();
 
+
         osc.frequency.value =
             freq;
 
-        osc.connect(ctx.destination);
+
+        osc.connect(
+            ctx.destination
+        );
+
 
         osc.start();
 
+
         osc.stop(
-            ctx.currentTime + duration
+            ctx.currentTime +
+            duration
         );
 
     }catch(e){}
@@ -823,52 +1132,72 @@ function beep(freq=600,duration=.08){
 
 
 /* =========================================================
-   TTS
-   Nanti karakter/bahasa bisa kamu ubah di sini
+   ROBOT BICARA
 ========================================================= */
-
-const VOICE_CONFIG = {
-
-    enabled:true,
-
-    lang:"id-ID",
-
-    rate:1.15,
-
-    pitch:1.0,
-
-    volume:1.0
-
-};
-
 
 function speak(text){
 
-    if(!VOICE_CONFIG.enabled) return;
+    if(
+        !ROBOT_CONFIG.enabled
+    ){
 
-    if(!("speechSynthesis" in window)) return;
+        return;
 
-
-    speechSynthesis.cancel();
-
-
-    const voice =
-        new SpeechSynthesisUtterance(text);
-
-    voice.lang =
-        VOICE_CONFIG.lang;
-
-    voice.rate =
-        VOICE_CONFIG.rate;
-
-    voice.pitch =
-        VOICE_CONFIG.pitch;
-
-    voice.volume =
-        VOICE_CONFIG.volume;
+    }
 
 
-    speechSynthesis.speak(voice);
+    if(
+        !("speechSynthesis" in window)
+    ){
+
+        return;
+
+    }
+
+
+    try{
+
+        speechSynthesis.cancel();
+
+
+        const voice =
+            new SpeechSynthesisUtterance(
+                text
+            );
+
+
+        /* =================================================
+           BAHASA DIKUNCI INDONESIA
+        ================================================= */
+
+        voice.lang =
+            "id-ID";
+
+
+        voice.rate =
+            ROBOT_CONFIG.rate;
+
+
+        voice.pitch =
+            ROBOT_CONFIG.pitch;
+
+
+        voice.volume =
+            ROBOT_CONFIG.volume;
+
+
+        speechSynthesis.speak(
+            voice
+        );
+
+    }catch(e){
+
+        console.error(
+            "VOICE ERROR:",
+            e
+        );
+
+    }
 
 }
 
@@ -880,12 +1209,17 @@ function speak(text){
 function getEkspedisi(resi){
 
     const r =
-        resi.toUpperCase();
+        String(resi)
+        .trim()
+        .toUpperCase();
 
+
+    /* =====================================================
+       SPX
+    ===================================================== */
 
     if(
-        r.startsWith("SPX") ||
-        r.startsWith("SPXID")
+        r.startsWith("SPX")
     ){
 
         return "SPX";
@@ -893,11 +1227,14 @@ function getEkspedisi(resi){
     }
 
 
+    /* =====================================================
+       J&T
+    ===================================================== */
+
     if(
         r.startsWith("JX") ||
         r.startsWith("JY") ||
-        r.startsWith("JZ") ||
-        /^\d+$/.test(r)
+        r.startsWith("JZ")
     ){
 
         return "J&T";
@@ -911,7 +1248,7 @@ function getEkspedisi(resi){
 
 
 /* =========================================================
-   SIMPAN RESI LOKAL
+   SIMPAN HASIL SCAN
 ========================================================= */
 
 function simpanLokal(resi){
@@ -922,71 +1259,107 @@ function simpanLokal(resi){
         .toUpperCase();
 
 
-    if(!resi) return;
+    if(!resi){
+
+        return false;
+
+    }
 
 
     const ekspedisi =
         getEkspedisi(resi);
 
 
+    /* =====================================================
+       RESI TIDAK DIKENAL
+    ===================================================== */
+
     if(!ekspedisi){
 
-        beep(250,.25);
+        beep(
+            250,
+            .25
+        );
+
 
         setStatus(
             "red",
             "Format resi tidak dikenal"
         );
 
+
         showNotif(
             "RESI TIDAK DIKENAL",
             "error"
         );
 
-        speak("Resi tidak dikenal");
 
-        return;
+        speak(
+            ROBOT_CONFIG.unknownResi
+        );
+
+
+        return false;
 
     }
 
 
-    /* =========================
-       CEK DOUBLE LOKAL
-    ========================= */
+    /* =====================================================
+       DOUBLE SCAN
+    ===================================================== */
 
-    if(localData.includes(resi)){
+    if(
+        localData.includes(resi)
+    ){
 
-        beep(300,.35);
+        beep(
+            300,
+            .35
+        );
+
 
         setStatus(
             "red",
-            "Resi sudah ada di antrean"
+            ROBOT_CONFIG.scanDouble
         );
 
+
         showNotif(
-            "RESI DOBEL",
+            "RESI DOUBLE",
             "warning"
         );
 
-        speak("Resi sudah ada");
 
-        return;
+        speak(
+            ROBOT_CONFIG.scanDouble
+        );
+
+
+        return false;
 
     }
 
 
-    /* =========================
-       SIMPAN
-    ========================= */
+    /* =====================================================
+       TAMBAH KE ANTREAN
+    ===================================================== */
 
-    localData.push(resi);
+    localData.push(
+        resi
+    );
 
 
     localStorage.setItem(
         STORAGE_DATA,
-        JSON.stringify(localData)
+        JSON.stringify(
+            localData
+        )
     );
 
+
+    /* =====================================================
+       HISTORY
+    ===================================================== */
 
     scanHistory.unshift({
 
@@ -994,47 +1367,79 @@ function simpanLokal(resi){
 
         ekspedisi:ekspedisi,
 
-        waktu:new Date().toISOString()
+        waktu:
+            new Date()
+            .toISOString()
 
     });
 
 
-    /* batasi history */
     scanHistory =
-        scanHistory.slice(0,200);
+        scanHistory.slice(
+            0,
+            200
+        );
 
 
     localStorage.setItem(
         STORAGE_HISTORY,
-        JSON.stringify(scanHistory)
+        JSON.stringify(
+            scanHistory
+        )
     );
 
 
-    beep(750,.08);
+    /* =====================================================
+       FEEDBACK
+    ===================================================== */
 
-
-    setStatus(
-        "green",
-        "Tersimpan • " + ekspedisi
+    beep(
+        750,
+        .08
     );
+
+
+    if(
+        ekspedisi === "SPX"
+    ){
+
+        setStatus(
+            "green",
+            "SPX berhasil"
+        );
+
+        speak(
+            ROBOT_CONFIG.scanSuccessSPX
+        );
+
+    }
+
+    else{
+
+        setStatus(
+            "green",
+            "J&T berhasil"
+        );
+
+        speak(
+            ROBOT_CONFIG.scanSuccessJNT
+        );
+
+    }
 
 
     showNotif(
-        "✓ RESI TERSIMPAN",
+        "RESI MASUK ANTREAN",
         "success"
-    );
-
-
-    speak(
-        ekspedisi === "SPX"
-        ? "S P X, berhasil"
-        : "J T, berhasil"
     );
 
 
     updateUI();
 
     renderHistory();
+
+
+    return true;
 
 }
 
@@ -1045,25 +1450,35 @@ function simpanLokal(resi){
 
 async function mulaiScan(){
 
-    if(cameraRunning) return;
+    if(cameraRunning){
+
+        return;
+
+    }
 
 
-    cameraRunning = true;
+    cameraRunning =
+        true;
 
 
     const btn =
-        document.getElementById("scanButton");
+        document.getElementById(
+            "scanButton"
+        );
 
 
-    btn.classList.add("active");
+    btn.classList.add(
+        "active"
+    );
+
 
     btn.innerText =
-        "🔴 LEPASKAN UNTUK BERHENTI";
+        "LEPASKAN UNTUK BERHENTI";
 
 
     setStatus(
         "yellow",
-        "Menyalakan kamera..."
+        ROBOT_CONFIG.cameraStarting
     );
 
 
@@ -1072,7 +1487,9 @@ async function mulaiScan(){
         if(!html5QrCode){
 
             html5QrCode =
-                new Html5Qrcode("reader");
+                new Html5Qrcode(
+                    "reader"
+                );
 
         }
 
@@ -1080,10 +1497,12 @@ async function mulaiScan(){
         await html5QrCode.start(
 
             {
-                facingMode:"environment"
+                facingMode:
+                    "environment"
             },
 
             {
+
                 fps:15,
 
                 qrbox:{
@@ -1091,26 +1510,39 @@ async function mulaiScan(){
                     height:180
                 },
 
-                aspectRatio:1.777778
+                aspectRatio:
+                    1.777778
 
             },
 
+
             function(decodedText){
 
-                if(processing) return;
+                if(processing){
+
+                    return;
+
+                }
 
 
-                processing = true;
+                processing =
+                    true;
 
 
-                simpanLokal(decodedText);
+                simpanLokal(
+                    decodedText
+                );
 
 
-                setTimeout(function(){
+                setTimeout(
+                    function(){
 
-                    processing = false;
+                        processing =
+                            false;
 
-                },1200);
+                    },
+                    1200
+                );
 
             }
 
@@ -1119,33 +1551,45 @@ async function mulaiScan(){
 
         setStatus(
             "green",
-            "Kamera aktif • siap scan"
+            ROBOT_CONFIG.cameraReady
         );
 
 
     }catch(error){
 
-        console.error(error);
+        console.error(
+            "CAMERA ERROR:",
+            error
+        );
 
 
-        cameraRunning = false;
+        cameraRunning =
+            false;
 
 
-        btn.classList.remove("active");
+        btn.classList.remove(
+            "active"
+        );
+
 
         btn.innerText =
-            "📷 TAHAN UNTUK SCAN";
+            "TAHAN UNTUK SCAN";
 
 
         setStatus(
             "red",
-            "Kamera gagal dibuka"
+            ROBOT_CONFIG.cameraError
         );
 
 
         showNotif(
             "IZINKAN AKSES KAMERA",
             "error"
+        );
+
+
+        speak(
+            ROBOT_CONFIG.cameraError
         );
 
     }
@@ -1159,20 +1603,30 @@ async function mulaiScan(){
 
 async function berhentiScan(){
 
-    if(!cameraRunning) return;
+    if(!cameraRunning){
+
+        return;
+
+    }
 
 
-    cameraRunning = false;
+    cameraRunning =
+        false;
 
 
     const btn =
-        document.getElementById("scanButton");
+        document.getElementById(
+            "scanButton"
+        );
 
 
-    btn.classList.remove("active");
+    btn.classList.remove(
+        "active"
+    );
+
 
     btn.innerText =
-        "📷 TAHAN UNTUK SCAN";
+        "TAHAN UNTUK SCAN";
 
 
     try{
@@ -1188,18 +1642,20 @@ async function berhentiScan(){
 
     setStatus(
         "yellow",
-        "Scanner berhenti"
+        ROBOT_CONFIG.cameraStopped
     );
 
 }
 
 
 /* =========================================================
-   HOLD BUTTON
+   HOLD SCAN BUTTON
 ========================================================= */
 
 const scanButton =
-    document.getElementById("scanButton");
+    document.getElementById(
+        "scanButton"
+    );
 
 
 scanButton.addEventListener(
@@ -1257,17 +1713,26 @@ scanButton.addEventListener(
 function toggleDrawer(){
 
     const drawer =
-        document.getElementById("drawer");
+        document.getElementById(
+            "drawer"
+        );
+
 
     const arrow =
-        document.getElementById("drawerArrow");
+        document.getElementById(
+            "drawerArrow"
+        );
 
 
-    drawer.classList.toggle("open");
+    drawer.classList.toggle(
+        "open"
+    );
 
 
     arrow.innerText =
-        drawer.classList.contains("open")
+        drawer.classList.contains(
+            "open"
+        )
         ? "▼"
         : "▲";
 
@@ -1275,174 +1740,184 @@ function toggleDrawer(){
 
 
 /* =========================================================
-   HISTORY
+   RENDER ANTREAN
 ========================================================= */
 
 function renderHistory(){
 
     const body =
-        document.getElementById("historyBody");
+        document.getElementById(
+            "historyBody"
+        );
 
 
-    body.innerHTML = "";
+    body.innerHTML =
+        "";
 
 
-    if(localData.length === 0){
+    if(
+        localData.length === 0
+    ){
 
         body.innerHTML = `
-        <tr>
-            <td colspan="2"
-                style="text-align:center;color:#94a3b8;padding:20px">
-                Tidak ada antrean
-            </td>
-        </tr>`;
+
+            <tr>
+
+                <td
+                    colspan="2"
+                    style="
+                        text-align:center;
+                        color:#94a3b8;
+                        padding:20px;
+                    "
+                >
+
+                    Antrean kosong
+
+                </td>
+
+            </tr>
+
+        `;
 
         return;
 
     }
 
 
-    /* hanya tampilkan yang masih belum sync */
-
     const data =
-        scanHistory.filter(function(item){
+        scanHistory.filter(
+            function(item){
 
-            return localData.includes(item.resi);
+                return localData.includes(
+                    item.resi
+                );
 
-        });
-
-
-    data.slice(0,100).forEach(function(item){
-
-        const badgeClass =
-            item.ekspedisi === "SPX"
-            ? "badge-spx"
-            : "badge-jnt";
+            }
+        );
 
 
-        const tr =
-            document.createElement("tr");
+    data
+    .slice(0,100)
+    .forEach(
+        function(item){
+
+            const badgeClass =
+                item.ekspedisi === "SPX"
+                ? "badge-spx"
+                : "badge-jnt";
 
 
-        tr.innerHTML = `
-
-            <td>
-                <strong>${escapeHTML(item.resi)}</strong>
-            </td>
-
-            <td>
-                <span class="badge ${badgeClass}">
-                    ${item.ekspedisi}
-                </span>
-            </td>
-
-        `;
+            const tr =
+                document.createElement(
+                    "tr"
+                );
 
 
-        body.appendChild(tr);
+            tr.innerHTML = `
 
-    });
+                <td>
+
+                    <strong>
+
+                        ${escapeHTML(
+                            item.resi
+                        )}
+
+                    </strong>
+
+                </td>
+
+                <td>
+
+                    <span
+                        class="badge
+                        ${badgeClass}"
+                    >
+
+                        ${escapeHTML(
+                            item.ekspedisi
+                        )}
+
+                    </span>
+
+                </td>
+
+            `;
+
+
+            body.appendChild(
+                tr
+            );
+
+        }
+    );
 
 }
 
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
 
 function escapeHTML(text){
 
     return String(text)
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
 
 }
 
 
 /* =========================================================
-   MANUAL
-========================================================= */
-
-function openManual(){
-
-    document
-        .getElementById("manualModal")
-        .classList.add("show");
-
-
-    setTimeout(function(){
-
-        document
-            .getElementById("manualInput")
-            .focus();
-
-    },100);
-
-}
-
-
-function closeManual(){
-
-    document
-        .getElementById("manualModal")
-        .classList.remove("show");
-
-}
-
-
-function saveManual(){
-
-    const input =
-        document.getElementById("manualInput");
-
-
-    const value =
-        input.value.trim();
-
-
-    if(!value) return;
-
-
-    simpanLokal(value);
-
-
-    input.value = "";
-
-
-    closeManual();
-
-}
-
-
-document
-.getElementById("manualInput")
-.addEventListener(
-    "keydown",
-    function(e){
-
-        if(e.key === "Enter"){
-
-            e.preventDefault();
-
-            saveManual();
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   SYNC KE APPS SCRIPT
+   SYNC KE GOOGLE APPS SCRIPT
 ========================================================= */
 
 async function syncKeServer(){
 
-    if(localData.length === 0){
+    if(
+        localData.length === 0
+    ){
 
         showNotif(
             "ANTREAN KOSONG",
             "warning"
         );
+
+
+        setStatus(
+            "yellow",
+            "Tidak ada antrean"
+        );
+
+
+        speak(
+            ROBOT_CONFIG.syncEmpty
+        );
+
 
         return;
 
@@ -1453,9 +1928,9 @@ async function syncKeServer(){
         getTargetUrl();
 
 
-    /* =========================
-       INI YANG MEMBACA CONFIG.JS
-    ========================= */
+    /* =====================================================
+       CEK CONFIG
+    ===================================================== */
 
     if(!url){
 
@@ -1464,9 +1939,11 @@ async function syncKeServer(){
             "URL Apps Script tidak ditemukan"
         );
 
+
         alert(
             "APP_URL tidak ditemukan dari config.js"
         );
+
 
         return;
 
@@ -1488,10 +1965,18 @@ async function syncKeServer(){
     let berhasil = 0;
 
 
-    for(let i=0;i<localData.length;i++){
+    const daftarSync =
+        [...localData];
+
+
+    for(
+        let i = 0;
+        i < daftarSync.length;
+        i++
+    ){
 
         const resi =
-            localData[i];
+            daftarSync[i];
 
 
         setStatus(
@@ -1504,26 +1989,37 @@ async function syncKeServer(){
 
             const response =
                 await fetch(
-                    url,
-                    {
-                        method:"POST",
 
-                        mode:"cors",
+                    url,
+
+                    {
+
+                        method:
+                            "POST",
+
+                        mode:
+                            "cors",
 
                         headers:{
+
                             "Content-Type":
-                            "text/plain;charset=utf-8"
+                                "text/plain;charset=utf-8"
+
                         },
 
-                        body:JSON.stringify({
+                        body:
+                            JSON.stringify({
 
-                            source:"pengiriman",
+                                source:
+                                    "pengiriman",
 
-                            resi:resi
+                                resi:
+                                    resi
 
-                        })
+                            })
 
                     }
+
                 );
 
 
@@ -1538,30 +2034,70 @@ async function syncKeServer(){
             );
 
 
-            const result =
-                JSON.parse(text);
+            let result;
 
 
-            /*
-             * SUCCESS = berhasil masuk
-             * DUPLICATE = server sudah punya
-             *
-             * Keduanya boleh dikeluarkan
-             * dari antrean lokal.
-             */
+            try{
+
+                result =
+                    JSON.parse(
+                        text
+                    );
+
+            }catch(e){
+
+                console.error(
+                    "JSON ERROR:",
+                    text
+                );
+
+
+                sisa.push(
+                    resi
+                );
+
+
+                continue;
+
+            }
+
+
+            /* =================================================
+               SUCCESS
+            ================================================= */
 
             if(
-                result.status === "success" ||
-                result.status === "duplicate"
+                result.status ===
+                "success"
             ){
 
                 berhasil++;
 
             }
 
+
+            /* =================================================
+               DUPLICATE
+
+               Tetap dianggap selesai karena
+               data sudah ada di server.
+            ================================================= */
+
+            else if(
+                result.status ===
+                "duplicate"
+            ){
+
+                berhasil++;
+
+            }
+
+
             else{
 
-                sisa.push(resi);
+                sisa.push(
+                    resi
+                );
 
             }
 
@@ -1570,22 +2106,35 @@ async function syncKeServer(){
 
             console.error(
                 "SYNC ERROR:",
+                resi,
                 error
             );
 
 
-            sisa.push(resi);
+            sisa.push(
+                resi
+            );
 
         }
 
 
         await new Promise(
-            resolve =>
-                setTimeout(resolve,250)
+            function(resolve){
+
+                setTimeout(
+                    resolve,
+                    250
+                );
+
+            }
         );
 
     }
 
+
+    /* =====================================================
+       SIMPAN ANTREAN YANG GAGAL
+    ================================================= */
 
     localData =
         sisa;
@@ -1593,7 +2142,9 @@ async function syncKeServer(){
 
     localStorage.setItem(
         STORAGE_DATA,
-        JSON.stringify(localData)
+        JSON.stringify(
+            localData
+        )
     );
 
 
@@ -1602,12 +2153,19 @@ async function syncKeServer(){
     renderHistory();
 
 
-    if(berhasil > 0){
+    /* =====================================================
+       HASIL SYNC
+    ===================================================== */
+
+    if(
+        berhasil > 0
+    ){
 
         setStatus(
             "green",
             `Sync selesai • ${berhasil} berhasil`
         );
+
 
         showNotif(
             `✓ ${berhasil} RESI TERSINKRON`,
@@ -1628,9 +2186,15 @@ async function syncKeServer(){
             "Sync gagal"
         );
 
+
         showNotif(
             "SYNC GAGAL",
             "error"
+        );
+
+
+        speak(
+            ROBOT_CONFIG.syncNoResult
         );
 
     }
@@ -1648,14 +2212,19 @@ async function loadDashboard(){
         getTargetUrl();
 
 
-    if(!url) return;
+    if(!url){
+
+        return;
+
+    }
 
 
     try{
 
         const response =
             await fetch(
-                url + "?action=getDashboard"
+                url +
+                "?action=getDashboard"
             );
 
 
@@ -1663,18 +2232,26 @@ async function loadDashboard(){
             await response.json();
 
 
-        if(data.status === "success"){
+        if(
+            data.status ===
+            "success"
+        ){
 
-            document.getElementById("hariIni")
-                .innerText =
+            document.getElementById(
+                "hariIni"
+            ).innerText =
                 data.hariIni || 0;
 
-            document.getElementById("kemarin")
-                .innerText =
+
+            document.getElementById(
+                "kemarin"
+            ).innerText =
                 data.kemarin || 0;
 
-            document.getElementById("mingguIni")
-                .innerText =
+
+            document.getElementById(
+                "mingguIni"
+            ).innerText =
                 data.mingguIni || 0;
 
         }
@@ -1692,12 +2269,14 @@ async function loadDashboard(){
 
 
 /* =========================================================
-   CLEAR ANTREAN LOKAL
+   CLEAR ANTREAN
 ========================================================= */
 
 function clearLocal(){
 
-    if(localData.length === 0){
+    if(
+        localData.length === 0
+    ){
 
         alert(
             "Antrean lokal sudah kosong."
@@ -1710,11 +2289,17 @@ function clearLocal(){
 
     const yakin =
         confirm(
+
             "Hapus semua antrean scan yang belum sinkron dari HP?\n\nData di Google Sheet TIDAK akan dihapus."
+
         );
 
 
-    if(!yakin) return;
+    if(!yakin){
+
+        return;
+
+    }
 
 
     localData = [];
@@ -1741,6 +2326,11 @@ function clearLocal(){
         "success"
     );
 
+
+    speak(
+        ROBOT_CONFIG.queueCleared
+    );
+
 }
 
 
@@ -1760,12 +2350,15 @@ function refreshApp(){
 ========================================================= */
 
 document.addEventListener(
+
     "touchmove",
+
     function(e){
 
         if(
-            !e.target.closest(".drawer-content") &&
-            !e.target.closest(".modal-box")
+            !e.target.closest(
+                ".drawer-content"
+            )
         ){
 
             e.preventDefault();
@@ -1773,12 +2366,16 @@ document.addEventListener(
         }
 
     },
+
     {
         passive:false
     }
+
 );
 
 </script>
 
+
 </body>
+
 </html>
