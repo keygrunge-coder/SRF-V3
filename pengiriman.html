@@ -252,6 +252,8 @@ const ROBOT_CONFIG = {
     pitch:1.0,
     volume:1.0,
     pesan:{
+        jntBerhasil:"Je en Te berhasil",
+        spxBerhasil:"SPX berhasil",
         siap:"Kamera mati, scanner siap",
         kameraAktif:"Kamera aktif, siap scan",
         kameraBerhenti:"Kamera dimatikan",
@@ -481,7 +483,7 @@ function simpanLokal(resi){
     speak(
         ekspedisi==="SPX"
         ? "S P X, berhasil, resi masuk antrean"
-        : "J N T, berhasil, resi masuk antrean"
+        : "J EN T, berhasil, resi masuk antrean"
     );
     return true;
 }
