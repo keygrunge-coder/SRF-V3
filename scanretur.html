@@ -1,17 +1,20 @@
-# Scan Retur — SRF V3
-
-```html
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
+
 <meta charset="UTF-8">
 
 <meta name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+      content="width=device-width,
+               initial-scale=1.0,
+               maximum-scale=1.0,
+               user-scalable=no">
 
 <title>SRF • Scan Retur</title>
 
 <style>
+
 /* =========================================================
    RESET
 ========================================================= */
@@ -71,6 +74,7 @@ body{
 
 .header-actions{
     display:flex;
+    align-items:center;
     gap:5px;
 }
 
@@ -88,6 +92,24 @@ body{
     cursor:pointer;
     touch-action:manipulation;
 }
+
+
+/* =========================================================
+   CAMERA BUTTON
+========================================================= */
+
+.camera-btn{
+    background:#16a34a;
+}
+
+.camera-btn.off{
+    background:#dc2626;
+}
+
+
+/* =========================================================
+   HASIL & RIWAYAT
+========================================================= */
 
 .result-btn{
     background:#2563eb;
@@ -343,10 +365,6 @@ body{
         0 4px 14px rgba(15,23,42,.08);
 }
 
-.result-card:last-child{
-    margin-bottom:0;
-}
-
 .result-header{
     display:flex;
 
@@ -419,7 +437,7 @@ body{
 
 
 /* =========================================================
-   TABLE HASIL
+   TABLE ITEM
 ========================================================= */
 
 .item-title{
@@ -599,6 +617,8 @@ body{
 
     box-shadow:
         0 3px 10px rgba(15,23,42,.06);
+
+    cursor:pointer;
 }
 
 .history-item-top{
@@ -643,80 +663,39 @@ body{
 
 
 /* =========================================================
-   SCAN BUTTON
-========================================================= */
-
-.scan-area{
-    position:absolute;
-
-    left:14px;
-    right:14px;
-    bottom:14px;
-
-    z-index:30;
-}
-
-.scan-button{
-    width:100%;
-
-    height:58px;
-
-    border:0;
-
-    border-radius:30px;
-
-    background:#334155;
-
-    color:white;
-
-    font-size:15px;
-    font-weight:900;
-
-    box-shadow:
-        0 5px 15px rgba(0,0,0,.45);
-
-    cursor:pointer;
-
-    touch-action:none;
-
-    user-select:none;
-
-    -webkit-user-select:none;
-}
-
-.scan-button.active{
-    background:#16a34a;
-}
-
-.scan-button:active{
-    transform:scale(.98);
-}
-
-
-/* =========================================================
    MOBILE
 ========================================================= */
 
-@media(max-width:380px){
+@media(max-width:430px){
 
     .header-title{
         font-size:13px;
     }
 
-    .header-btn{
-        padding:6px;
+    .header-actions{
+        gap:3px;
+    }
 
-        font-size:9px;
+    .header-btn{
+        padding:6px 7px;
+        font-size:8px;
     }
 
     .status-text{
         font-size:12px;
     }
 
-    .scan-button{
-        height:54px;
+}
 
-        font-size:14px;
+@media(max-width:360px){
+
+    .header-title{
+        font-size:12px;
+    }
+
+    .header-btn{
+        padding:5px 6px;
+        font-size:7px;
     }
 
     .result-panel,
@@ -735,9 +714,11 @@ body{
     .item-table td{
         padding:8px 4px;
     }
+
 }
 
 </style>
+
 </head>
 
 
@@ -756,18 +737,37 @@ body{
 
     <div class="header-actions">
 
+        <!-- KAMERA -->
+
+        <button
+            id="cameraButton"
+            class="header-btn camera-btn"
+            onclick="toggleCamera()">
+
+            KAMERA ON
+
+        </button>
+
+
+        <!-- HASIL -->
+
         <button
             class="header-btn result-btn"
             onclick="openResultPanel()">
 
-            HASIL SCAN
+            HASIL
+
         </button>
+
+
+        <!-- RIWAYAT -->
 
         <button
             class="header-btn history-btn"
             onclick="openHistoryPanel()">
 
             RIWAYAT
+
         </button>
 
     </div>
@@ -782,18 +782,35 @@ body{
 <div class="stats">
 
     <div class="stat">
+
         Hari Ini
-        <strong id="hariIni">0</strong>
+
+        <strong id="hariIni">
+            0
+        </strong>
+
     </div>
 
+
     <div class="stat">
+
         Kemarin
-        <strong id="kemarin">0</strong>
+
+        <strong id="kemarin">
+            0
+        </strong>
+
     </div>
 
+
     <div class="stat">
+
         Minggu Ini
-        <strong id="mingguIni">0</strong>
+
+        <strong id="mingguIni">
+            0
+        </strong>
+
     </div>
 
 </div>
@@ -816,6 +833,7 @@ body{
             id="lamp"
             class="lamp">
         </div>
+
 
         <div
             id="statusText"
@@ -850,6 +868,7 @@ body{
                 HASIL SCAN
             </div>
 
+
             <button
                 class="result-close"
                 onclick="closeResultPanel()">
@@ -859,6 +878,7 @@ body{
             </button>
 
         </div>
+
 
         <div id="resultContainer"></div>
 
@@ -879,6 +899,7 @@ body{
                 RIWAYAT SCAN RETUR
             </div>
 
+
             <button
                 class="history-close"
                 onclick="closeHistoryPanel()">
@@ -889,24 +910,8 @@ body{
 
         </div>
 
+
         <div id="historyContainer"></div>
-
-    </div>
-
-
-    <!-- =====================================================
-         SCAN BUTTON
-    ====================================================== -->
-
-    <div class="scan-area">
-
-        <button
-            id="scanButton"
-            class="scan-button">
-
-            📷 TAHAN UNTUK SCAN
-
-        </button>
 
     </div>
 
@@ -923,7 +928,7 @@ body{
 <script>
 
 /* =========================================================
-   CONFIG APPS SCRIPT
+   URL APPS SCRIPT
 ========================================================= */
 
 function getTargetUrl(){
@@ -935,9 +940,12 @@ function getTargetUrl(){
             APP_URL
         ){
 
-            return String(APP_URL).trim();
+            return String(
+                APP_URL
+            ).trim();
 
         }
+
 
         if(
             typeof CONFIG !== "undefined" &&
@@ -945,7 +953,9 @@ function getTargetUrl(){
             CONFIG.APP_URL
         ){
 
-            return String(CONFIG.APP_URL).trim();
+            return String(
+                CONFIG.APP_URL
+            ).trim();
 
         }
 
@@ -996,6 +1006,9 @@ const ROBOT_CONFIG = {
         barangKembali:
             "Barang sudah kembali",
 
+        resiSudahKembali:
+            "Resi sudah kembali",
+
         resiTidakDitemukan:
             "Resi tidak ditemukan",
 
@@ -1029,7 +1042,9 @@ const SCAN_CONFIG = {
 const STORAGE_HISTORY =
     "srf_scan_retur_history_v3";
 
+
 let scanHistory = [];
+
 
 try{
 
@@ -1048,7 +1063,7 @@ try{
 
 
 /* =========================================================
-   SCANNER VARIABLES
+   SCANNER VARIABLE
 ========================================================= */
 
 let html5QrCode = null;
@@ -1068,10 +1083,14 @@ window.addEventListener(
 
         renderHistory();
 
+        updateDashboard();
+
         setStatus(
             "yellow",
             ROBOT_CONFIG.pesan.siap
         );
+
+        updateCameraButton();
 
     }
 );
@@ -1091,13 +1110,15 @@ function setStatus(
             "lamp"
         );
 
+
     const status =
         document.getElementById(
             "statusText"
         );
 
 
-    status.innerText = text;
+    status.innerText =
+        text;
 
 
     if(type === "green"){
@@ -1147,10 +1168,14 @@ function showNotif(
             "notif"
         );
 
-    el.innerText = text;
+
+    el.innerText =
+        text;
+
 
     el.className =
         "notif " + type;
+
 
     el.style.display =
         "block";
@@ -1190,20 +1215,26 @@ function beep(
             window.AudioContext ||
             window.webkitAudioContext;
 
+
         const ctx =
             new AudioContext();
+
 
         const osc =
             ctx.createOscillator();
 
+
         osc.frequency.value =
             freq;
+
 
         osc.connect(
             ctx.destination
         );
 
+
         osc.start();
+
 
         osc.stop(
             ctx.currentTime +
@@ -1229,6 +1260,7 @@ function speak(text){
 
     }
 
+
     if(
         !("speechSynthesis" in window)
     ){
@@ -1252,11 +1284,14 @@ function speak(text){
         voice.lang =
             ROBOT_CONFIG.bahasa;
 
+
         voice.rate =
             ROBOT_CONFIG.rate;
 
+
         voice.pitch =
             ROBOT_CONFIG.pitch;
+
 
         voice.volume =
             ROBOT_CONFIG.volume;
@@ -1299,59 +1334,40 @@ function normalizeResi(resi){
 
 function escapeHTML(text){
 
-    return String(text ?? "")
+    return String(
+        text ?? ""
+    )
 
-        .replace(
-            /&/g,
-            "&amp;"
-        )
+    .replace(
+        /&/g,
+        "&amp;"
+    )
 
-        .replace(
-            /</g,
-            "&lt;"
-        )
+    .replace(
+        /</g,
+        "&lt;"
+    )
 
-        .replace(
-            />/g,
-            "&gt;"
-        )
+    .replace(
+        />/g,
+        "&gt;"
+    )
 
-        .replace(
-            /"/g,
-            "&quot;"
-        )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
 
-        .replace(
-            /'/g,
-            "&#039;"
-        );
+    .replace(
+        /'/g,
+        "&#039;"
+    );
 
 }
 
 
 /* =========================================================
-   PARSE ITEM DARI DATA GOOGLE SHEET
-=========================================================
-
-   Contoh:
-
-   SKU:
-   069 | MACKER ROBLOX BAIM
-
-   WARNA:
-   abu | abu
-
-   SIZE:
-   30-31 | 34-35
-
-   QTY:
-   2
-
-   Hasil:
-
-   069                abu  30-31  1
-   MACKER ROBLOX BAIM abu  34-35  1
-
+   PARSE ITEM
 ========================================================= */
 
 function parseItems(data){
@@ -1361,49 +1377,57 @@ function parseItems(data){
             data.sku || ""
         ).trim();
 
+
     const warnaRaw =
         String(
             data.warna || ""
         ).trim();
+
 
     const sizeRaw =
         String(
             data.size || ""
         ).trim();
 
+
     const totalQty =
-        Number(data.qty) || 0;
+        Number(
+            data.qty
+        ) || 0;
 
 
     const skuList =
         skuRaw
-            ? skuRaw
-                .split("|")
-                .map(x => x.trim())
-                .filter(Boolean)
-            : [];
+        ? skuRaw
+            .split("|")
+            .map(
+                x => x.trim()
+            )
+            .filter(Boolean)
+        : [];
 
 
     const warnaList =
         warnaRaw
-            ? warnaRaw
-                .split("|")
-                .map(x => x.trim())
-            : [];
+        ? warnaRaw
+            .split("|")
+            .map(
+                x => x.trim()
+            )
+            .filter(Boolean)
+        : [];
 
 
     const sizeList =
         sizeRaw
-            ? sizeRaw
-                .split("|")
-                .map(x => x.trim())
-            : [];
+        ? sizeRaw
+            .split("|")
+            .map(
+                x => x.trim()
+            )
+            .filter(Boolean)
+        : [];
 
-
-    /*
-     * Jumlah item ditentukan
-     * dari SKU.
-     */
 
     const itemCount =
         Math.max(
@@ -1417,12 +1441,11 @@ function parseItems(data){
     const items = [];
 
 
-    /*
-     * Jika satu item,
-     * gunakan seluruh qty.
-     */
+    /* SATU ITEM */
 
-    if(itemCount === 1){
+    if(
+        itemCount === 1
+    ){
 
         items.push({
 
@@ -1449,16 +1472,7 @@ function parseItems(data){
     }
 
 
-    /*
-     * Jika banyak item:
-     *
-     * Qty total dibagi ke
-     * jumlah item.
-     *
-     * Contoh:
-     * 2 item + qty 2
-     * = masing-masing 1.
-     */
+    /* BANYAK ITEM */
 
     let sisaQty =
         totalQty;
@@ -1523,7 +1537,7 @@ function parseItems(data){
 
 
 /* =========================================================
-   FORMAT TANGGAL
+   FORMAT DATE
 ========================================================= */
 
 function formatDateTime(value){
@@ -1547,7 +1561,9 @@ function formatDateTime(value){
             )
         ){
 
-            return String(value);
+            return String(
+                value
+            );
 
         }
 
@@ -1566,7 +1582,9 @@ function formatDateTime(value){
 
     }catch(e){
 
-        return String(value);
+        return String(
+            value
+        );
 
     }
 
@@ -1574,7 +1592,7 @@ function formatDateTime(value){
 
 
 /* =========================================================
-   RENDER HASIL SCAN
+   RENDER HASIL
 ========================================================= */
 
 function renderResult(data){
@@ -1585,7 +1603,8 @@ function renderResult(data){
         );
 
 
-    container.innerHTML = "";
+    container.innerHTML =
+        "";
 
 
     if(!data){
@@ -1620,33 +1639,26 @@ function renderResult(data){
                 <tr>
 
                     <td>
-
                         ${escapeHTML(
                             item.nama
                         )}
-
                     </td>
 
                     <td>
-
                         ${escapeHTML(
                             item.warna
                         )}
-
                     </td>
 
                     <td>
-
                         ${escapeHTML(
                             item.size
                         )}
-
                     </td>
 
                     <td>
 
-                        <span
-                            class="qty-badge">
+                        <span class="qty-badge">
 
                             ${escapeHTML(
                                 item.qty
@@ -1669,7 +1681,9 @@ function renderResult(data){
             function(sum,item){
 
                 return sum +
-                    Number(item.qty || 0);
+                    Number(
+                        item.qty || 0
+                    );
 
             },
             0
@@ -1704,9 +1718,7 @@ function renderResult(data){
                 <div class="info-box">
 
                     <div class="info-label">
-
                         EKSPEDISI
-
                     </div>
 
                     <div class="info-value">
@@ -1724,9 +1736,7 @@ function renderResult(data){
                 <div class="info-box">
 
                     <div class="info-label">
-
                         ORDER ID
-
                     </div>
 
                     <div class="info-value">
@@ -1744,9 +1754,7 @@ function renderResult(data){
                 <div class="info-box">
 
                     <div class="info-label">
-
                         WAKTU KEMBALI
-
                     </div>
 
                     <div class="info-value">
@@ -1764,9 +1772,7 @@ function renderResult(data){
                 <div class="info-box">
 
                     <div class="info-label">
-
                         TOTAL
-
                     </div>
 
                     <div class="info-value">
@@ -1813,6 +1819,7 @@ function renderResult(data){
 
                 </thead>
 
+
                 <tbody>
 
                     ${rows}
@@ -1844,12 +1851,13 @@ function renderResult(data){
 
 
 /* =========================================================
-   HASIL SCAN PANEL
+   RESULT PANEL
 ========================================================= */
 
 function openResultPanel(){
 
     closeHistoryPanel();
+
 
     document
         .getElementById(
@@ -1860,7 +1868,9 @@ function openResultPanel(){
         );
 
 
-    if(scanHistory.length){
+    if(
+        scanHistory.length
+    ){
 
         renderResult(
             scanHistory[0]
@@ -1868,7 +1878,9 @@ function openResultPanel(){
 
     }else{
 
-        renderResult(null);
+        renderResult(
+            null
+        );
 
     }
 
@@ -1889,7 +1901,7 @@ function closeResultPanel(){
 
 
 /* =========================================================
-   RIWAYAT
+   SAVE HISTORY
 ========================================================= */
 
 function saveHistory(data){
@@ -1898,10 +1910,6 @@ function saveHistory(data){
         data
     );
 
-
-    /*
-     * Maksimal 100 hasil.
-     */
 
     scanHistory =
         scanHistory.slice(
@@ -1920,8 +1928,14 @@ function saveHistory(data){
 
     renderHistory();
 
+    updateDashboard();
+
 }
 
+
+/* =========================================================
+   HISTORY
+========================================================= */
 
 function renderHistory(){
 
@@ -1962,7 +1976,7 @@ function renderHistory(){
 
 
     scanHistory.forEach(
-        function(item,index){
+        function(item){
 
             const items =
                 parseItems(item);
@@ -1973,7 +1987,9 @@ function renderHistory(){
                     function(sum,x){
 
                         return sum +
-                            Number(x.qty || 0);
+                            Number(
+                                x.qty || 0
+                            );
 
                     },
                     0
@@ -2004,6 +2020,7 @@ function renderHistory(){
 
                         </div>
 
+
                         <div class="history-time">
 
                             ${escapeHTML(
@@ -2033,6 +2050,7 @@ function renderHistory(){
 
                     closeHistoryPanel();
 
+
                     document
                         .getElementById(
                             "resultPanel"
@@ -2040,6 +2058,7 @@ function renderHistory(){
                         .classList.add(
                             "open"
                         );
+
 
                     renderResult(
                         item
@@ -2064,6 +2083,7 @@ function openHistoryPanel(){
     closeResultPanel();
 
     renderHistory();
+
 
     document
         .getElementById(
@@ -2090,7 +2110,134 @@ function closeHistoryPanel(){
 
 
 /* =========================================================
-   PROSES HASIL DARI SERVER
+   DASHBOARD
+========================================================= */
+
+function updateDashboard(){
+
+    const now =
+        new Date();
+
+
+    const today =
+        now.toDateString();
+
+
+    const yesterday =
+        new Date(
+            now.getTime() -
+            86400000
+        ).toDateString();
+
+
+    const day =
+        now.getDay();
+
+
+    const mondayOffset =
+        day === 0
+        ? 6
+        : day - 1;
+
+
+    const monday =
+        new Date(
+            now.getTime() -
+            mondayOffset * 86400000
+        );
+
+
+    monday.setHours(
+        0,0,0,0
+    );
+
+
+    let hariIni = 0;
+    let kemarin = 0;
+    let mingguIni = 0;
+
+
+    scanHistory.forEach(
+        function(item){
+
+            if(!item.waktuScan){
+
+                return;
+
+            }
+
+
+            const d =
+                new Date(
+                    item.waktuScan
+                );
+
+
+            if(
+                isNaN(
+                    d.getTime()
+                )
+            ){
+
+                return;
+
+            }
+
+
+            if(
+                d.toDateString() ===
+                today
+            ){
+
+                hariIni++;
+
+            }
+
+
+            if(
+                d.toDateString() ===
+                yesterday
+            ){
+
+                kemarin++;
+
+            }
+
+
+            if(
+                d >= monday
+            ){
+
+                mingguIni++;
+
+            }
+
+        }
+    );
+
+
+    document.getElementById(
+        "hariIni"
+    ).innerText =
+        hariIni;
+
+
+    document.getElementById(
+        "kemarin"
+    ).innerText =
+        kemarin;
+
+
+    document.getElementById(
+        "mingguIni"
+    ).innerText =
+        mingguIni;
+
+}
+
+
+/* =========================================================
+   PROSES HASIL SERVER
 ========================================================= */
 
 function prosesHasilScan(
@@ -2098,9 +2245,9 @@ function prosesHasilScan(
     resi
 ){
 
-    /*
-     * NOT FOUND
-     */
+    /* =========================================
+       RESI TIDAK DITEMUKAN
+    ========================================= */
 
     if(
         result.status ===
@@ -2141,9 +2288,52 @@ function prosesHasilScan(
     }
 
 
-    /*
-     * ERROR
-     */
+    /* =========================================
+       DOUBLE SCAN
+    ========================================= */
+
+    if(
+        result.status ===
+        "duplicate"
+    ){
+
+        if(
+            SCAN_CONFIG.beepError
+        ){
+
+            beep(
+                350,
+                .20
+            );
+
+        }
+
+
+        setStatus(
+            "red",
+            ROBOT_CONFIG.pesan.resiSudahKembali
+        );
+
+
+        showNotif(
+            "DOUBLE SCAN — RESI SUDAH KEMBALI",
+            "error"
+        );
+
+
+        speak(
+            ROBOT_CONFIG.pesan.resiSudahKembali
+        );
+
+
+        return;
+
+    }
+
+
+    /* =========================================
+       ERROR
+    ========================================= */
 
     if(
         result.status !==
@@ -2184,9 +2374,13 @@ function prosesHasilScan(
     }
 
 
-    /*
-     * DATA HASIL
-     */
+    /* =========================================
+       DATA HASIL
+    ========================================= */
+
+    const now =
+        new Date();
+
 
     const data = {
 
@@ -2225,30 +2419,30 @@ function prosesHasilScan(
             "",
 
         waktuKembali:
-            formatDateTime(
-                new Date()
+            result.tglKembali
+            ? formatDateTime(
+                result.tglKembali
+            )
+            : formatDateTime(
+                now
             ),
 
         waktuScan:
             formatDateTime(
-                new Date()
+                now
             )
 
     };
 
 
-    /*
-     * Simpan riwayat
-     */
+    /* SIMPAN RIWAYAT */
 
     saveHistory(
         data
     );
 
 
-    /*
-     * Feedback
-     */
+    /* FEEDBACK */
 
     if(
         SCAN_CONFIG.beepSuccess
@@ -2264,7 +2458,7 @@ function prosesHasilScan(
 
     setStatus(
         "green",
-        "Barang sudah kembali"
+        ROBOT_CONFIG.pesan.barangKembali
     );
 
 
@@ -2274,18 +2468,14 @@ function prosesHasilScan(
     );
 
 
-    /*
-     * ROBOT HANYA STATUS
-     */
+    /* ROBOT HANYA STATUS */
 
     speak(
         ROBOT_CONFIG.pesan.barangKembali
     );
 
 
-    /*
-     * Buka hasil otomatis
-     */
+    /* TAMPILKAN HASIL */
 
     renderResult(
         data
@@ -2295,7 +2485,7 @@ function prosesHasilScan(
 
 
 /* =========================================================
-   REQUEST SCAN RETUR
+   REQUEST KE APPS SCRIPT
 ========================================================= */
 
 async function scanKeServer(
@@ -2444,19 +2634,7 @@ async function mulaiScan(){
         true;
 
 
-    const btn =
-        document.getElementById(
-            "scanButton"
-        );
-
-
-    btn.classList.add(
-        "active"
-    );
-
-
-    btn.innerText =
-        "🔴 LEPASKAN UNTUK BERHENTI";
+    updateCameraButton();
 
 
     setStatus(
@@ -2489,11 +2667,8 @@ async function mulaiScan(){
                 fps:15,
 
                 qrbox:{
-
                     width:280,
-
                     height:180
-
                 },
 
                 aspectRatio:
@@ -2576,13 +2751,7 @@ async function mulaiScan(){
             false;
 
 
-        btn.classList.remove(
-            "active"
-        );
-
-
-        btn.innerText =
-            "📷 TAHAN UNTUK SCAN";
+        updateCameraButton();
 
 
         setStatus(
@@ -2616,6 +2785,8 @@ async function berhentiScan(){
         !cameraRunning
     ){
 
+        updateCameraButton();
+
         return;
 
     }
@@ -2625,19 +2796,7 @@ async function berhentiScan(){
         false;
 
 
-    const btn =
-        document.getElementById(
-            "scanButton"
-        );
-
-
-    btn.classList.remove(
-        "active"
-    );
-
-
-    btn.innerText =
-        "📷 TAHAN UNTUK SCAN";
+    updateCameraButton();
 
 
     try{
@@ -2648,7 +2807,14 @@ async function berhentiScan(){
 
         }
 
-    }catch(e){}
+    }catch(e){
+
+        console.error(
+            "STOP CAMERA ERROR:",
+            e
+        );
+
+    }
 
 
     setStatus(
@@ -2660,67 +2826,74 @@ async function berhentiScan(){
 
 
 /* =========================================================
-   HOLD BUTTON
+   TOGGLE CAMERA
 ========================================================= */
 
-const scanButton =
-    document.getElementById(
-        "scanButton"
-    );
+function toggleCamera(){
 
+    if(
+        cameraRunning
+    ){
 
-scanButton.addEventListener(
-    "pointerdown",
-    function(e){
+        berhentiScan();
 
-        e.preventDefault();
+    }else{
 
         mulaiScan();
 
     }
-);
 
-
-scanButton.addEventListener(
-    "pointerup",
-    function(e){
-
-        e.preventDefault();
-
-        berhentiScan();
-
-    }
-);
-
-
-scanButton.addEventListener(
-    "pointercancel",
-    function(){
-
-        berhentiScan();
-
-    }
-);
-
-
-scanButton.addEventListener(
-    "pointerleave",
-    function(){
-
-        if(
-            cameraRunning
-        ){
-
-            berhentiScan();
-
-        }
-
-    }
-);
+}
 
 
 /* =========================================================
-   CEGAH SCROLL DI LUAR PANEL
+   UPDATE CAMERA BUTTON
+========================================================= */
+
+function updateCameraButton(){
+
+    const btn =
+        document.getElementById(
+            "cameraButton"
+        );
+
+
+    if(!btn){
+
+        return;
+
+    }
+
+
+    if(
+        cameraRunning
+    ){
+
+        btn.innerText =
+            "KAMERA OFF";
+
+
+        btn.classList.add(
+            "off"
+        );
+
+    }else{
+
+        btn.innerText =
+            "KAMERA ON";
+
+
+        btn.classList.remove(
+            "off"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   TOUCH / SCROLL
 ========================================================= */
 
 document.addEventListener(
@@ -2762,10 +2935,7 @@ document.addEventListener(
     type="text/javascript">
 </script>
 
+
 </body>
+
 </html>
-```
-
-**Catatan penting:** pada kode di atas, `<script src="html5-qrcode">` sengaja diletakkan di bagian paling bawah, tetapi fungsi scanner baru dijalankan setelah `load`, jadi library tetap sudah tersedia ketika scanner dipakai.
-
-Panel **HASIL SCAN** mengambil data dari respons `scanRetur()` yang sudah kamu punya: `resi`, `orderId`, `sku`, `warna`, `size`, `qty`, dan `ekspedisi`. Untuk contoh `069 | MACKER ROBLOX BAIM`, tampilannya akan menjadi dua baris barang terpisah. Robot hanya mengucapkan **“Barang sudah kembali.”**
