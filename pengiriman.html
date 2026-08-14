@@ -1,446 +1,3254 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sistem Scan Resi Cepat</title>
-    <!-- Library Html5-Qrcode -->
-    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background-color: #f4f6f9; color: #333; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-        
-        header { background: #1e293b; color: #fff; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); z-index: 10; }
-        header h1 { font-size: 15px; font-weight: 600; }
-        
-        .header-btns { display: flex; gap: 5px; }
-        .btn-header { border: none; padding: 6px 7px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; color: #fff; display: flex; align-items: center; gap: 2px; }
-        .btn-sync { background: #2563eb; }
-        .btn-download { background: #059669; }
-        .btn-refresh { background: #d97706; }
-        .btn-clear { background: #dc2626; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-        .dashboard-stats { display: flex; background: #334155; padding: 8px 16px; justify-content: space-around; color: #fff; font-size: 13px; text-align: center; }
-        .stat-item span { font-weight: bold; color: #38bdf8; display: block; font-size: 15px; }
+<title>SRF Scanner</title>
 
-        .scanner-container { flex: 1; position: relative; background: #000; display: flex; justify-content: center; align-items: center; overflow: hidden; }
-        #reader { width: 100% !important; height: 100% !important; border: none !important; }
-        #reader video { object-fit: cover !important; width: 100% !important; height: 100% !important; }
+<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
-        .indicator-box { position: absolute; top: 15px; left: 15px; right: 15px; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(4px); padding: 10px 14px; border-radius: 8px; display: flex; align-items: center; gap: 10px; z-index: 5; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
-        #bca-indicator { width: 14px; height: 14px; border-radius: 50%; background-color: #ffcc00; box-shadow: 0 0 8px currentColor; transition: background-color 0.3s; }
-        #status-message { color: #fff; font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
 
-        .notif-banner { position: absolute; top: 75px; left: 50%; transform: translateX(-50%); padding: 10px 20px; border-radius: 20px; font-weight: bold; font-size: 14px; display: none; z-index: 6; box-shadow: 0 4px 12px rgba(0,0,0,0.3); text-align: center; }
-        .notif-banner.success { background: #22c55e; color: #fff; }
-        .notif-banner.warning { background: #f59e0b; color: #fff; }
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+    background: #020617;
+}
 
-        .floating-actions { position: absolute; bottom: 90px; right: 15px; display: flex; flex-direction: column; gap: 10px; z-index: 2; }
-        .float-btn { width: 50px; height: 50px; border-radius: 25px; background: #2563eb; color: #fff; border: none; font-size: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); display: flex; justify-content: center; align-items: center; cursor: pointer; }
+/* =========================================================
+   APP
+========================================================= */
 
-        /* AREA TOMBOL TAHAN UNTUK SCAN */
-        .scan-action-area { position: absolute; bottom: 15px; left: 15px; right: 15px; z-index: 15; }
-        #holdScanBtn { width: 100%; padding: 15px; border-radius: 30px; border: none; background: #334155; color: #fff; font-size: 15px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.4); cursor: pointer; transition: background 0.2s; }
-        #holdScanBtn.active { background: #16a34a; }
+.app {
+    width: 100%;
+    height: 100dvh;
 
-        .bottom-drawer { position: absolute; bottom: 0; left: 0; right: 0; background: #fff; border-top-left-radius: 16px; border-top-right-radius: 16px; box-shadow: 0 -4px 10px rgba(0,0,0,0.15); transition: transform 0.3s ease; transform: translateY(calc(100% - 45px)); z-index: 10; display: flex; flex-direction: column; max-height: 50vh; }
-        .bottom-drawer.open { transform: translateY(0); }
-        .drawer-handle { height: 45px; display: flex; justify-content: space-between; align-items: center; padding: 0 16px; font-weight: 600; font-size: 13px; background: #e2e8f0; border-top-left-radius: 16px; border-top-right-radius: 16px; cursor: pointer; }
-        .drawer-content { overflow-y: auto; padding: 10px 16px; flex: 1; }
+    display: flex;
+    flex-direction: column;
 
-        table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid #f1f5f9; }
-        th { background: #f8fafc; color: #64748b; font-weight: 600; }
-        
-        .badge { padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; }
-        .badge-keluar { background: #dcfce7; color: #166534; }
-        .badge-duplikat { background: #fef9c3; color: #854d0e; }
+    background: #020617;
 
-        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(2px); z-index: 100; display: none; justify-content: center; align-items: center; padding: 20px; }
-        .modal-box { background: #fff; width: 100%; max-width: 320px; padding: 20px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-        .modal-box h3 { font-size: 16px; margin-bottom: 12px; color: #1e293b; }
-        .modal-box input { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; margin-bottom: 15px; outline: none; }
-        .modal-box input:focus { border-color: #2563eb; }
-        .modal-btns { display: flex; justify-content: flex-end; gap: 8px; }
-        .modal-btns button { padding: 8px 14px; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; }
-        .btn-cancel { background: #e2e8f0; color: #475569; }
-        .btn-submit { background: #2563eb; color: #fff; }
-    </style>
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.header {
+    height: 52px;
+    min-height: 52px;
+
+    background: #0f172a;
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 10px;
+
+    z-index: 100;
+}
+
+.logo {
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: .4px;
+}
+
+.header-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.header-btn {
+    height: 32px;
+
+    border: 0;
+    border-radius: 7px;
+
+    padding: 0 8px;
+
+    color: white;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    touch-action: manipulation;
+}
+
+.sync-btn {
+    background: #2563eb;
+}
+
+.download-btn {
+    background: #059669;
+}
+
+.clear-btn {
+    background: #dc2626;
+}
+
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+.dashboard {
+    height: 54px;
+    min-height: 54px;
+
+    background: #1e293b;
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+    color: white;
+
+    z-index: 90;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    border-right: 1px solid #334155;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+    font-weight: 600;
+}
+
+.stat:last-child {
+    border-right: 0;
+}
+
+.stat-number {
+    color: white;
+
+    font-size: 17px;
+    font-weight: 800;
+
+    line-height: 18px;
+}
+
+
+/* =========================================================
+   CAMERA AREA
+========================================================= */
+
+.camera-area {
+    position: relative;
+
+    flex: 1;
+
+    min-height: 0;
+
+    background: #000;
+
+    overflow: hidden;
+}
+
+
+/* CAMERA FULL AREA */
+
+#reader {
+    position: absolute;
+
+    inset: 0;
+
+    width: 100% !important;
+    height: 100% !important;
+
+    border: 0 !important;
+
+    background: #000;
+}
+
+#reader video {
+    position: absolute !important;
+
+    inset: 0 !important;
+
+    width: 100% !important;
+    height: 100% !important;
+
+    object-fit: cover !important;
+}
+
+
+/* Hilangkan UI bawaan library */
+
+#reader__dashboard {
+    display: none !important;
+}
+
+#reader__dashboard_section {
+    display: none !important;
+}
+
+#reader__dashboard_section_csr {
+    display: none !important;
+}
+
+#reader__status_span {
+    display: none !important;
+}
+
+
+/* =========================================================
+   DARK CAMERA OVERLAY
+========================================================= */
+
+.camera-overlay {
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(0,0,0,.35),
+            transparent 25%,
+            transparent 70%,
+            rgba(0,0,0,.55)
+        );
+
+    z-index: 5;
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.status {
+    position: absolute;
+
+    top: 12px;
+    left: 12px;
+    right: 12px;
+
+    min-height: 46px;
+
+    padding: 8px 12px;
+
+    display: flex;
+    align-items: center;
+
+    border-radius: 11px;
+
+    background: rgba(15,23,42,.88);
+
+    backdrop-filter: blur(8px);
+
+    box-shadow:
+        0 5px 18px rgba(0,0,0,.35);
+
+    z-index: 20;
+}
+
+.status-light {
+    width: 13px;
+    height: 13px;
+
+    flex-shrink: 0;
+
+    margin-right: 9px;
+
+    border-radius: 50%;
+
+    background: #facc15;
+
+    box-shadow: 0 0 10px currentColor;
+}
+
+.status-text {
+    color: white;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* =========================================================
+   SCAN FRAME
+========================================================= */
+
+.scan-frame {
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    width: 84%;
+    max-width: 430px;
+
+    height: 145px;
+
+    transform: translate(-50%, -50%);
+
+    border: 1px solid rgba(255,255,255,.75);
+
+    border-radius: 14px;
+
+    z-index: 15;
+
+    pointer-events: none;
+}
+
+
+/* CORNERS */
+
+.corner {
+    position: absolute;
+
+    width: 30px;
+    height: 30px;
+
+    border-color: #22c55e;
+    border-style: solid;
+}
+
+.corner.tl {
+    left: -2px;
+    top: -2px;
+
+    border-width: 4px 0 0 4px;
+
+    border-radius: 10px 0 0 0;
+}
+
+.corner.tr {
+    right: -2px;
+    top: -2px;
+
+    border-width: 4px 4px 0 0;
+
+    border-radius: 0 10px 0 0;
+}
+
+.corner.bl {
+    left: -2px;
+    bottom: -2px;
+
+    border-width: 0 0 4px 4px;
+
+    border-radius: 0 0 0 10px;
+}
+
+.corner.br {
+    right: -2px;
+    bottom: -2px;
+
+    border-width: 0 4px 4px 0;
+
+    border-radius: 0 0 10px 0;
+}
+
+
+/* SCAN LINE */
+
+.scan-line {
+    position: absolute;
+
+    left: 5%;
+    right: 5%;
+
+    top: 50%;
+
+    height: 2px;
+
+    background: #22c55e;
+
+    box-shadow:
+        0 0 8px #22c55e;
+
+    animation:
+        scanMove 1.7s ease-in-out infinite;
+}
+
+@keyframes scanMove {
+
+    0% {
+        transform: translateY(-55px);
+    }
+
+    50% {
+        transform: translateY(55px);
+    }
+
+    100% {
+        transform: translateY(-55px);
+    }
+
+}
+
+
+/* =========================================================
+   SCAN INFO
+========================================================= */
+
+.scan-info {
+    position: absolute;
+
+    left: 50%;
+    top: calc(50% + 95px);
+
+    transform: translateX(-50%);
+
+    color: white;
+
+    font-size: 11px;
+    font-weight: 600;
+
+    text-align: center;
+
+    opacity: .8;
+
+    z-index: 15;
+
+    pointer-events: none;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   NOTIFICATION
+========================================================= */
+
+.notification {
+    position: absolute;
+
+    left: 50%;
+    top: 78px;
+
+    transform:
+        translateX(-50%)
+        translateY(-10px);
+
+    padding: 10px 18px;
+
+    border-radius: 30px;
+
+    color: white;
+
+    font-size: 13px;
+    font-weight: 800;
+
+    opacity: 0;
+
+    z-index: 80;
+
+    pointer-events: none;
+
+    white-space: nowrap;
+
+    transition:
+        opacity .2s,
+        transform .2s;
+}
+
+.notification.show {
+    opacity: 1;
+
+    transform:
+        translateX(-50%)
+        translateY(0);
+}
+
+.notification.success {
+    background: #16a34a;
+}
+
+.notification.warning {
+    background: #d97706;
+}
+
+.notification.error {
+    background: #dc2626;
+}
+
+
+/* =========================================================
+   CAMERA ERROR
+========================================================= */
+
+.camera-error {
+    position: absolute;
+
+    left: 20px;
+    right: 20px;
+
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    display: none;
+
+    text-align: center;
+
+    color: white;
+
+    z-index: 50;
+}
+
+.camera-error-title {
+    font-size: 18px;
+    font-weight: 800;
+
+    margin-bottom: 8px;
+}
+
+.camera-error-text {
+    font-size: 12px;
+
+    color: #cbd5e1;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   BOTTOM CONTROL
+========================================================= */
+
+.bottom-control {
+    position: absolute;
+
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+
+    height: 62px;
+
+    display: flex;
+
+    gap: 8px;
+
+    z-index: 60;
+}
+
+
+/* MANUAL */
+
+.manual-button {
+    width: 56px;
+
+    flex-shrink: 0;
+
+    border: 0;
+
+    border-radius: 14px;
+
+    background: rgba(15,23,42,.94);
+
+    color: white;
+
+    font-size: 20px;
+
+    box-shadow:
+        0 5px 15px rgba(0,0,0,.4);
+
+    cursor: pointer;
+
+    touch-action: manipulation;
+}
+
+
+/* HOLD SCAN */
+
+.hold-button {
+    flex: 1;
+
+    border: 0;
+
+    border-radius: 31px;
+
+    background: #334155;
+
+    color: white;
+
+    font-size: 15px;
+    font-weight: 900;
+
+    box-shadow:
+        0 5px 15px rgba(0,0,0,.45);
+
+    cursor: pointer;
+
+    touch-action: none;
+
+    user-select: none;
+
+    -webkit-user-select: none;
+
+    transition:
+        background .15s,
+        transform .1s;
+}
+
+.hold-button.active {
+    background: #16a34a;
+}
+
+.hold-button:active {
+    transform: scale(.98);
+}
+
+
+/* =========================================================
+   QUEUE BAR
+========================================================= */
+
+.queue-bar {
+    position: absolute;
+
+    left: 10px;
+    right: 10px;
+
+    bottom: 80px;
+
+    height: 42px;
+
+    border-radius: 11px;
+
+    background: rgba(15,23,42,.92);
+
+    backdrop-filter: blur(8px);
+
+    color: white;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 0 13px;
+
+    z-index: 55;
+
+    box-shadow:
+        0 5px 15px rgba(0,0,0,.35);
+
+    cursor: pointer;
+
+    touch-action: manipulation;
+}
+
+.queue-left {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.queue-dot {
+    width: 8px;
+    height: 8px;
+
+    border-radius: 50%;
+
+    background: #facc15;
+}
+
+.queue-right {
+    font-size: 16px;
+
+    color: #cbd5e1;
+}
+
+
+/* =========================================================
+   QUEUE PANEL
+========================================================= */
+
+.queue-panel {
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    height: 65vh;
+
+    max-height: 500px;
+
+    background: white;
+
+    border-radius: 18px 18px 0 0;
+
+    z-index: 200;
+
+    display: flex;
+    flex-direction: column;
+
+    transform: translateY(100%);
+
+    transition:
+        transform .25s ease;
+
+    box-shadow:
+        0 -7px 25px rgba(0,0,0,.35);
+}
+
+.queue-panel.open {
+    transform: translateY(0);
+}
+
+.queue-panel-head {
+    height: 52px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 0 15px;
+
+    background: #e2e8f0;
+
+    border-radius: 18px 18px 0 0;
+
+    color: #0f172a;
+
+    font-size: 13px;
+    font-weight: 900;
+}
+
+.queue-close {
+    width: 32px;
+    height: 32px;
+
+    border: 0;
+
+    border-radius: 8px;
+
+    background: #cbd5e1;
+
+    color: #334155;
+
+    font-size: 16px;
+
+    cursor: pointer;
+}
+
+.queue-panel-body {
+    flex: 1;
+
+    overflow-y: auto;
+
+    padding: 5px 12px 15px;
+}
+
+.queue-panel-footer {
+    padding: 10px 12px;
+
+    border-top: 1px solid #e2e8f0;
+}
+
+.sync-large {
+    width: 100%;
+
+    height: 45px;
+
+    border: 0;
+
+    border-radius: 10px;
+
+    background: #2563eb;
+
+    color: white;
+
+    font-size: 13px;
+    font-weight: 900;
+
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.queue-table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    font-size: 12px;
+}
+
+.queue-table th {
+    position: sticky;
+    top: 0;
+
+    padding: 9px;
+
+    background: #f8fafc;
+
+    color: #64748b;
+
+    text-align: left;
+
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.queue-table td {
+    padding: 9px;
+
+    border-bottom: 1px solid #f1f5f9;
+
+    color: #334155;
+}
+
+.resi-text {
+    font-weight: 700;
+
+    word-break: break-all;
+}
+
+.badge {
+    display: inline-block;
+
+    padding: 3px 7px;
+
+    border-radius: 5px;
+
+    font-size: 10px;
+    font-weight: 900;
+}
+
+.badge-spx {
+    background: #dbeafe;
+
+    color: #1d4ed8;
+}
+
+.badge-jnt {
+    background: #fee2e2;
+
+    color: #b91c1c;
+}
+
+.badge-unknown {
+    background: #fef3c7;
+
+    color: #92400e;
+}
+
+.empty-row {
+    text-align: center;
+
+    padding: 30px 10px !important;
+
+    color: #94a3b8 !important;
+}
+
+
+/* =========================================================
+   MODAL MANUAL
+========================================================= */
+
+.manual-modal {
+    position: fixed;
+
+    inset: 0;
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(0,0,0,.65);
+
+    backdrop-filter: blur(3px);
+
+    z-index: 500;
+}
+
+.manual-modal.show {
+    display: flex;
+}
+
+.manual-box {
+    width: 100%;
+    max-width: 360px;
+
+    padding: 20px;
+
+    background: white;
+
+    border-radius: 16px;
+
+    box-shadow:
+        0 15px 40px rgba(0,0,0,.35);
+}
+
+.manual-title {
+    color: #0f172a;
+
+    font-size: 17px;
+    font-weight: 900;
+
+    margin-bottom: 15px;
+}
+
+.manual-input {
+    width: 100%;
+
+    height: 46px;
+
+    padding: 0 12px;
+
+    border: 1px solid #cbd5e1;
+
+    border-radius: 9px;
+
+    outline: none;
+
+    font-size: 14px;
+
+    text-transform: uppercase;
+}
+
+.manual-input:focus {
+    border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 3px rgba(37,99,235,.12);
+}
+
+.manual-actions {
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 8px;
+
+    margin-top: 15px;
+}
+
+.manual-actions button {
+    height: 40px;
+
+    padding: 0 15px;
+
+    border: 0;
+
+    border-radius: 8px;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    cursor: pointer;
+}
+
+.manual-cancel {
+    background: #e2e8f0;
+
+    color: #475569;
+}
+
+.manual-save {
+    background: #2563eb;
+
+    color: white;
+}
+
+
+/* =========================================================
+   MOBILE SMALL SCREEN
+========================================================= */
+
+@media (max-height: 650px) {
+
+    .header {
+        height: 46px;
+        min-height: 46px;
+    }
+
+    .dashboard {
+        height: 45px;
+        min-height: 45px;
+    }
+
+    .stat-number {
+        font-size: 15px;
+    }
+
+    .bottom-control {
+        bottom: 7px;
+        height: 54px;
+    }
+
+    .queue-bar {
+        bottom: 68px;
+        height: 37px;
+    }
+
+    .hold-button {
+        font-size: 13px;
+    }
+
+}
+
+
+/* =========================================================
+   DESKTOP
+========================================================= */
+
+@media (min-width: 700px) {
+
+    .header {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .bottom-control {
+        left: 50%;
+
+        width: 500px;
+
+        right: auto;
+
+        transform: translateX(-50%);
+    }
+
+    .queue-bar {
+        left: 50%;
+
+        width: 500px;
+
+        right: auto;
+
+        transform: translateX(-50%);
+    }
+
+}
+</style>
 </head>
+
+
 <body>
 
-    <header>
-        <h1>Scan Resi Cepat</h1>
-        <div class="header-btns">
-            <button class="btn-header btn-refresh" onclick="window.location.reload()" title="Refresh Halaman">🔄</button>
-            <button class="btn-header btn-sync" onclick="syncKeServer()">☁️ Sync (<span id="sync-count">0</span>)</button>
-            <button class="btn-header btn-download" onclick="downloadOfflineData()" title="Download TXT">📥(<span id="local-slot">0</span>)</button>
-            <button class="btn-header btn-clear" onclick="clearDataLokal()" title="Bersihkan Cache">🗑️</button>
+<div class="app">
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="header">
+
+        <div class="logo">
+            SRF SCANNER
         </div>
+
+        <div class="header-actions">
+
+            <button
+                class="header-btn sync-btn"
+                id="headerSync">
+                SYNC <span id="syncCount">0</span>
+            </button>
+
+            <button
+                class="header-btn download-btn"
+                id="downloadBtn">
+                TXT
+            </button>
+
+            <button
+                class="header-btn clear-btn"
+                id="clearBtn">
+                HAPUS
+            </button>
+
+        </div>
+
     </header>
 
-    <div class="dashboard-stats">
-        <div class="stat-item">Hari Ini <span id="load-hari-ini">0</span></div>
-        <div class="stat-item">Kemarin <span id="load-kemarin">0</span></div>
-        <div class="stat-item">Minggu Ini <span id="load-minggu">0</span></div>
-    </div>
 
-    <div class="scanner-container">
+    <!-- =====================================================
+         DASHBOARD
+    ====================================================== -->
+
+    <section class="dashboard">
+
+        <div class="stat">
+
+            HARI INI
+
+            <span
+                class="stat-number"
+                id="todayCount">
+                0
+            </span>
+
+        </div>
+
+
+        <div class="stat">
+
+            KEMARIN
+
+            <span
+                class="stat-number"
+                id="yesterdayCount">
+                0
+            </span>
+
+        </div>
+
+
+        <div class="stat">
+
+            MINGGU INI
+
+            <span
+                class="stat-number"
+                id="weekCount">
+                0
+            </span>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         CAMERA
+    ====================================================== -->
+
+    <main class="camera-area">
+
+
         <div id="reader"></div>
-        
-        <div class="indicator-box">
-            <div id="bca-indicator"></div>
-            <div id="status-message">Tekan & Tahan tombol di bawah untuk scan</div>
-        </div>
 
-        <div id="notif" class="notif-banner"></div>
 
-        <div class="floating-actions">
-            <button class="float-btn" onclick="toggleManualModal(true)" title="Input Manual">⌨️</button>
-        </div>
+        <div class="camera-overlay"></div>
 
-        <!-- TOMBOL PUSH-TO-SCAN TAMBAHAN -->
-        <div class="scan-action-area">
-            <button id="holdScanBtn">📷 TAHAN UNTUK SCAN</button>
-        </div>
-    </div>
 
-    <div class="bottom-drawer" id="bottomDrawer">
-        <div class="drawer-handle" onclick="toggleDrawer()">
-            <span>Antrean Belum Sinkron (<span id="history-count">0</span>)</span>
-            <span id="drawerArrow">▲</span>
-        </div>
-        <div class="drawer-content">
-            <table>
-                <thead>
-                    <tr>
-                        <th>No. Resi</th>
-                        <th>Ekspedisi</th>
-                    </tr>
-                </thead>
-                <tbody id="historyBody"></tbody>
-            </table>
-        </div>
-    </div>
+        <!-- STATUS -->
 
-    <!-- Modal Input Manual -->
-    <div class="modal-overlay" id="manualModal">
-        <div class="modal-box">
-            <h3>Input Resi Manual</h3>
-            <input type="text" id="manualResi" placeholder="Ketik atau scan nomor resi...">
-            <div class="modal-btns">
-                <button class="btn-cancel" onclick="toggleManualModal(false)">Batal</button>
-                <button class="btn-submit" id="manualBtn">Simpan</button>
+        <div class="status">
+
+            <div
+                class="status-light"
+                id="statusLight">
             </div>
+
+            <div
+                class="status-text"
+                id="statusText">
+
+                Tekan & tahan tombol untuk scan
+
+            </div>
+
         </div>
+
+
+        <!-- SCAN FRAME -->
+
+        <div class="scan-frame">
+
+            <div class="corner tl"></div>
+            <div class="corner tr"></div>
+            <div class="corner bl"></div>
+            <div class="corner br"></div>
+
+            <div class="scan-line"></div>
+
+        </div>
+
+
+        <div class="scan-info">
+            Arahkan barcode resi ke dalam garis
+        </div>
+
+
+        <!-- NOTIFICATION -->
+
+        <div
+            class="notification"
+            id="notification">
+        </div>
+
+
+        <!-- CAMERA ERROR -->
+
+        <div
+            class="camera-error"
+            id="cameraError">
+
+            <div class="camera-error-title">
+                Kamera tidak tersedia
+            </div>
+
+            <div class="camera-error-text">
+
+                Pastikan izin kamera sudah diberikan
+                dan halaman dibuka melalui HTTPS.
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             QUEUE BAR
+        ================================================== -->
+
+        <div
+            class="queue-bar"
+            id="queueBar">
+
+            <div class="queue-left">
+
+                <span class="queue-dot"></span>
+
+                ANTREAN OFFLINE
+
+                (<span id="queueCount">0</span>)
+
+            </div>
+
+            <div class="queue-right">
+                >
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             BOTTOM SCAN CONTROL
+        ================================================== -->
+
+        <div class="bottom-control">
+
+
+            <button
+                class="manual-button"
+                id="manualButton"
+                title="Input manual">
+
+                ⌨
+
+            </button>
+
+
+            <button
+                class="hold-button"
+                id="holdButton">
+
+                TAHAN UNTUK SCAN
+
+            </button>
+
+
+        </div>
+
+
+        <!-- =================================================
+             QUEUE PANEL
+        ================================================== -->
+
+        <section
+            class="queue-panel"
+            id="queuePanel">
+
+
+            <div class="queue-panel-head">
+
+                <span>
+                    ANTREAN OFFLINE
+                    (<span id="panelQueueCount">0</span>)
+                </span>
+
+
+                <button
+                    class="queue-close"
+                    id="queueClose">
+
+                    ×
+
+                </button>
+
+            </div>
+
+
+            <div class="queue-panel-body">
+
+                <table class="queue-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                RESI
+                            </th>
+
+                            <th>
+                                EKSPEDISI
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody
+                        id="queueBody">
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <div class="queue-panel-footer">
+
+                <button
+                    class="sync-large"
+                    id="panelSync">
+
+                    SYNC SEMUA
+
+                </button>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+</div>
+
+
+<!-- =========================================================
+     MANUAL MODAL
+========================================================= -->
+
+<div
+    class="manual-modal"
+    id="manualModal">
+
+
+    <div class="manual-box">
+
+
+        <div class="manual-title">
+            Input Resi Manual
+        </div>
+
+
+        <input
+            type="text"
+            class="manual-input"
+            id="manualInput"
+            placeholder="Masukkan nomor resi"
+            autocomplete="off"
+            autocapitalize="characters">
+
+
+        <div class="manual-actions">
+
+            <button
+                class="manual-cancel"
+                id="manualCancel">
+
+                BATAL
+
+            </button>
+
+
+            <button
+                class="manual-save"
+                id="manualSave">
+
+                SIMPAN
+
+            </button>
+
+        </div>
+
+
     </div>
 
-    <script src="config.js"></script>
-    <script>
-        function getTargetUrl() {
-            if (typeof APP_URL !== 'undefined') return APP_URL;
-            if (typeof CONFIG !== 'undefined' && CONFIG.APP_URL) return CONFIG.APP_URL;
-            return null;
+</div>
+
+
+<script src="config.js"></script>
+
+
+<script>
+
+/* =========================================================
+   SRF SCANNER
+   ========================================================= */
+
+
+/* =========================================================
+   STORAGE
+========================================================= */
+
+const STORAGE_KEY =
+    "srf_resi_offline_v3";
+
+const HISTORY_KEY =
+    "srf_scan_history_v3";
+
+
+/* =========================================================
+   URL
+========================================================= */
+
+function getTargetUrl() {
+
+    if (
+        typeof APP_URL !== "undefined" &&
+        APP_URL
+    ) {
+
+        return APP_URL;
+
+    }
+
+
+    if (
+        typeof CONFIG !== "undefined" &&
+        CONFIG.APP_URL
+    ) {
+
+        return CONFIG.APP_URL;
+
+    }
+
+
+    return "";
+
+}
+
+
+/* =========================================================
+   DATA
+========================================================= */
+
+let localData =
+    JSON.parse(
+        localStorage.getItem(
+            STORAGE_KEY
+        ) || "[]"
+    );
+
+
+let scanHistory =
+    JSON.parse(
+        localStorage.getItem(
+            HISTORY_KEY
+        ) || "[]"
+    );
+
+
+/* =========================================================
+   SCANNER STATE
+========================================================= */
+
+let html5QrCode = null;
+
+let cameraRunning = false;
+
+let startingCamera = false;
+
+let stoppingCamera = false;
+
+let processingScan = false;
+
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const holdButton =
+    document.getElementById(
+        "holdButton"
+    );
+
+const statusLight =
+    document.getElementById(
+        "statusLight"
+    );
+
+const statusText =
+    document.getElementById(
+        "statusText"
+    );
+
+const notification =
+    document.getElementById(
+        "notification"
+    );
+
+const cameraError =
+    document.getElementById(
+        "cameraError"
+    );
+
+const queuePanel =
+    document.getElementById(
+        "queuePanel"
+    );
+
+const queueBody =
+    document.getElementById(
+        "queueBody"
+    );
+
+const manualModal =
+    document.getElementById(
+        "manualModal"
+    );
+
+const manualInput =
+    document.getElementById(
+        "manualInput"
+    );
+
+
+/* =========================================================
+   INIT
+========================================================= */
+
+window.addEventListener(
+    "load",
+    () => {
+
+        updateQueueUI();
+
+        renderQueue();
+
+        loadDashboard();
+
+        setStatus(
+            "idle",
+            "Tekan & tahan tombol untuk scan"
+        );
+
+    }
+);
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+function setStatus(
+    type,
+    text
+) {
+
+    statusText.textContent =
+        text;
+
+
+    if (
+        type === "success"
+    ) {
+
+        statusLight.style.background =
+            "#22c55e";
+
+    }
+
+    else if (
+        type === "error"
+    ) {
+
+        statusLight.style.background =
+            "#ef4444";
+
+    }
+
+    else {
+
+        statusLight.style.background =
+            "#facc15";
+
+    }
+
+}
+
+
+/* =========================================================
+   NOTIFICATION
+========================================================= */
+
+let notificationTimer = null;
+
+function showNotification(
+    text,
+    type = "success"
+) {
+
+    clearTimeout(
+        notificationTimer
+    );
+
+
+    notification.textContent =
+        text;
+
+
+    notification.className =
+        "notification show " +
+        type;
+
+
+    notificationTimer =
+        setTimeout(
+            () => {
+
+                notification.classList.remove(
+                    "show"
+                );
+
+            },
+            1800
+        );
+
+}
+
+
+/* =========================================================
+   AUDIO
+========================================================= */
+
+function beep(
+    frequency,
+    duration
+) {
+
+    try {
+
+        const AudioContext =
+            window.AudioContext ||
+            window.webkitAudioContext;
+
+        if (!AudioContext) {
+            return;
         }
 
-        window.onload = function() { 
-            muatDataDashboardAwal(); 
-        };
 
-        let html5QrCode = null;
-        let isProcessing = false;
-        let isCameraRunning = false;
-        
-        let localData = JSON.parse(localStorage.getItem('resi_offline_v2')) || [];
-        let scanHistory = JSON.parse(localStorage.getItem("scanHistory_v2") || "[]");
-        updateCounters();
-        renderHistory();
+        const ctx =
+            new AudioContext();
 
-        function beep(freq, duration){ 
-            try { 
-                const AudioContext = window.AudioContext || window.webkitAudioContext;
-                const ctx = new AudioContext(); 
-                const osc = ctx.createOscillator(); 
-                osc.frequency.value = freq; 
-                osc.connect(ctx.destination); 
-                osc.start(); 
-                osc.stop(ctx.currentTime + duration);
-                setTimeout(() => ctx.close(), duration * 1000 + 100);
-            } catch(e){} 
-        }
-        function beepSuccess(){ beep(500, 0.08); }
-        function beepDuplicate(){ beep(350, 0.4); } 
 
-        function robotBicara(teks) { 
-            if ('speechSynthesis' in window) { 
-                window.speechSynthesis.cancel(); 
-                let tts = new SpeechSynthesisUtterance(teks); 
-                tts.lang = 'id-ID'; 
-                tts.rate = 1.1; 
-                window.speechSynthesis.speak(tts); 
-            } 
-        }
+        const oscillator =
+            ctx.createOscillator();
 
-        function setLampuBca(warna, pesan) { 
-            const indikator = document.getElementById('bca-indicator'); 
-            document.getElementById('status-message').innerText = pesan; 
-            if(warna === 'ijo') indikator.style.backgroundColor = '#00cc44'; 
-            if(warna === 'kuning') indikator.style.backgroundColor = '#ffcc00'; 
-            if(warna === 'merah') indikator.style.backgroundColor = '#ff3333'; 
-        }
 
-        function showNotif(text, type){ 
-            const n = document.getElementById("notif"); 
-            n.style.display = "block"; 
-            n.className = type === "warning" ? "notif-banner warning" : "notif-banner success"; 
-            n.innerHTML = text; 
-            setTimeout(()=>{ n.style.display="none"; }, 2000); 
-        }
+        const gain =
+            ctx.createGain();
 
-        function updateCounters() {
-            document.getElementById('local-slot').innerText = localData.length;
-            document.getElementById('sync-count').innerText = localData.length;
-            document.getElementById('history-count').innerText = localData.length;
-        }
 
-        function muatDataDashboardAwal() {
-            let url = getTargetUrl();
-            if (!url) return;
-            fetch(`${url}?action=getDashboard`)
-            .then(res => res.json())
-            .then(data => { 
-                if(data.status === 'success') { 
-                    document.getElementById('load-hari-ini').innerText = data.hariIni; 
-                    document.getElementById('load-kemarin').innerText = data.kemarin; 
-                    document.getElementById('load-minggu').innerText = data.mingguIni; 
-                } 
-            }).catch(e => {});
-        }
+        oscillator.type =
+            "sine";
 
-        // --- LOGIKA PUSH-TO-SCAN (TEKAN & TAHAN) ---
-        const holdBtn = document.getElementById("holdScanBtn");
 
-        function mulaiScan() {
-            if (isCameraRunning) return;
-            isCameraRunning = true;
-            holdBtn.classList.add('active');
-            holdBtn.innerText = "🔴 LEPASKAN UNTUK BERHENTI";
+        oscillator.frequency.value =
+            frequency;
 
-            if (!html5QrCode) {
-                html5QrCode = new Html5Qrcode("reader");
-            }
-            
-            html5QrCode.start(
-                { facingMode: "environment" }, 
-                { fps: 15, qrbox: 220 }, 
-                (decodedText) => { 
-                    if(!isProcessing) { 
-                        isProcessing = true; 
-                        simpanLokal(decodedText.trim()); 
-                        setTimeout(() => { isProcessing = false; }, 1000);
-                    } 
-                }
-            ).then(() => { 
-                setLampuBca('ijo', 'Kamera Aktif - Silakan Scan'); 
-            }).catch(err => { 
-                setLampuBca('merah', 'Kamera Gagal');
-                isCameraRunning = false;
-                holdBtn.classList.remove('active');
-                holdBtn.innerText = "📷 TAHAN UNTUK SCAN";
-            });
-        }
 
-        function berhentiScan() {
-            if (!isCameraRunning) return;
-            isCameraRunning = false;
-            holdBtn.classList.remove('active');
-            holdBtn.innerText = "📷 TAHAN UNTUK SCAN";
+        gain.gain.value =
+            0.15;
 
-            if (html5QrCode) {
-                html5QrCode.stop().then(() => {
-                    setLampuBca('kuning', 'Scanner Berhenti');
-                }).catch(err => {
-                    // Abaikan error jika sudah berhenti
-                });
-            }
-        }
 
-        // Event Listener Tombol Tekan & Tahan
-        holdBtn.addEventListener("touchstart", (e) => { e.preventDefault(); mulaiScan(); });
-        holdBtn.addEventListener("touchend", (e) => { e.preventDefault(); berhentiScan(); });
-        holdBtn.addEventListener("mousedown", (e) => { e.preventDefault(); mulaiScan(); });
-        holdBtn.addEventListener("mouseup", (e) => { e.preventDefault(); berhentiScan(); });
-        holdBtn.addEventListener("mouseleave", (e) => { berhentiScan(); });
+        oscillator.connect(gain);
 
-        function toggleDrawer() {
-            const drawer = document.getElementById("bottomDrawer");
-            const arrow = document.getElementById("drawerArrow");
-            drawer.classList.toggle("open");
-            arrow.innerText = drawer.classList.contains("open") ? "▲" : "▼";
-        }
+        gain.connect(
+            ctx.destination
+        );
 
-        function toggleManualModal(show) {
-            const modal = document.getElementById("manualModal");
-            modal.style.display = show ? "flex" : "none";
-            if (show) {
-                setTimeout(() => document.getElementById("manualResi").focus(), 100);
-            }
-        }
 
-        document.getElementById("manualBtn").onclick = function() {
-            const input = document.getElementById("manualResi");
-            const val = input.value.trim();
-            if(!val) return;
-            simpanLokal(val);
-            input.value = "";
-            toggleManualModal(false);
-        };
+        oscillator.start();
 
-        document.getElementById("manualResi").addEventListener("keypress", (e) => {
-            if (e.key === "Enter") {
-                e.preventDefault();
-                document.getElementById("manualBtn").click();
-            }
-        });
+        oscillator.stop(
+            ctx.currentTime +
+            duration
+        );
 
-        function simpanLokal(resi) {
-            let resiUpper = resi.toUpperCase();
-            
-            let ekspedisiLabel = (resiUpper.startsWith("SPX") || resiUpper.startsWith("SPXID")) ? "SPX" : "Je En Te";
-            let suaraEkspedisi = (ekspedisiLabel === "SPX") ? "S P X" : "Je En Te";
 
-            let isDuplicate = localData.includes(resi);
-
-            if (isDuplicate) {
-                beepDuplicate();
-                setLampuBca('merah', 'Dobel di HP!');
-                robotBicara("Dobel");
-                showNotif("⚠ RESI DOBEL (SUDAH ADA DI ANTREAN)", "warning");
-            } else {
-                beepSuccess();
-                setLampuBca('ijo', `Tersimpan! ${ekspedisiLabel}`);
-                robotBicara(`${suaraEkspedisi}, SUKSES.`);
-                showNotif("✓ TERSIMPAN LOKAL", "success");
-
-                localData.push(resi);
-                localStorage.setItem('resi_offline_v2', JSON.stringify(localData));
-
-                scanHistory.unshift({ resi, display: ekspedisiLabel });
-                localStorage.setItem("scanHistory_v2", JSON.stringify(scanHistory.slice(0, 100)));
-            }
-
-            updateCounters();
-            renderHistory();
-        }
-
-        function renderHistory(){ 
-            const body = document.getElementById("historyBody"); 
-            body.innerHTML = ""; 
-            
-            let currentAntrean = scanHistory.filter(item => localData.includes(item.resi));
-            
-            if(currentAntrean.length === 0) {
-                body.innerHTML = `<tr><td colspan="2" style="text-align:center; color:#94a3b8; padding: 15px;">Belum ada antrean resi baru.</td></tr>`;
-                return;
-            }
-
-            currentAntrean.slice(0, 20).forEach(item => { 
-                let badge = "badge-keluar"; 
-                body.innerHTML += `<tr><td style="font-weight:600;">${item.resi}</td><td><span class="badge ${badge}">${item.display}</span></td></tr>`; 
-            }); 
-        }
-
-        function downloadOfflineData() { 
-            if(localData.length === 0) {
-                alert("Belum ada data tersimpan.");
-                return;
-            }
-            let blob = new Blob([localData.join("\n")], { type: "text/plain" }); 
-            let a = document.createElement("a"); 
-            a.href = URL.createObjectURL(blob); 
-            a.download = "data_scan_offline.txt"; 
-            a.click(); 
-        }
-
-        function clearDataLokal() {
-            if(confirm("Hapus semua data scan lokal di HP?")) {
-                localStorage.removeItem('resi_offline_v2');
-                localStorage.removeItem('scanHistory_v2');
-                localData = [];
-                scanHistory = [];
-                updateCounters();
-                renderHistory();
-                setLampuBca('ijo', 'Data bersih!');
-                robotBicara("Bersih");
-            }
-        }
-
-        async function syncKeServer() {
-            if(localData.length === 0) {
-                alert("Tidak ada data untuk disinkronkan.");
-                return;
-            }
-            
-            let url = getTargetUrl();
-            if(!url) {
-                alert("URL Apps Script belum diatur di config.js!");
-                return;
-            }
-
-            if(!confirm(`Akan menyinkronkan ${localData.length} data ke Google Sheet. Lanjutkan?`)) return;
-
-            setLampuBca('kuning', `Memulai Sync (0/${localData.length})...`);
-            robotBicara("Memulai sinkronisasi data.");
-
-            let suksesCount = 0;
-            let sisaData = [...localData];
-
-            for (let i = 0; i < localData.length; i++) {
-                let resi = localData[i];
-                setLampuBca('kuning', `Sync (${i+1}/${localData.length}): ${resi}`);
+        setTimeout(
+            () => {
 
                 try {
-                    let r = await fetch(url, { 
-                        method: "POST", 
-                        mode: "cors", 
-                        headers: { "Content-Type": "text/plain;charset=utf-8" }, 
-                        body: JSON.stringify({ resi: resi, source: "pengiriman" }) 
-                    });
-                    
-                    let textRes = await r.text();
-                    let json = JSON.parse(textRes);
+                    ctx.close();
+                }
+                catch(e) {}
 
-                    if(json.status === "success" || json.status === "duplicate") {
-                        suksesCount++;
-                        sisaData = sisaData.filter(item => item !== resi);
-                    }
-                } catch(innerErr) {
-                    break;
+            },
+            duration * 1000 + 100
+        );
+
+    }
+    catch(e) {}
+
+}
+
+
+function successBeep() {
+
+    beep(
+        750,
+        .08
+    );
+
+}
+
+
+function duplicateBeep() {
+
+    beep(
+        300,
+        .25
+    );
+
+}
+
+
+/* =========================================================
+   SPEECH
+========================================================= */
+
+function speak(
+    text
+) {
+
+    try {
+
+        if (
+            !("speechSynthesis" in window)
+        ) {
+
+            return;
+
+        }
+
+
+        window.speechSynthesis.cancel();
+
+
+        const voice =
+            new SpeechSynthesisUtterance(
+                text
+            );
+
+
+        voice.lang =
+            "id-ID";
+
+
+        voice.rate =
+            1.05;
+
+
+        window.speechSynthesis.speak(
+            voice
+        );
+
+    }
+    catch(e) {}
+
+}
+
+
+/* =========================================================
+   COURIER
+========================================================= */
+
+function getCourier(
+    resi
+) {
+
+    const r =
+        resi
+            .trim()
+            .toUpperCase();
+
+
+    if (
+        r.startsWith("SPX")
+    ) {
+
+        return "SPX";
+
+    }
+
+
+    if (
+        r.startsWith("JX") ||
+        r.startsWith("JY") ||
+        r.startsWith("JZ")
+    ) {
+
+        return "JNT";
+
+    }
+
+
+    return "UNKNOWN";
+
+}
+
+
+/* =========================================================
+   SAVE LOCAL
+========================================================= */
+
+function saveLocal(
+    rawResi
+) {
+
+    const resi =
+        String(rawResi)
+            .trim()
+            .toUpperCase();
+
+
+    if (!resi) {
+        return;
+    }
+
+
+    /*
+       ANTI DUPLICATE
+    */
+
+    const duplicate =
+        localData.some(
+            item =>
+                item.toUpperCase() ===
+                resi
+        );
+
+
+    if (duplicate) {
+
+        duplicateBeep();
+
+
+        setStatus(
+            "error",
+            "RESI DOBEL DI ANTREAN"
+        );
+
+
+        speak(
+            "Dobel"
+        );
+
+
+        showNotification(
+            "RESI SUDAH ADA",
+            "warning"
+        );
+
+
+        return;
+
+    }
+
+
+    /*
+       COURIER
+    */
+
+    const courier =
+        getCourier(
+            resi
+        );
+
+
+    /*
+       LOCAL QUEUE
+    */
+
+    localData.push(
+        resi
+    );
+
+
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(
+            localData
+        )
+    );
+
+
+    /*
+       HISTORY
+    */
+
+    scanHistory.unshift({
+
+        resi: resi,
+
+        courier: courier,
+
+        time: Date.now()
+
+    });
+
+
+    scanHistory =
+        scanHistory.slice(
+            0,
+            300
+        );
+
+
+    localStorage.setItem(
+        HISTORY_KEY,
+        JSON.stringify(
+            scanHistory
+        )
+    );
+
+
+    /*
+       SUCCESS
+    */
+
+    successBeep();
+
+
+    if (
+        courier === "SPX"
+    ) {
+
+        speak(
+            "S P X sukses"
+        );
+
+    }
+
+    else if (
+        courier === "JNT"
+    ) {
+
+        speak(
+            "J N T sukses"
+        );
+
+    }
+
+    else {
+
+        speak(
+            "Sukses"
+        );
+
+    }
+
+
+    setStatus(
+        "success",
+        "TERSIMPAN • " + courier
+    );
+
+
+    showNotification(
+        "RESI TERSIMPAN",
+        "success"
+    );
+
+
+    updateQueueUI();
+
+    renderQueue();
+
+}
+
+
+/* =========================================================
+   QUEUE UI
+========================================================= */
+
+function updateQueueUI() {
+
+    const count =
+        localData.length;
+
+
+    document.getElementById(
+        "syncCount"
+    ).textContent =
+        count;
+
+
+    document.getElementById(
+        "queueCount"
+    ).textContent =
+        count;
+
+
+    document.getElementById(
+        "panelQueueCount"
+    ).textContent =
+        count;
+
+}
+
+
+/* =========================================================
+   RENDER QUEUE
+========================================================= */
+
+function renderQueue() {
+
+    queueBody.innerHTML = "";
+
+
+    if (
+        localData.length === 0
+    ) {
+
+        queueBody.innerHTML = `
+            <tr>
+                <td
+                    colspan="2"
+                    class="empty-row">
+                    Tidak ada antrean offline
+                </td>
+            </tr>
+        `;
+
+        return;
+
+    }
+
+
+    [...localData]
+        .reverse()
+        .forEach(
+            resi => {
+
+                const courier =
+                    getCourier(
+                        resi
+                    );
+
+
+                let badge =
+                    "badge-unknown";
+
+
+                if (
+                    courier === "SPX"
+                ) {
+
+                    badge =
+                        "badge-spx";
+
                 }
 
-                await new Promise(resolve => setTimeout(resolve, 300));
-            }
+                else if (
+                    courier === "JNT"
+                ) {
 
-            localData = sisaData;
-            if(localData.length === 0) {
-                localStorage.removeItem('resi_offline_v2');
-            } else {
-                localStorage.setItem('resi_offline_v2', JSON.stringify(localData));
-            }
-            
-            updateCounters();
-            renderHistory();
+                    badge =
+                        "badge-jnt";
 
-            if(suksesCount > 0) {
-                setLampuBca('ijo', `Sync Selesai (${suksesCount} terkirim)!`);
-                robotBicara("Sinkronisasi selesai.");
-                alert(`Berhasil mengirim ${suksesCount} data ke Google Sheet!${localData.length > 0 ? '\nSisa data gagal terkirim tetap tersimpan di HP.' : ''}`);
-            } else {
-                setLampuBca('merah', 'Sync Gagal (Cek Koneksi)');
-                robotBicara("Gagal sinkronisasi.");
-                alert("Gagal mengirim data. Pastikan koneksi internet stabil dan URL Apps Script benar.");
+                }
+
+
+                queueBody.innerHTML += `
+                    <tr>
+
+                        <td
+                            class="resi-text">
+                            ${escapeHTML(resi)}
+                        </td>
+
+                        <td>
+
+                            <span
+                                class="badge ${badge}">
+                                ${courier}
+                            </span>
+
+                        </td>
+
+                    </tr>
+                `;
+
             }
+        );
+
+}
+
+
+/* =========================================================
+   ESCAPE
+========================================================= */
+
+function escapeHTML(
+    text
+) {
+
+    return String(text)
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+/* =========================================================
+   START CAMERA
+========================================================= */
+
+async function startCamera() {
+
+    if (
+        cameraRunning ||
+        startingCamera ||
+        stoppingCamera
+    ) {
+
+        return;
+
+    }
+
+
+    startingCamera =
+        true;
+
+
+    cameraError.style.display =
+        "none";
+
+
+    holdButton.classList.add(
+        "active"
+    );
+
+
+    holdButton.textContent =
+        "LEPASKAN UNTUK BERHENTI";
+
+
+    setStatus(
+        "idle",
+        "Memulai kamera..."
+    );
+
+
+    try {
+
+        if (!html5QrCode) {
+
+            html5QrCode =
+                new Html5Qrcode(
+                    "reader"
+                );
+
         }
-    </script>
+
+
+        /*
+           Barcode resi biasanya
+           berbentuk horizontal.
+        */
+
+        const scannerConfig = {
+
+            fps: 15,
+
+            qrbox: {
+
+                width:
+                    Math.min(
+                        390,
+                        Math.floor(
+                            window.innerWidth *
+                            .86
+                        )
+                    ),
+
+                height: 145
+
+            },
+
+            aspectRatio:
+                1.7777778,
+
+            disableFlip:
+                false
+
+        };
+
+
+        /*
+           Coba kamera belakang.
+        */
+
+        await html5QrCode.start(
+
+            {
+                facingMode:
+                    "environment"
+            },
+
+            scannerConfig,
+
+            handleScan,
+
+            () => {}
+
+        );
+
+
+        cameraRunning =
+            true;
+
+
+        setStatus(
+            "success",
+            "KAMERA AKTIF • SIAP SCAN"
+        );
+
+    }
+
+    catch(error) {
+
+        console.error(
+            "START CAMERA ERROR:",
+            error
+        );
+
+
+        cameraRunning =
+            false;
+
+
+        holdButton.classList.remove(
+            "active"
+        );
+
+
+        holdButton.textContent =
+            "TAHAN UNTUK SCAN";
+
+
+        setStatus(
+            "error",
+            "KAMERA GAGAL"
+        );
+
+
+        cameraError.style.display =
+            "block";
+
+
+        showNotification(
+            "IZIN KAMERA DITOLAK / GAGAL",
+            "error"
+        );
+
+    }
+
+    finally {
+
+        startingCamera =
+            false;
+
+    }
+
+}
+
+
+/* =========================================================
+   HANDLE SCAN
+========================================================= */
+
+function handleScan(
+    decodedText
+) {
+
+    if (
+        processingScan
+    ) {
+
+        return;
+
+    }
+
+
+    const resi =
+        String(decodedText)
+            .trim()
+            .toUpperCase();
+
+
+    if (!resi) {
+        return;
+    }
+
+
+    processingScan =
+        true;
+
+
+    saveLocal(
+        resi
+    );
+
+
+    setTimeout(
+        () => {
+
+            processingScan =
+                false;
+
+        },
+        1200
+    );
+
+}
+
+
+/* =========================================================
+   STOP CAMERA
+========================================================= */
+
+async function stopCamera() {
+
+    if (
+        !cameraRunning
+    ) {
+
+        holdButton.classList.remove(
+            "active"
+        );
+
+        holdButton.textContent =
+            "TAHAN UNTUK SCAN";
+
+        return;
+
+    }
+
+
+    if (
+        stoppingCamera
+    ) {
+
+        return;
+
+    }
+
+
+    stoppingCamera =
+        true;
+
+
+    cameraRunning =
+        false;
+
+
+    holdButton.classList.remove(
+        "active"
+    );
+
+
+    holdButton.textContent =
+        "TAHAN UNTUK SCAN";
+
+
+    try {
+
+        if (
+            html5QrCode
+        ) {
+
+            await html5QrCode.stop();
+
+        }
+
+    }
+
+    catch(error) {
+
+        console.warn(
+            "STOP CAMERA:",
+            error
+        );
+
+    }
+
+    finally {
+
+        stoppingCamera =
+            false;
+
+
+        setStatus(
+            "idle",
+            "Scanner berhenti"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   POINTER EVENTS
+========================================================= */
+
+holdButton.addEventListener(
+    "pointerdown",
+    event => {
+
+        event.preventDefault();
+
+
+        try {
+
+            holdButton.setPointerCapture(
+                event.pointerId
+            );
+
+        }
+        catch(e) {}
+
+
+        startCamera();
+
+    }
+);
+
+
+holdButton.addEventListener(
+    "pointerup",
+    event => {
+
+        event.preventDefault();
+
+        stopCamera();
+
+    }
+);
+
+
+holdButton.addEventListener(
+    "pointercancel",
+    event => {
+
+        event.preventDefault();
+
+        stopCamera();
+
+    }
+);
+
+
+holdButton.addEventListener(
+    "lostpointercapture",
+    () => {
+
+        if (
+            cameraRunning
+        ) {
+
+            stopCamera();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   QUEUE PANEL
+========================================================= */
+
+document.getElementById(
+    "queueBar"
+).addEventListener(
+    "click",
+    () => {
+
+        queuePanel.classList.add(
+            "open"
+        );
+
+        renderQueue();
+
+    }
+);
+
+
+document.getElementById(
+    "queueClose"
+).addEventListener(
+    "click",
+    () => {
+
+        queuePanel.classList.remove(
+            "open"
+        );
+
+    }
+);
+
+
+/* =========================================================
+   MANUAL
+========================================================= */
+
+document.getElementById(
+    "manualButton"
+).addEventListener(
+    "click",
+    () => {
+
+        manualModal.classList.add(
+            "show"
+        );
+
+
+        setTimeout(
+            () => {
+
+                manualInput.focus();
+
+            },
+            100
+        );
+
+    }
+);
+
+
+document.getElementById(
+    "manualCancel"
+).addEventListener(
+    "click",
+    closeManual
+);
+
+
+function closeManual() {
+
+    manualModal.classList.remove(
+        "show"
+    );
+
+    manualInput.value =
+        "";
+
+}
+
+
+/* =========================================================
+   MANUAL SAVE
+========================================================= */
+
+document.getElementById(
+    "manualSave"
+).addEventListener(
+    "click",
+    () => {
+
+        const value =
+            manualInput.value
+                .trim()
+                .toUpperCase();
+
+
+        if (!value) {
+
+            manualInput.focus();
+
+            return;
+
+        }
+
+
+        saveLocal(
+            value
+        );
+
+
+        closeManual();
+
+    }
+);
+
+
+manualInput.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key ===
+            "Enter"
+        ) {
+
+            event.preventDefault();
+
+            document.getElementById(
+                "manualSave"
+            ).click();
+
+        }
+
+
+        if (
+            event.key ===
+            "Escape"
+        ) {
+
+            closeManual();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   DOWNLOAD
+========================================================= */
+
+document.getElementById(
+    "downloadBtn"
+).addEventListener(
+    "click",
+    () => {
+
+        if (
+            localData.length === 0
+        ) {
+
+            alert(
+                "Tidak ada data offline."
+            );
+
+            return;
+
+        }
+
+
+        const blob =
+            new Blob(
+                [
+                    localData.join(
+                        "\n"
+                    )
+                ],
+                {
+                    type:
+                        "text/plain;charset=utf-8"
+                }
+            );
+
+
+        const url =
+            URL.createObjectURL(
+                blob
+            );
+
+
+        const a =
+            document.createElement(
+                "a"
+            );
+
+
+        a.href =
+            url;
+
+
+        a.download =
+            "SRF_SCAN_OFFLINE.txt";
+
+
+        document.body.appendChild(
+            a
+        );
+
+
+        a.click();
+
+
+        a.remove();
+
+
+        URL.revokeObjectURL(
+            url
+        );
+
+    }
+);
+
+
+/* =========================================================
+   CLEAR
+========================================================= */
+
+document.getElementById(
+    "clearBtn"
+).addEventListener(
+    "click",
+    () => {
+
+        if (
+            localData.length === 0
+        ) {
+
+            return;
+
+        }
+
+
+        if (
+            !confirm(
+                "Hapus semua antrean resi dari HP?"
+            )
+        ) {
+
+            return;
+
+        }
+
+
+        localData =
+            [];
+
+
+        localStorage.removeItem(
+            STORAGE_KEY
+        );
+
+
+        updateQueueUI();
+
+        renderQueue();
+
+
+        setStatus(
+            "success",
+            "Antrean lokal dibersihkan"
+        );
+
+
+        speak(
+            "Data dibersihkan"
+        );
+
+    }
+);
+
+
+/* =========================================================
+   SYNC BUTTON
+========================================================= */
+
+document.getElementById(
+    "headerSync"
+).addEventListener(
+    "click",
+    syncToServer
+);
+
+
+document.getElementById(
+    "panelSync"
+).addEventListener(
+    "click",
+    syncToServer
+);
+
+
+/* =========================================================
+   SYNC
+========================================================= */
+
+async function syncToServer() {
+
+    if (
+        localData.length === 0
+    ) {
+
+        alert(
+            "Tidak ada resi untuk disinkronkan."
+        );
+
+        return;
+
+    }
+
+
+    const url =
+        getTargetUrl();
+
+
+    if (!url) {
+
+        alert(
+            "APP_URL belum ditemukan di config.js."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        !confirm(
+            `Kirim ${localData.length} resi ke Google Sheet?`
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    const queue =
+        [...localData];
+
+
+    const gagal =
+        [];
+
+
+    let sukses =
+        0;
+
+
+    setStatus(
+        "idle",
+        `SYNC 0/${queue.length}`
+    );
+
+
+    for (
+        let i = 0;
+        i < queue.length;
+        i++
+    ) {
+
+        const resi =
+            queue[i];
+
+
+        setStatus(
+            "idle",
+            `SYNC ${i + 1}/${queue.length}`
+        );
+
+
+        try {
+
+            const response =
+                await fetch(
+                    url,
+                    {
+
+                        method:
+                            "POST",
+
+                        mode:
+                            "cors",
+
+                        headers: {
+
+                            "Content-Type":
+                                "text/plain;charset=utf-8"
+
+                        },
+
+                        body:
+                            JSON.stringify({
+
+                                resi:
+                                    resi,
+
+                                source:
+                                    "pengiriman"
+
+                            })
+
+                    }
+                );
+
+
+            const text =
+                await response.text();
+
+
+            let result =
+                null;
+
+
+            try {
+
+                result =
+                    JSON.parse(
+                        text
+                    );
+
+            }
+            catch(e) {}
+
+
+            if (
+                result &&
+                (
+                    result.status ===
+                        "success" ||
+
+                    result.status ===
+                        "duplicate"
+                )
+            ) {
+
+                sukses++;
+
+            }
+
+            else {
+
+                gagal.push(
+                    resi
+                );
+
+            }
+
+        }
+
+        catch(error) {
+
+            console.error(
+                "SYNC ERROR:",
+                error
+            );
+
+
+            gagal.push(
+                resi
+            );
+
+
+            /*
+               Jika koneksi putus,
+               jangan lanjut terlalu jauh.
+            */
+
+            break;
+
+        }
+
+
+        await sleep(
+            150
+        );
+
+    }
+
+
+    /*
+       DATA GAGAL TETAP DI HP
+    */
+
+    localData =
+        gagal;
+
+
+    if (
+        localData.length > 0
+    ) {
+
+        localStorage.setItem(
+            STORAGE_KEY,
+            JSON.stringify(
+                localData
+            )
+        );
+
+    }
+
+    else {
+
+        localStorage.removeItem(
+            STORAGE_KEY
+        );
+
+    }
+
+
+    updateQueueUI();
+
+    renderQueue();
+
+
+    if (
+        sukses > 0
+    ) {
+
+        successBeep();
+
+
+        setStatus(
+            "success",
+            `SYNC SELESAI • ${sukses} RESI`
+        );
+
+
+        showNotification(
+            `${sukses} RESI BERHASIL SYNC`,
+            "success"
+        );
+
+
+        speak(
+            "Sinkronisasi selesai"
+        );
+
+    }
+
+
+    if (
+        gagal.length > 0
+    ) {
+
+        alert(
+            `Berhasil: ${sukses}\n` +
+            `Belum terkirim: ${gagal.length}\n\n` +
+            `Data yang gagal tetap tersimpan di HP.`
+        );
+
+    }
+
+    else {
+
+        alert(
+            `Semua ${sukses} resi berhasil dikirim ke Google Sheet.`
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   SLEEP
+========================================================= */
+
+function sleep(
+    ms
+) {
+
+    return new Promise(
+        resolve =>
+            setTimeout(
+                resolve,
+                ms
+            )
+    );
+
+}
+
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+async function loadDashboard() {
+
+    const url =
+        getTargetUrl();
+
+
+    if (!url) {
+        return;
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${url}?action=getDashboard`,
+                {
+                    method:
+                        "GET",
+
+                    cache:
+                        "no-store"
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            data.status ===
+            "success"
+        ) {
+
+            document.getElementById(
+                "todayCount"
+            ).textContent =
+                data.hariIni ??
+                0;
+
+
+            document.getElementById(
+                "yesterdayCount"
+            ).textContent =
+                data.kemarin ??
+                0;
+
+
+            document.getElementById(
+                "weekCount"
+            ).textContent =
+                data.mingguIni ??
+                0;
+
+        }
+
+    }
+    catch(error) {
+
+        console.warn(
+            "Dashboard error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   TAB / APP BACKGROUND
+========================================================= */
+
+document.addEventListener(
+    "visibilitychange",
+    () => {
+
+        if (
+            document.hidden &&
+            cameraRunning
+        ) {
+
+            stopCamera();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   BEFORE CLOSE
+========================================================= */
+
+window.addEventListener(
+    "beforeunload",
+    () => {
+
+        if (
+            cameraRunning &&
+            html5QrCode
+        ) {
+
+            try {
+
+                html5QrCode.stop();
+
+            }
+            catch(e) {}
+
+        }
+
+    }
+);
+
+</script>
+
 </body>
 </html>
