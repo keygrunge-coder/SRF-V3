@@ -127,7 +127,6 @@
 
     <script src="config.js"></script>
     <script>
-        // Mendukung variabel APP_URL langsung ataupun dari objek CONFIG
         function getTargetUrl() {
             if (typeof APP_URL !== 'undefined') return APP_URL;
             if (typeof CONFIG !== 'undefined' && CONFIG.APP_URL) return CONFIG.APP_URL;
@@ -260,7 +259,7 @@
 
         function simpanLokal(resi) {
             let resiUpper = resi.toUpperCase();
-            let ekspedisi = resiUpper.startsWith("SPX") ? "SPX" : "J&T";
+            let ekspedisi = (resiUpper.startsWith("SPX") || resiUpper.startsWith("SPXID")) ? "SPX" : "J&T";
 
             let isDuplicate = localData.includes(resi);
 
@@ -273,7 +272,7 @@
             } else {
                 beepSuccess();
                 setLampuBca('ijo', `Tersimpan! ${ekspedisi}`);
-                robotBicara(`${ekspedisi}, Oke.`);
+                robotBicara(`${ekspedisi}, SUKSES.`);
                 showNotif("✓ TERSIMPAN LOKAL", "success");
 
                 localData.push(resi);
@@ -351,11 +350,12 @@
                 setLampuBca('kuning', `Sync (${i+1}/${localData.length}): ${resi}`);
 
                 try {
+                    // Mengirim source: "pengiriman" agar router doPost di Apps Script masuk ke handlePengiriman
                     let r = await fetch(url, { 
                         method: "POST", 
                         mode: "cors", 
                         headers: { "Content-Type": "text/plain;charset=utf-8" }, 
-                        body: JSON.stringify({ resi: resi, source: "harian" }) 
+                        body: JSON.stringify({ resi: resi, source: "pengiriman" }) 
                     });
                     
                     let textRes = await r.text();
