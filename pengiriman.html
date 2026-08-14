@@ -259,7 +259,7 @@
             if (isDuplicate) {
                 beepDuplicate();
                 setLampuBca('merah', 'Dobel di HP!');
-                robotBicara("Dobel");
+                robotBicara("sudah di scan");
                 showNotif("⚠ RESI DOBEL (LOKAL)", "warning");
                 scanHistory.unshift({ resi, display: "DOBEL" });
             } else {
@@ -314,7 +314,7 @@
                 updateCounters();
                 renderHistory();
                 setLampuBca('ijo', 'Data bersih!');
-                robotBicara("Bersih");
+                robotBicara("Data Dibersihkan");
             }
         }
 
