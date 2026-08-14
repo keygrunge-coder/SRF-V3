@@ -2,75 +2,244 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SEO Keyword Analyzer & Generator Judul Sandal</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SEO Keyword Analyzer & Title Generator - Sandal</title>
 <style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f4f6f8;color:#17202a}
-.wrap{max-width:1100px;margin:auto;padding:24px}
-.card{background:#fff;border:1px solid #e2e6ea;border-radius:16px;padding:20px;margin-bottom:16px;box-shadow:0 3px 12px #00000008}
-h1{margin:0 0 8px;font-size:24px;color:#111827}
-h2{margin:0 0 12px;font-size:18px}
-.muted{color:#68737d;font-size:14px}
-textarea, input[type="text"], input[type="number"]{width:100%;border:1px solid #ccd3da;border-radius:12px;padding:12px;font-size:14px;margin-top:6px}
-textarea{min-height:180px;resize:vertical}
-button{border:0;border-radius:10px;padding:12px 18px;font-weight:700;cursor:pointer;background:#111827;color:white}
-button.secondary{background:#e9edf1;color:#111827;margin-left:8px}
-button.accent{background:#2563eb;color:white}
-button.success{background:#16a34a;color:white;margin-left:8px}
-.actions{margin-top:12px}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-.stat{background:#f7f8fa;border-radius:12px;padding:14px}
-.stat b{display:block;font-size:20px;margin-top:4px}
-table{width:100%;border-collapse:collapse;margin-top:10px}
-th,td{text-align:left;padding:10px;border-bottom:1px solid #edf0f2}
-th{font-size:13px;color:#66707a}
-.titlebox{background:#f7f8fa;padding:16px;border-radius:12px;margin:12px 0;border:1px solid #e2e6ea}
-.title-text{font-size:18px;font-weight:700;color:#1e293b;line-height:1.4}
-.char-info{font-size:13px;color:#64748b;margin-top:8px}
-.filter-grid{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-top:12px}
-@media(max-width:700px){.grid{grid-template-columns:repeat(2,1fr)}.filter-grid{grid-template-columns:1fr}.wrap{padding:12px}}
+  :root {
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --primary-color: #2563eb;
+    --primary-hover: #1d4ed8;
+    --text-color: #0f172a;
+    --muted-color: #64748b;
+    --border-color: #e2e8f0;
+    --accent-bg: #f1f5f9;
+    --success-color: #16a34a;
+    --success-hover: #15803d;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.5;
+  }
+
+  .wrap {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 24px 16px;
+  }
+
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 2px 4px -2px rgba(0, 0, 0, 0.03);
+  }
+
+  h1 {
+    margin: 0 0 6px 0;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-color);
+  }
+
+  h2 {
+    margin: 0 0 16px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-color);
+  }
+
+  .muted {
+    color: var(--muted-color);
+    font-size: 13px;
+  }
+
+  textarea, input[type="text"], input[type="number"] {
+    width: 100%;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 14px;
+    background: #fff;
+    color: var(--text-color);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  textarea:focus, input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+
+  textarea {
+    min-height: 160px;
+    resize: vertical;
+    margin-top: 10px;
+  }
+
+  .filter-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 16px;
+    margin-top: 16px;
+  }
+
+  .field-group label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted-color);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  button {
+    border: 0;
+    border-radius: 10px;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  button:active { transform: scale(0.98); }
+
+  button.primary { background: var(--primary-color); color: white; }
+  button.primary:hover { background: var(--primary-hover); }
+
+  button.success { background: var(--success-color); color: white; }
+  button.success:hover { background: var(--success-hover); }
+
+  button.secondary { background: var(--accent-bg); color: var(--text-color); }
+  button.secondary:hover { background: #e2e8f0; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .stat {
+    background: var(--accent-bg);
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+  }
+
+  .stat-label { font-size: 12px; color: var(--muted-color); font-weight: 500; }
+  .stat-val { font-size: 20px; font-weight: 700; color: var(--text-color); margin-top: 4px; }
+
+  .titlebox {
+    background: #f8fafc;
+    border: 1.5px dashed var(--border-color);
+    padding: 18px;
+    border-radius: 12px;
+    margin: 16px 0;
+  }
+
+  .generated-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #1e293b;
+    line-height: 1.5;
+    word-break: break-word;
+  }
+
+  .char-info {
+    font-size: 12px;
+    color: var(--muted-color);
+    margin-top: 8px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8px;
+  }
+
+  th, td {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 14px;
+  }
+
+  th {
+    font-size: 12px;
+    color: var(--muted-color);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: #f8fafc;
+  }
+
+  tr:last-child td { border-bottom: none; }
+
+  @media(max-width: 640px) {
+    .filter-grid, .grid { grid-template-columns: 1fr; }
+    .actions { flex-direction: column; }
+    button { width: 100%; }
+  }
 </style>
 </head>
 <body>
 
 <div class="wrap">
+  <!-- Input Form Card -->
   <div class="card">
-    <h1>👡 Analyzer Kata Kunci & Generator Judul Sandal</h1>
-    <div class="muted">Copas hasil pencarian Shopee (Tab Terlaris). Alat ini khusus mengekstrak kata kunci produk sandal yang paling laku.</div>
+    <h1>👡 SEO Keyword Analyzer Sandal</h1>
+    <div class="muted">Salin data pencarian Shopee (Tab Terlaris), tempel di bawah untuk menemukan kata kunci paling sering digunakan.</div>
     
-    <textarea id="input" placeholder="Paste mentahan hasil copas dari Shopee di sini..."></textarea>
+    <textarea id="input" placeholder="Tempel teks hasil pencarian Shopee di sini..."></textarea>
     
     <div class="filter-grid">
-      <div>
-        <label class="muted"><b>Kata Buangan Tambahan (Pisahkan dengan koma/spasi):</b></label>
+      <div class="field-group">
+        <label>Kata Buangan Tambahan</label>
         <input type="text" id="customStopWords" placeholder="contoh: promo, gratis, ongkir, diskon">
       </div>
-      <div>
-        <label class="muted"><b>Ambil Maksimal Produk Terlaris:</b></label>
-        <input type="number" id="topLimit" value="20" min="5" max="100">
+      <div class="field-group">
+        <label>Minimal Kemunculan Kata</label>
+        <input type="number" id="minFrequency" value="2" min="1" max="50">
       </div>
     </div>
 
     <div class="actions">
-      <button onclick="analyze()">ANALISIS PRODUK TERLARIS</button>
-      <button class="secondary" onclick="resetForm()">RESET</button>
+      <button class="primary" onclick="analyze()">🔍 Analisis Kata Kunci</button>
+      <button class="secondary" onclick="resetForm()">🔄 Reset Input</button>
     </div>
   </div>
 
+  <!-- Result Output -->
   <div id="result"></div>
 </div>
 
 <script>
-// Stop words khusus kategori produk umum & Shopee e-commerce UI
+// Kata buangan standar (UI Shopee & kata umum non-spesifik)
 const DEFAULT_STOP = new Set(`
 dan yang untuk dari dengan di ke pada anak ini itu terbaru model laki perempuan cowok cewek
 atau serta ada all the a an of by i harga rp terjual bln hari besok kab kabupaten kota 
 produk serupa viral kekinian grosir murah promo diskon gratis ongkir cod toko star seller
-sepatu pakaian baju celana tas aksoris original berkualitas premium import lokal
+sepatu pakaian baju celana tas aksesoris original berkualitas premium import lokal
 `.trim().split(/\s+/));
 
-let globalKeywords = [];
+let globalFilteredKeywords = [];
 
 function clean(s){
   return s.toLowerCase()
@@ -81,31 +250,19 @@ function clean(s){
    .replace(/\s+/g,' ').trim();
 }
 
-function extractPrices(raw){
-  const prices = [];
-  const regex = /rp\s*([\d.,]+)/gi;
-  let match;
-  while ((match = regex.exec(raw)) !== null) {
-    let cleanNum = parseInt(match[1].replace(/[.,]/g, ''));
-    if (cleanNum > 1000 && cleanNum < 50000000) prices.push(cleanNum);
-  }
-  return prices;
-}
-
 function extractTitles(raw){
-  const lines = raw.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+  const lines = raw.split(/\r?\n/).map(x => x.trim()).filter(Boolean);
   let titles = [];
-  for(let i=0; i<lines.length; i++){
-    let s = lines[i].replace(/^[-•]+\s*/,'').trim();
+  for(let i = 0; i < lines.length; i++){
+    let s = lines[i].replace(/^[-•]+\s*/, '').trim();
     if(s.length >= 18 && s.length <= 250 && /[a-zA-Z]/.test(s)){
-      let nearby = lines.slice(i+1, i+6).join(' ');
-      // Filter khusus: Memastikan ada teks penjualan di sekitarnya
+      let nearby = lines.slice(i + 1, i + 6).join(' ');
       if(/(\d+\s*terjual|\d+k?\+?\s*terjual|terjual\/bln|rp\s*[\d.,]+)/i.test(nearby)){
         titles.push(s);
       }
     }
   }
-  return [...new Map(titles.map(t=>[t.toLowerCase(),t])).values()];
+  return [...new Map(titles.map(t => [t.toLowerCase(), t])).values()];
 }
 
 function getActiveStopWords(){
@@ -121,8 +278,8 @@ function tokenize(t, stopSet){
 
 function ngrams(words, n, stopSet){
   let a = [];
-  for(let i=0; i<=words.length-n; i++){
-    let x = words.slice(i, i+n);
+  for(let i = 0; i <= words.length - n; i++){
+    let x = words.slice(i, i + n);
     if(x.every(w => !stopSet.has(w))) a.push(x.join(' '));
   }
   return a;
@@ -137,13 +294,12 @@ function shuffleArray(array) {
   return arr;
 }
 
-function generateTitle() {
-  if(!globalKeywords.length) return;
+function generateRandomTitle() {
+  if(!globalFilteredKeywords.length) return;
 
-  const pool = globalKeywords.map(x => x[0]);
+  const pool = globalFilteredKeywords.map(x => x[0]);
   let shuffled = shuffleArray(pool).slice(0, 6);
 
-  // Kunci kata "Sandal" di depan
   let titleParts = [];
   if(pool.includes('sandal')) {
     titleParts.push('Sandal');
@@ -152,7 +308,7 @@ function generateTitle() {
     titleParts.push('Sendal');
     shuffled = shuffled.filter(w => w !== 'sandal' && w !== 'sendal');
   } else {
-    titleParts.push('Sandal'); // Default jika tidak terdeteksi
+    titleParts.push('Sandal');
   }
 
   titleParts = titleParts.concat(shuffled);
@@ -164,89 +320,128 @@ function generateTitle() {
 
 function copyTitle() {
   const text = document.getElementById('generatedTitle').innerText;
-  if(text) {
+  if(text && text !== '-') {
     navigator.clipboard.writeText(text);
-    alert('Judul berhasil disalin ke clipboard!');
+    alert('Judul berhasil disalin!');
   }
 }
 
 function analyze(){
   const raw = document.getElementById('input').value;
-  if(!raw.trim()){ alert('Masukkan data copas Shopee terlebih dahulu.'); return; }
+  if(!raw.trim()){ alert('Silakan tempelkan hasil copas data Shopee terlebih dahulu.'); return; }
 
-  const limit = parseInt(document.getElementById('topLimit').value) || 20;
-  const rawTitles = extractTitles(raw);
-  const titles = rawTitles.slice(0, limit);
-  const prices = extractPrices(raw);
+  const minFreq = parseInt(document.getElementById('minFrequency').value) || 2;
+  const titles = extractTitles(raw);
 
   if(!titles.length){
-    document.getElementById('result').innerHTML = '<div class="card"><b>Judul produk terlaris tidak terdeteksi.</b><p class="muted">Pastikan kamu menyalin halaman hasil pencarian Shopee dengan lengkap.</p></div>';
+    document.getElementById('result').innerHTML = `
+      <div class="card">
+        <h2>⚠️ Judul Produk Tidak Terbaca</h2>
+        <p class="muted">Sistem tidak menemukan judul produk. Pastikan Anda menyalin seluruh teks dari halaman pencarian Shopee dengan lengkap.</p>
+      </div>`;
     return;
   }
 
   const stopSet = getActiveStopWords();
   const one = {}, two = {}, three = {};
 
-  // Perhitungan berbobot (Produk teratas dapat skor lebih tinggi)
-  titles.forEach((t, index) => {
-    const weight = index < 5 ? 3 : (index < 10 ? 2 : 1);
+  titles.forEach(t => {
     const words = tokenize(t, stopSet);
-
-    new Set(words).forEach(w => one[w] = (one[w] || 0) + weight);
-    new Set(ngrams(words, 2, stopSet)).forEach(w => two[w] = (two[w] || 0) + weight);
-    new Set(ngrams(words, 3, stopSet)).forEach(w => three[w] = (three[w] || 0) + weight);
+    new Set(words).forEach(w => one[w] = (one[w] || 0) + 1);
+    new Set(ngrams(words, 2, stopSet)).forEach(w => two[w] = (two[w] || 0) + 1);
+    new Set(ngrams(words, 3, stopSet)).forEach(w => three[w] = (three[w] || 0) + 1);
   });
 
-  const rank = o => Object.entries(o).sort((a,b) => b[1] - a[1] || a[0].localeCompare(b[0]));
-  globalKeywords = rank(one);
-
-  const top2 = rank(two).slice(0, 15);
-  const top3 = rank(three).slice(0, 10);
-
-  let avgPrice = prices.length ? Math.round(prices.reduce((a,b)=>a+b, 0) / prices.length) : 0;
-  const formatRp = val => val ? 'Rp ' + val.toLocaleString('id-ID') : 'N/A';
+  const rank = o => Object.entries(o).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+  
+  // Filter berdasarkan minimal kemunculan (default >= 2 kali)
+  globalFilteredKeywords = rank(one).filter(item => item[1] >= minFreq);
+  const top2 = rank(two).filter(item => item[1] >= minFreq).slice(0, 15);
+  const top3 = rank(three).filter(item => item[1] >= minFreq).slice(0, 10);
 
   document.getElementById('result').innerHTML = `
     <div class="card">
       <div class="grid">
-        <div class="stat">Produk Diisi<b>${titles.length} Top Sales</b></div>
-        <div class="stat">Kata Unik Khusus<b>${Object.keys(one).length} Kata</b></div>
-        <div class="stat">Rata-rata Harga<b>${formatRp(avgPrice)}</b></div>
-        <div class="stat">Total Sampel Judul<b>${rawTitles.length} Terdeteksi</b></div>
+        <div class="stat">
+          <div class="stat-label">Produk Terbaca</div>
+          <div class="stat-val">${titles.length} Judul</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Kata Kunci Lolos Filter</div>
+          <div class="stat-val">${globalFilteredKeywords.length} Kata</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Batas Min. Kemunculan</div>
+          <div class="stat-val">≥ ${minFreq} Kali</div>
+        </div>
       </div>
     </div>
 
     <div class="card">
-      <h2>🚀 Generator Judul Sandal Otomatis</h2>
-      <div class="muted">Disusun berdasar kata kunci bernilai tinggi dari produk terlaris.</div>
+      <h2>✨ Random SEO Title Generator</h2>
+      <div class="muted">Kombinasi otomatis dari kata kunci teratas yang muncul minimal ${minFreq} kali.</div>
+      
       <div class="titlebox">
-        <div class="title-text" id="generatedTitle">-</div>
-        <div class="char-info">Panjang Karakter: <b id="charCount">0</b> / 255 (Saran Shopee: 80 - 120 Karakter)</div>
+        <div class="generated-title" id="generatedTitle">-</div>
+        <div class="char-info">Panjang Karakter: <b id="charCount">0</b> / 255 (Panjang ideal Shopee: 80 - 120)</div>
       </div>
-      <button class="accent" onclick="generateTitle()">🔀 Acak Judul Baru</button>
-      <button class="success" onclick="copyTitle()">📋 Salin Judul</button>
+
+      <div class="actions" style="margin-top:0;">
+        <button class="primary" onclick="generateRandomTitle()">🔀 Acak Variasi Judul</button>
+        <button class="success" onclick="copyTitle()">📋 Salin Judul</button>
+      </div>
     </div>
 
-    <div class="card"><h2>🏆 Top Kata Kunci Single (Unigram)</h2>${renderTable(globalKeywords.slice(0, 25), 'Kata Kunci', 'Skor Bobot')}</div>
-    <div class="card"><h2>Kombinasi 2 Kata Populer (Bigram)</h2>${renderTable(top2, 'Frasa 2 Kata', 'Skor Bobot')}</div>
-    <div class="card"><h2>Kombinasi 3 Kata Populer (Trigram)</h2>${renderTable(top3, 'Frasa 3 Kata', 'Skor Bobot')}</div>
+    <div class="card">
+      <h2>🏆 Kata Kunci Tunggal (Unigram)</h2>
+      <div class="muted" style="margin-bottom:12px;">Daftar kata kunci yang sering diulang oleh kompetitor.</div>
+      ${renderTable(globalFilteredKeywords.slice(0, 30), 'Kata Kunci', 'Frekuensi Muncul')}
+    </div>
+
+    <div class="card">
+      <h2>🔗 Frasa 2 Kata (Bigram)</h2>
+      <div class="muted" style="margin-bottom:12px;">Kombinasi 2 kata populer untuk kategori sandal.</div>
+      ${renderTable(top2, 'Frasa 2 Kata', 'Frekuensi Muncul')}
+    </div>
+
+    <div class="card">
+      <h2>🔗 Frasa 3 Kata (Trigram)</h2>
+      <div class="muted" style="margin-bottom:12px;">Kombinasi 3 kata populer untuk deskripsi/pencarian panjang.</div>
+      ${renderTable(top3, 'Frasa 3 Kata', 'Frekuensi Muncul')}
+    </div>
   `;
 
-  generateTitle();
+  generateRandomTitle();
 }
 
 function renderTable(data, col1, col2){
-  if(!data.length) return '<p class="muted">Tidak ada data.</p>';
-  return '<table><thead><tr><th>'+col1+'</th><th>'+col2+'</th></tr></thead><tbody>'+
-    data.map(x => '<tr><td><b>'+x[0]+'</b></td><td>'+x[1]+' pt</td></tr>').join('')+
-    '</tbody></table>';
+  if(!data.length) return '<p class="muted">Tidak ada kata kunci yang memenuhi batas minimal kemunculan.</p>';
+  return `
+    <table>
+      <thead>
+        <tr>
+          <th>${col1}</th>
+          <th>${col2}</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${data.map(x => `
+          <tr>
+            <td><b>${x[0]}</b></td>
+            <td>${x[1]} kali</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
 }
 
 function resetForm(){
   document.getElementById('input').value = '';
   document.getElementById('customStopWords').value = '';
+  document.getElementById('minFrequency').value = '2';
   document.getElementById('result').innerHTML = '';
-  globalKeywords = [];
+  globalFilteredKeywords = [];
 }
 </script>
 </body>
