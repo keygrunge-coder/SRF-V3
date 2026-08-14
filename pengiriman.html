@@ -3,20 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sistem Scan Resi Cepat (Offline Mode)</title>
+    <title>Sistem Scan Resi Cepat</title>
     <!-- Library Html5-Qrcode -->
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         body { background-color: #f4f6f9; color: #333; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         
-        header { background: #1e293b; color: #fff; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); z-index: 10; }
-        header h1 { font-size: 16px; font-weight: 600; }
+        header { background: #1e293b; color: #fff; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); z-index: 10; }
+        header h1 { font-size: 15px; font-weight: 600; }
         
-        .header-btns { display: flex; gap: 6px; }
-        .btn-header { border: none; padding: 6px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; color: #fff; }
+        .header-btns { display: flex; gap: 5px; }
+        .btn-header { border: none; padding: 6px 7px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; color: #fff; display: flex; align-items: center; gap: 2px; }
         .btn-sync { background: #2563eb; }
         .btn-download { background: #059669; }
+        .btn-refresh { background: #d97706; }
         .btn-clear { background: #dc2626; }
 
         .dashboard-stats { display: flex; background: #334155; padding: 8px 16px; justify-content: space-around; color: #fff; font-size: 13px; text-align: center; }
@@ -66,8 +67,9 @@
     <header>
         <h1>Scan Resi Cepat</h1>
         <div class="header-btns">
+            <button class="btn-header btn-refresh" onclick="window.location.reload()" title="Refresh Halaman">🔄</button>
             <button class="btn-header btn-sync" onclick="syncKeServer()">☁️ Sync (<span id="sync-count">0</span>)</button>
-            <button class="btn-header btn-download" onclick="downloadOfflineData()">📥 (<span id="local-slot">0</span>)</button>
+            <button class="btn-header btn-download" onclick="downloadOfflineData()" title="Download TXT">📥(<span id="local-slot">0</span>)</button>
             <button class="btn-header btn-clear" onclick="clearDataLokal()" title="Bersihkan Cache">🗑️</button>
         </div>
     </header>
@@ -130,7 +132,6 @@
         let html5QrCode = null;
         let isProcessing = false;
         
-        // Menggunakan nama kunci khusus versi baru agar bersih dari cache lama
         let localData = JSON.parse(localStorage.getItem('resi_offline_v2')) || [];
         let scanHistory = JSON.parse(localStorage.getItem("scanHistory_v2") || "[]");
         updateCounters();
@@ -323,47 +324,61 @@
                 return;
             }
             if(typeof APP_URL === 'undefined') {
-                alert("URL Apps Script belum diatur!");
+                alert("URL Apps Script belum diatur di config.js!");
                 return;
             }
 
-            if(!confirm(`Kirim ${localData.length} data ke Google Sheet?`)) return;
+            if(!confirm(`Akan menyinkronkan ${localData.length} data ke Google Sheet. Lanjutkan?`)) return;
 
-            setLampuBca('kuning', 'Sedang Sync...');
-            robotBicara("Sinkronisasi.");
+            setLampuBca('kuning', `Memulai Sync (0/${localData.length})...`);
+            robotBicara("Memulai sinkronisasi data.");
 
-            try {
-                let suksesCount = 0;
-                for (let i = 0; i < localData.length; i++) {
-                    let resi = localData[i];
-                    try {
-                        let r = await fetch(APP_URL, { 
-                            method: "POST", 
-                            mode: "cors", 
-                            headers: { "Content-Type": "text/plain;charset=utf-8" }, 
-                            body: JSON.stringify({ resi: resi, source: "harian" }) 
-                        });
-                        let json = await r.json();
-                        if(json.status === "success" || json.status === "duplicate") {
-                            suksesCount++;
-                        }
-                    } catch(innerErr) {
-                        break;
+            let suksesCount = 0;
+            let sisaData = [...localData];
+
+            for (let i = 0; i < localData.length; i++) {
+                let resi = localData[i];
+                setLampuBca('kuning', `Sync (${i+1}/${localData.length}): ${resi}`);
+
+                try {
+                    let r = await fetch(APP_URL, { 
+                        method: "POST", 
+                        mode: "cors", 
+                        headers: { "Content-Type": "text/plain;charset=utf-8" }, 
+                        body: JSON.stringify({ resi: resi, source: "harian" }) 
+                    });
+                    
+                    let textRes = await r.text();
+                    let json = JSON.parse(textRes);
+
+                    if(json.status === "success" || json.status === "duplicate") {
+                        suksesCount++;
+                        sisaData = sisaData.filter(item => item !== resi);
                     }
+                } catch(innerErr) {
+                    break;
                 }
 
-                if(suksesCount > 0) {
-                    alert(`Berhasil sync ${suksesCount} data!`);
-                    localData = [];
-                    localStorage.removeItem('resi_offline_v2');
-                    updateCounters();
-                    setLampuBca('ijo', 'Sync Selesai!');
-                    robotBicara("Selesai");
-                } else {
-                    setLampuBca('merah', 'Sync Gagal');
-                }
-            } catch(err) {
-                setLampuBca('merah', 'Koneksi Error');
+                await new Promise(resolve => setTimeout(resolve, 300));
+            }
+
+            localData = sisaData;
+            if(localData.length === 0) {
+                localStorage.removeItem('resi_offline_v2');
+            } else {
+                localStorage.setItem('resi_offline_v2', JSON.stringify(localData));
+            }
+            
+            updateCounters();
+
+            if(suksesCount > 0) {
+                setLampuBca('ijo', `Sync Selesai (${suksesCount} terkirim)!`);
+                robotBicara("Sinkronisasi selesai.");
+                alert(`Berhasil mengirim ${suksesCount} data ke Google Sheet!${localData.length > 0 ? '\nSisa data gagal terkirim tetap tersimpan di HP.' : ''}`);
+            } else {
+                setLampuBca('merah', 'Sync Gagal (Cek Koneksi)');
+                robotBicara("Gagal sinkronisasi.");
+                alert("Gagal mengirim data. Pastikan koneksi internet stabil dan URL Apps Script benar.");
             }
         }
     </script>
