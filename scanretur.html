@@ -1,937 +1,783 @@
+
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta name="viewport"
-      content="width=device-width,
-               initial-scale=1.0,
-               maximum-scale=1.0,
-               user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <title>SRF • Scan Retur</title>
 
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f172a">
+
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
 <style>
-
-/* =========================================================
-   RESET
-========================================================= */
-
 *{
     box-sizing:border-box;
     margin:0;
     padding:0;
-
-    font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Roboto,
-        Arial,
-        sans-serif;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
 }
 
-html,
-body{
+html,body{
     width:100%;
-    height:100%;
-    overflow:hidden;
+    min-height:100%;
     background:#0f172a;
+    color:#f8fafc;
 }
 
 body{
-    display:flex;
-    flex-direction:column;
+    min-height:100vh;
 }
 
-
-/* =========================================================
+/* =========================
    HEADER
-========================================================= */
+========================= */
 
 .header{
     height:52px;
-    flex-shrink:0;
-
     background:#1e293b;
-    color:white;
-
     display:flex;
     align-items:center;
     justify-content:space-between;
-
     padding:0 10px;
+    border-bottom:1px solid #334155;
+    position:relative;
+    z-index:20;
+}
 
-    z-index:50;
+.header-left{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.back-btn{
+    border:0;
+    background:transparent;
+    color:#cbd5e1;
+    font-size:20px;
+    cursor:pointer;
+    padding:4px;
 }
 
 .header-title{
-    font-size:15px;
+    font-size:14px;
     font-weight:900;
 }
 
-.header-actions{
-    display:flex;
-    align-items:center;
-    gap:5px;
-}
-
-.header-btn{
+.camera-toggle{
     border:0;
-    border-radius:7px;
-
-    padding:7px 9px;
-
+    border-radius:8px;
+    padding:7px 10px;
+    background:#475569;
     color:white;
-
     font-size:10px;
     font-weight:900;
-
     cursor:pointer;
-    touch-action:manipulation;
 }
 
-
-/* =========================================================
-   CAMERA BUTTON
-========================================================= */
-
-.camera-btn{
+.camera-toggle.on{
     background:#16a34a;
 }
 
-.camera-btn.off{
-    background:#dc2626;
+/* =========================
+   MAIN
+========================= */
+
+.main{
+    width:100%;
+    max-width:700px;
+    margin:auto;
+    padding-bottom:20px;
 }
 
+/* =========================
+   CAMERA
+========================= */
 
-/* =========================================================
-   HASIL & RIWAYAT
-========================================================= */
-
-.result-btn{
-    background:#2563eb;
-}
-
-.history-btn{
-    background:#7c3aed;
-}
-
-
-/* =========================================================
-   DASHBOARD
-========================================================= */
-
-.stats{
-    height:52px;
-    flex-shrink:0;
-
-    background:#334155;
-    color:white;
-
-    display:flex;
-    justify-content:space-around;
-    align-items:center;
-
-    text-align:center;
-}
-
-.stat{
-    font-size:10px;
-    color:#cbd5e1;
-}
-
-.stat strong{
-    display:block;
-
-    color:#38bdf8;
-
-    font-size:16px;
-
-    margin-top:1px;
-}
-
-
-/* =========================================================
-   SCANNER
-========================================================= */
-
-.scanner{
+.camera-section{
     position:relative;
-
-    flex:1;
-    min-height:0;
-
+    width:100%;
+    height:55vh;
+    min-height:300px;
+    max-height:520px;
     background:#000;
-
     overflow:hidden;
 }
 
 #reader{
-    position:absolute;
-
-    inset:0;
-
     width:100%!important;
     height:100%!important;
-
     border:0!important;
-
-    background:#000;
 }
 
 #reader video{
     width:100%!important;
     height:100%!important;
-
     object-fit:cover!important;
 }
 
 #reader img,
-#reader__dashboard{
+#reader__dashboard,
+#reader__dashboard_section_csr,
+#reader__dashboard_section_swaplink{
     display:none!important;
 }
 
-#reader__scan_region{
-    width:100%!important;
-    height:100%!important;
-}
-
-
-/* =========================================================
-   STATUS
-========================================================= */
-
-.status-box{
+.camera-status{
     position:absolute;
-
     top:12px;
     left:12px;
     right:12px;
-
-    z-index:20;
-
-    background:rgba(15,23,42,.88);
-
-    backdrop-filter:blur(8px);
-
-    border-radius:10px;
-
-    padding:10px 12px;
+    z-index:10;
 
     display:flex;
     align-items:center;
-    gap:9px;
+    gap:8px;
 
-    color:white;
+    padding:9px 12px;
+
+    background:rgba(15,23,42,.82);
+    backdrop-filter:blur(8px);
+
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,.08);
 }
 
-.lamp{
-    width:13px;
-    height:13px;
-    min-width:13px;
-
+.status-lamp{
+    width:11px;
+    height:11px;
+    min-width:11px;
     border-radius:50%;
-
     background:#facc15;
-
-    box-shadow:
-        0 0 10px currentColor;
+    box-shadow:0 0 10px currentColor;
 }
 
 .status-text{
-    font-size:13px;
+    font-size:12px;
     font-weight:800;
-
-    overflow:hidden;
-    white-space:nowrap;
-    text-overflow:ellipsis;
 }
 
-
-/* =========================================================
-   NOTIFICATION
-========================================================= */
-
-.notif{
+.camera-off{
     position:absolute;
+    inset:0;
+    z-index:5;
 
-    top:75px;
-    left:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
 
-    transform:translateX(-50%);
+    flex-direction:column;
+    gap:8px;
 
-    z-index:40;
-
-    padding:10px 18px;
-
-    border-radius:25px;
-
-    font-size:13px;
-    font-weight:900;
-
-    display:none;
-
-    white-space:nowrap;
-
-    box-shadow:
-        0 5px 15px rgba(0,0,0,.35);
+    background:#020617;
 }
 
-.notif.success{
+.camera-off-icon{
+    font-size:42px;
+    opacity:.7;
+}
+
+.camera-off-text{
+    color:#94a3b8;
+    font-size:12px;
+    font-weight:700;
+}
+
+/* =========================
+   MODE BUTTONS
+========================= */
+
+.mode-area{
+    padding:10px;
+    background:#1e293b;
+}
+
+.mode-buttons{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+}
+
+.mode-btn{
+    border:0;
+    border-radius:9px;
+    padding:11px;
+    color:white;
+    background:#334155;
+    font-size:11px;
+    font-weight:900;
+    cursor:pointer;
+}
+
+.mode-btn.active{
+    background:#2563eb;
+}
+
+/* =========================
+   MANUAL
+========================= */
+
+.manual-panel{
+    display:none;
+    padding:10px;
+    background:#1e293b;
+}
+
+.manual-panel.open{
+    display:block;
+}
+
+.section-title{
+    font-size:12px;
+    font-weight:900;
+    margin-bottom:7px;
+}
+
+.manual-help{
+    color:#94a3b8;
+    font-size:10px;
+    line-height:1.5;
+    margin-bottom:8px;
+}
+
+#manualInput{
+    width:100%;
+    min-height:145px;
+    resize:vertical;
+
+    padding:11px;
+
+    background:#0f172a;
+    color:white;
+
+    border:1px solid #475569;
+    border-radius:9px;
+
+    outline:none;
+    font-size:12px;
+    line-height:1.5;
+}
+
+#manualInput:focus{
+    border-color:#3b82f6;
+}
+
+.manual-actions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    margin-top:8px;
+}
+
+.action-btn{
+    border:0;
+    border-radius:8px;
+    padding:11px;
+    font-size:11px;
+    font-weight:900;
+    cursor:pointer;
+}
+
+.process-btn{
     background:#16a34a;
     color:white;
 }
 
-.notif.warning{
-    background:#f59e0b;
+.clear-btn{
+    background:#475569;
     color:white;
 }
 
-.notif.error{
-    background:#dc2626;
-    color:white;
-}
+/* =========================
+   NOTIFICATION
+========================= */
 
-
-/* =========================================================
-   HASIL SCAN PANEL
-========================================================= */
-
-.result-panel{
-    position:absolute;
-
-    inset:0;
-
-    z-index:100;
-
+.notification{
     display:none;
-
-    overflow-y:auto;
-
-    background:#f1f5f9;
-
-    padding:12px;
+    margin:10px;
+    padding:11px 12px;
+    border-radius:9px;
+    font-size:11px;
+    font-weight:900;
 }
 
-.result-panel.open{
+.notification.show{
     display:block;
 }
 
-.result-top{
-    display:flex;
+.notification.success{
+    background:#14532d;
+    color:#86efac;
+}
 
+.notification.warning{
+    background:#78350f;
+    color:#fcd34d;
+}
+
+.notification.error{
+    background:#7f1d1d;
+    color:#fca5a5;
+}
+
+.notification.info{
+    background:#1e3a8a;
+    color:#93c5fd;
+}
+
+/* =========================
+   HASIL TERAKHIR
+========================= */
+
+.results-section{
+    padding:10px;
+}
+
+.results-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:8px;
+}
+
+.results-title{
+    font-size:13px;
+    font-weight:900;
+}
+
+.results-count{
+    color:#94a3b8;
+    font-size:10px;
+    font-weight:700;
+}
+
+/* =========================
+   RESULT CARD
+========================= */
+
+.result-card{
+    background:#1e293b;
+    border:1px solid #334155;
+    border-radius:12px;
+    margin-bottom:8px;
+    overflow:hidden;
+}
+
+.result-head{
+    width:100%;
+    border:0;
+    background:transparent;
+    color:white;
+
+    padding:11px;
+
+    display:flex;
     align-items:center;
     justify-content:space-between;
 
-    margin-bottom:10px;
-}
-
-.result-title{
-    color:#0f172a;
-
-    font-size:16px;
-    font-weight:900;
-}
-
-.result-close{
-    border:0;
-
-    background:#dc2626;
-    color:white;
-
-    border-radius:8px;
-
-    padding:8px 12px;
-
-    font-size:10px;
-    font-weight:900;
-
+    text-align:left;
     cursor:pointer;
 }
 
-.result-card{
-    background:white;
-
-    border-radius:14px;
-
-    padding:14px;
-
-    margin-bottom:12px;
-
-    box-shadow:
-        0 4px 14px rgba(15,23,42,.08);
-}
-
-.result-header{
-    display:flex;
-
-    align-items:flex-start;
-    justify-content:space-between;
-
-    gap:10px;
-
-    margin-bottom:10px;
+.result-head-left{
+    min-width:0;
 }
 
 .result-resi{
-    color:#0f172a;
-
-    font-size:15px;
+    font-size:12px;
     font-weight:900;
-
     word-break:break-all;
 }
 
-.result-status{
-    flex-shrink:0;
-
-    background:#dcfce7;
-    color:#166534;
-
-    padding:5px 8px;
-
-    border-radius:7px;
-
+.result-time{
+    margin-top:3px;
+    color:#94a3b8;
     font-size:9px;
-    font-weight:900;
 }
 
-.result-info{
-    display:grid;
-
-    grid-template-columns:1fr 1fr;
-
+.result-head-right{
+    display:flex;
+    align-items:center;
     gap:7px;
+    flex-shrink:0;
+}
 
-    margin-bottom:12px;
+.arrow{
+    color:#94a3b8;
+    font-size:11px;
+}
+
+.badge{
+    padding:4px 7px;
+    border-radius:6px;
+    font-size:8px;
+    font-weight:900;
+    white-space:nowrap;
+}
+
+.badge-success{
+    background:#14532d;
+    color:#86efac;
+}
+
+.badge-duplicate{
+    background:#7f1d1d;
+    color:#fca5a5;
+}
+
+.badge-notfound{
+    background:#78350f;
+    color:#fcd34d;
+}
+
+.badge-error{
+    background:#7f1d1d;
+    color:#fca5a5;
+}
+
+.result-body{
+    display:none;
+    padding:0 11px 11px;
+    border-top:1px solid #334155;
+}
+
+.result-card.open .result-body{
+    display:block;
+}
+
+.info-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:7px;
+    margin-top:10px;
 }
 
 .info-box{
-    background:#f8fafc;
-
-    border-radius:8px;
-
+    background:#0f172a;
+    border-radius:7px;
     padding:8px;
 }
 
 .info-label{
     color:#64748b;
-
-    font-size:9px;
+    font-size:8px;
     font-weight:700;
 }
 
 .info-value{
-    color:#0f172a;
-
-    font-size:11px;
-    font-weight:900;
-
     margin-top:2px;
-
+    color:#e2e8f0;
+    font-size:10px;
+    font-weight:900;
     word-break:break-word;
 }
 
+/* =========================
+   DETAIL ITEM
+========================= */
 
-/* =========================================================
-   TABLE ITEM
-========================================================= */
-
-.item-title{
-    color:#0f172a;
-
-    font-size:12px;
+.items-title{
+    margin-top:11px;
+    margin-bottom:6px;
+    font-size:10px;
     font-weight:900;
-
-    margin-bottom:7px;
 }
 
 .item-table{
     width:100%;
-
     border-collapse:collapse;
-
-    font-size:11px;
+    font-size:10px;
 }
 
 .item-table th{
-    background:#f1f5f9;
-
+    background:#0f172a;
     color:#64748b;
-
-    padding:8px 6px;
-
+    padding:7px 5px;
     text-align:left;
-
-    font-size:9px;
-    font-weight:900;
+    font-size:8px;
 }
 
 .item-table td{
-    padding:9px 6px;
-
-    border-bottom:
-        1px solid #e2e8f0;
-
-    color:#1e293b;
-
+    padding:8px 5px;
+    border-bottom:1px solid #334155;
+    color:#e2e8f0;
     font-weight:700;
-
     vertical-align:middle;
 }
 
-.item-table th:last-child,
-.item-table td:last-child{
-    text-align:center;
-}
-
-.item-table tbody tr:last-child td{
+.item-table tr:last-child td{
     border-bottom:0;
 }
 
-.qty-badge{
+.qty{
     display:inline-flex;
-
-    align-items:center;
     justify-content:center;
-
-    min-width:28px;
-
-    padding:4px 6px;
-
-    border-radius:6px;
-
-    background:#dbeafe;
-    color:#1d4ed8;
-
-    font-size:10px;
-    font-weight:900;
-}
-
-.total-box{
-    display:flex;
-
-    justify-content:space-between;
     align-items:center;
 
-    margin-top:10px;
+    min-width:25px;
+    padding:3px 5px;
 
-    padding-top:10px;
-
-    border-top:
-        2px solid #e2e8f0;
-
-    color:#0f172a;
-
-    font-size:12px;
-    font-weight:900;
-}
-
-.total-value{
-    color:#2563eb;
-
-    font-size:14px;
-}
-
-
-/* =========================================================
-   HISTORY
-========================================================= */
-
-.history-panel{
-    position:absolute;
-
-    inset:0;
-
-    z-index:100;
-
-    display:none;
-
-    overflow-y:auto;
-
-    background:#f1f5f9;
-
-    padding:12px;
-}
-
-.history-panel.open{
-    display:block;
-}
-
-.history-top{
-    display:flex;
-
-    align-items:center;
-    justify-content:space-between;
-
-    margin-bottom:10px;
-}
-
-.history-title{
-    color:#0f172a;
-
-    font-size:16px;
-    font-weight:900;
-}
-
-.history-close{
-    border:0;
-
-    background:#dc2626;
+    background:#1d4ed8;
     color:white;
 
-    border-radius:8px;
-
-    padding:8px 12px;
-
-    font-size:10px;
+    border-radius:5px;
+    font-size:9px;
     font-weight:900;
 }
 
-.history-empty{
-    background:white;
-
-    border-radius:12px;
-
-    padding:25px 15px;
-
-    text-align:center;
-
-    color:#94a3b8;
-
-    font-size:12px;
+.result-message{
+    margin-top:10px;
+    padding:9px;
+    border-radius:7px;
+    background:#0f172a;
+    color:#cbd5e1;
+    font-size:10px;
     font-weight:700;
 }
 
-.history-item{
-    background:white;
+/* =========================
+   EMPTY
+========================= */
 
-    border-radius:12px;
-
-    padding:12px;
-
-    margin-bottom:8px;
-
-    box-shadow:
-        0 3px 10px rgba(15,23,42,.06);
-
-    cursor:pointer;
-}
-
-.history-item-top{
-    display:flex;
-
-    align-items:center;
-    justify-content:space-between;
-
-    gap:8px;
-}
-
-.history-resi{
-    color:#0f172a;
-
-    font-size:12px;
-    font-weight:900;
-
-    word-break:break-all;
-}
-
-.history-time{
+.empty{
+    padding:25px 15px;
+    background:#1e293b;
+    border:1px solid #334155;
+    border-radius:10px;
+    text-align:center;
     color:#64748b;
-
-    font-size:9px;
-
-    margin-top:4px;
+    font-size:11px;
 }
 
-.history-count{
-    flex-shrink:0;
+/* =========================
+   RESPONSIVE
+========================= */
 
-    background:#dbeafe;
-    color:#1d4ed8;
+@media(max-width:380px){
 
-    padding:4px 7px;
-
-    border-radius:6px;
-
-    font-size:9px;
-    font-weight:900;
-}
-
-
-/* =========================================================
-   MOBILE
-========================================================= */
-
-@media(max-width:430px){
+    .camera-section{
+        height:52vh;
+    }
 
     .header-title{
         font-size:13px;
     }
 
-    .header-actions{
-        gap:3px;
+    .camera-toggle{
+        padding:6px 8px;
+        font-size:9px;
     }
 
-    .header-btn{
-        padding:6px 7px;
-        font-size:8px;
-    }
-
-    .status-text{
-        font-size:12px;
-    }
-
-}
-
-@media(max-width:360px){
-
-    .header-title{
-        font-size:12px;
-    }
-
-    .header-btn{
-        padding:5px 6px;
-        font-size:7px;
-    }
-
-    .result-panel,
-    .history-panel{
-        padding:10px;
+    .info-grid{
+        gap:5px;
     }
 
     .item-table{
-        font-size:10px;
+        font-size:9px;
     }
-
-    .item-table th{
-        font-size:8px;
-    }
-
-    .item-table td{
-        padding:8px 4px;
-    }
-
 }
-
 </style>
-
 </head>
-
 
 <body>
 
-
-<!-- =========================================================
-     HEADER
-========================================================= -->
-
 <header class="header">
 
-    <div class="header-title">
-        SRF • Scan Retur
+    <div class="header-left">
+
+        <button
+            class="back-btn"
+            onclick="location.href='index.html'">
+            ←
+        </button>
+
+        <div class="header-title">
+            SCAN RETUR
+        </div>
+
     </div>
 
-    <div class="header-actions">
-
-        <!-- KAMERA -->
-
-        <button
-            id="cameraButton"
-            class="header-btn camera-btn"
-            onclick="toggleCamera()">
-
-            KAMERA ON
-
-        </button>
-
-
-        <!-- HASIL -->
-
-        <button
-            class="header-btn result-btn"
-            onclick="openResultPanel()">
-
-            HASIL
-
-        </button>
-
-
-        <!-- RIWAYAT -->
-
-        <button
-            class="header-btn history-btn"
-            onclick="openHistoryPanel()">
-
-            RIWAYAT
-
-        </button>
-
-    </div>
+    <button
+        id="cameraToggle"
+        class="camera-toggle"
+        onclick="toggleCamera()">
+        KAMERA OFF
+    </button>
 
 </header>
 
 
-<!-- =========================================================
-     DASHBOARD
-========================================================= -->
+<main class="main">
 
-<div class="stats">
+    <!-- CAMERA -->
 
-    <div class="stat">
-
-        Hari Ini
-
-        <strong id="hariIni">
-            0
-        </strong>
-
-    </div>
-
-
-    <div class="stat">
-
-        Kemarin
-
-        <strong id="kemarin">
-            0
-        </strong>
-
-    </div>
-
-
-    <div class="stat">
-
-        Minggu Ini
-
-        <strong id="mingguIni">
-            0
-        </strong>
-
-    </div>
-
-</div>
-
-
-<!-- =========================================================
-     SCANNER
-========================================================= -->
-
-<div class="scanner">
-
-    <div id="reader"></div>
-
-
-    <!-- STATUS -->
-
-    <div class="status-box">
+    <section class="camera-section">
 
         <div
-            id="lamp"
-            class="lamp">
+            id="reader">
         </div>
 
-
         <div
-            id="statusText"
-            class="status-text">
+            id="cameraOff"
+            class="camera-off">
 
-            Kamera mati, scanner siap
+            <div class="camera-off-icon">
+                ▣
+            </div>
+
+            <div class="camera-off-text">
+                Kamera tidak aktif
+            </div>
 
         </div>
 
-    </div>
+        <div class="camera-status">
+
+            <div
+                id="statusLamp"
+                class="status-lamp">
+            </div>
+
+            <div
+                id="statusText"
+                class="status-text">
+                Kamera mati
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- MODE -->
+
+    <section class="mode-area">
+
+        <div class="mode-buttons">
+
+            <button
+                id="cameraModeBtn"
+                class="mode-btn active"
+                onclick="setMode('camera')">
+
+                SCAN KAMERA
+
+            </button>
+
+            <button
+                id="manualModeBtn"
+                class="mode-btn"
+                onclick="setMode('manual')">
+
+                INPUT MANUAL
+
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- MANUAL -->
+
+    <section
+        id="manualPanel"
+        class="manual-panel">
+
+        <div class="section-title">
+            INPUT MANUAL RESI RETUR
+        </div>
+
+        <div class="manual-help">
+
+            Bisa masukkan banyak resi sekaligus.
+            Pisahkan dengan Enter, spasi, atau koma.
+
+        </div>
+
+        <textarea
+            id="manualInput"
+            placeholder="Contoh:
+JY1261687193
+JY1262837600
+JY1197060858
+JY1192937624
+JY1125358383"></textarea>
+
+        <div class="manual-actions">
+
+            <button
+                class="action-btn process-btn"
+                onclick="processManual()">
+
+                PROSES SEMUA
+
+            </button>
+
+            <button
+                class="action-btn clear-btn"
+                onclick="clearManual()">
+
+                BERSIHKAN
+
+            </button>
+
+        </div>
+
+    </section>
 
 
     <!-- NOTIFICATION -->
 
     <div
-        id="notif"
-        class="notif">
+        id="notification"
+        class="notification">
     </div>
 
 
-    <!-- =====================================================
-         HASIL SCAN
-    ====================================================== -->
+    <!-- HASIL -->
 
-    <div
-        id="resultPanel"
-        class="result-panel">
+    <section class="results-section">
 
-        <div class="result-top">
+        <div class="results-header">
 
-            <div class="result-title">
+            <div class="results-title">
                 HASIL SCAN
             </div>
 
-
-            <button
-                class="result-close"
-                onclick="closeResultPanel()">
-
-                TUTUP
-
-            </button>
-
-        </div>
-
-
-        <div id="resultContainer"></div>
-
-    </div>
-
-
-    <!-- =====================================================
-         RIWAYAT
-    ====================================================== -->
-
-    <div
-        id="historyPanel"
-        class="history-panel">
-
-        <div class="history-top">
-
-            <div class="history-title">
-                RIWAYAT SCAN RETUR
+            <div
+                id="resultsCount"
+                class="results-count">
+                0 hasil
             </div>
 
+        </div>
 
-            <button
-                class="history-close"
-                onclick="closeHistoryPanel()">
+        <div id="resultsContainer">
 
-                TUTUP
-
-            </button>
+            <div class="empty">
+                Belum ada hasil scan.
+            </div>
 
         </div>
 
+    </section>
 
-        <div id="historyContainer"></div>
+</main>
 
-    </div>
-
-</div>
-
-
-<!-- =========================================================
-     CONFIG
-========================================================= -->
 
 <script src="config.js"></script>
-
 
 <script>
 
 /* =========================================================
-   URL APPS SCRIPT
+   CONFIG
 ========================================================= */
 
-function getTargetUrl(){
+function getAppUrl(){
 
     try{
 
@@ -940,12 +786,9 @@ function getTargetUrl(){
             APP_URL
         ){
 
-            return String(
-                APP_URL
-            ).trim();
+            return String(APP_URL).trim();
 
         }
-
 
         if(
             typeof CONFIG !== "undefined" &&
@@ -953,18 +796,13 @@ function getTargetUrl(){
             CONFIG.APP_URL
         ){
 
-            return String(
-                CONFIG.APP_URL
-            ).trim();
+            return String(CONFIG.APP_URL).trim();
 
         }
 
     }catch(e){
 
-        console.error(
-            "CONFIG ERROR:",
-            e
-        );
+        console.error(e);
 
     }
 
@@ -974,103 +812,61 @@ function getTargetUrl(){
 
 
 /* =========================================================
-   ROBOT
-========================================================= */
-
-const ROBOT_CONFIG = {
-
-    enabled:true,
-
-    bahasa:"id-ID",
-
-    rate:1.15,
-
-    pitch:1.0,
-
-    volume:1.0,
-
-    pesan:{
-
-        siap:
-            "Kamera mati, scanner siap",
-
-        kameraAktif:
-            "Kamera aktif, siap scan",
-
-        kameraBerhenti:
-            "Kamera dimatikan",
-
-        kameraGagal:
-            "Tidak dapat membuka kamera",
-
-        barangKembali:
-            "Barang sudah kembali",
-
-        resiSudahKembali:
-            "Resi sudah kembali",
-
-        resiTidakDitemukan:
-            "Resi tidak ditemukan",
-
-        scanGagal:
-            "Scan gagal"
-
-    }
-
-};
-
-
-/* =========================================================
-   SCAN CONFIG
-========================================================= */
-
-const SCAN_CONFIG = {
-
-    processingDelay:1200,
-
-    beepSuccess:true,
-
-    beepError:true
-
-};
-
-
-/* =========================================================
-   STORAGE
-========================================================= */
-
-const STORAGE_HISTORY =
-    "srf_scan_retur_history_v3";
-
-
-let scanHistory = [];
-
-
-try{
-
-    scanHistory =
-        JSON.parse(
-            localStorage.getItem(
-                STORAGE_HISTORY
-            ) || "[]"
-        );
-
-}catch(e){
-
-    scanHistory = [];
-
-}
-
-
-/* =========================================================
-   SCANNER VARIABLE
+   STATE
 ========================================================= */
 
 let html5QrCode = null;
 
 let cameraRunning = false;
 
-let processing = false;
+let requestRunning = false;
+
+let currentMode = "camera";
+
+let resultHistory = [];
+
+
+/*
+ * Resi yang sedang diproses.
+ *
+ * Ini mencegah satu barcode yang sama
+ * masuk berkali-kali ketika kamera
+ * masih melihat barcode tersebut.
+ */
+
+let lockedResi = "";
+
+
+/* =========================================================
+   STORAGE
+========================================================= */
+
+const STORAGE_KEY =
+    "srf_scan_retur_results_v4";
+
+
+try{
+
+    resultHistory =
+        JSON.parse(
+            localStorage.getItem(
+                STORAGE_KEY
+            ) || "[]"
+        );
+
+    if(
+        !Array.isArray(resultHistory)
+    ){
+
+        resultHistory = [];
+
+    }
+
+}catch(e){
+
+    resultHistory = [];
+
+}
 
 
 /* =========================================================
@@ -1081,240 +877,19 @@ window.addEventListener(
     "load",
     function(){
 
-        renderHistory();
-
-        updateDashboard();
+        renderResults();
 
         setStatus(
             "yellow",
-            ROBOT_CONFIG.pesan.siap
+            "Kamera mati"
         );
-
-        updateCameraButton();
 
     }
 );
 
 
 /* =========================================================
-   STATUS
-========================================================= */
-
-function setStatus(
-    type,
-    text
-){
-
-    const lamp =
-        document.getElementById(
-            "lamp"
-        );
-
-
-    const status =
-        document.getElementById(
-            "statusText"
-        );
-
-
-    status.innerText =
-        text;
-
-
-    if(type === "green"){
-
-        lamp.style.background =
-            "#22c55e";
-
-        lamp.style.color =
-            "#22c55e";
-
-    }
-
-    else if(type === "red"){
-
-        lamp.style.background =
-            "#ef4444";
-
-        lamp.style.color =
-            "#ef4444";
-
-    }
-
-    else{
-
-        lamp.style.background =
-            "#facc15";
-
-        lamp.style.color =
-            "#facc15";
-
-    }
-
-}
-
-
-/* =========================================================
-   NOTIFICATION
-========================================================= */
-
-function showNotif(
-    text,
-    type="success"
-){
-
-    const el =
-        document.getElementById(
-            "notif"
-        );
-
-
-    el.innerText =
-        text;
-
-
-    el.className =
-        "notif " + type;
-
-
-    el.style.display =
-        "block";
-
-
-    clearTimeout(
-        window.notifTimer
-    );
-
-
-    window.notifTimer =
-        setTimeout(
-            function(){
-
-                el.style.display =
-                    "none";
-
-            },
-            1800
-        );
-
-}
-
-
-/* =========================================================
-   BEEP
-========================================================= */
-
-function beep(
-    freq=600,
-    duration=.08
-){
-
-    try{
-
-        const AudioContext =
-            window.AudioContext ||
-            window.webkitAudioContext;
-
-
-        const ctx =
-            new AudioContext();
-
-
-        const osc =
-            ctx.createOscillator();
-
-
-        osc.frequency.value =
-            freq;
-
-
-        osc.connect(
-            ctx.destination
-        );
-
-
-        osc.start();
-
-
-        osc.stop(
-            ctx.currentTime +
-            duration
-        );
-
-    }catch(e){}
-
-}
-
-
-/* =========================================================
-   ROBOT
-========================================================= */
-
-function speak(text){
-
-    if(
-        !ROBOT_CONFIG.enabled
-    ){
-
-        return;
-
-    }
-
-
-    if(
-        !("speechSynthesis" in window)
-    ){
-
-        return;
-
-    }
-
-
-    try{
-
-        speechSynthesis.cancel();
-
-
-        const voice =
-            new SpeechSynthesisUtterance(
-                text
-            );
-
-
-        voice.lang =
-            ROBOT_CONFIG.bahasa;
-
-
-        voice.rate =
-            ROBOT_CONFIG.rate;
-
-
-        voice.pitch =
-            ROBOT_CONFIG.pitch;
-
-
-        voice.volume =
-            ROBOT_CONFIG.volume;
-
-
-        speechSynthesis.speak(
-            voice
-        );
-
-    }catch(e){
-
-        console.error(
-            "ROBOT ERROR:",
-            e
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   NORMALIZE RESI
+   NORMALIZE
 ========================================================= */
 
 function normalizeResi(resi){
@@ -1332,10 +907,10 @@ function normalizeResi(resi){
    ESCAPE HTML
 ========================================================= */
 
-function escapeHTML(text){
+function escapeHTML(value){
 
     return String(
-        text ?? ""
+        value ?? ""
     )
 
     .replace(
@@ -1367,66 +942,1424 @@ function escapeHTML(text){
 
 
 /* =========================================================
+   STATUS
+========================================================= */
+
+function setStatus(
+    type,
+    text
+){
+
+    const lamp =
+        document.getElementById(
+            "statusLamp"
+        );
+
+    const status =
+        document.getElementById(
+            "statusText"
+        );
+
+
+    status.innerText =
+        text;
+
+
+    if(
+        type === "green"
+    ){
+
+        lamp.style.background =
+            "#22c55e";
+
+        lamp.style.color =
+            "#22c55e";
+
+    }
+
+    else if(
+        type === "red"
+    ){
+
+        lamp.style.background =
+            "#ef4444";
+
+        lamp.style.color =
+            "#ef4444";
+
+    }
+
+    else{
+
+        lamp.style.background =
+            "#facc15";
+
+        lamp.style.color =
+            "#facc15";
+
+    }
+
+}
+
+
+/* =========================================================
+   NOTIFICATION
+========================================================= */
+
+function showNotification(
+    text,
+    type="info"
+){
+
+    const el =
+        document.getElementById(
+            "notification"
+        );
+
+
+    el.innerText =
+        text;
+
+
+    el.className =
+        "notification show " +
+        type;
+
+
+    clearTimeout(
+        window.notificationTimer
+    );
+
+
+    window.notificationTimer =
+        setTimeout(
+            function(){
+
+                el.className =
+                    "notification";
+
+            },
+            2200
+        );
+
+}
+
+
+/* =========================================================
+   ROBOT
+========================================================= */
+
+function speak(text){
+
+    if(
+        !("speechSynthesis" in window)
+    ){
+
+        return;
+
+    }
+
+
+    try{
+
+        speechSynthesis.cancel();
+
+
+        const voice =
+            new SpeechSynthesisUtterance(
+                text
+            );
+
+
+        voice.lang =
+            "id-ID";
+
+        voice.rate =
+            1.1;
+
+        voice.pitch =
+            1;
+
+        voice.volume =
+            1;
+
+
+        speechSynthesis.speak(
+            voice
+        );
+
+    }catch(e){}
+
+}
+
+
+/* =========================================================
+   CAMERA TOGGLE
+========================================================= */
+
+async function toggleCamera(){
+
+    if(
+        cameraRunning
+    ){
+
+        await stopCamera();
+
+    }else{
+
+        await startCamera();
+
+    }
+
+}
+
+
+/* =========================================================
+   START CAMERA
+========================================================= */
+
+async function startCamera(){
+
+    if(
+        cameraRunning ||
+        currentMode !== "camera"
+    ){
+
+        return;
+
+    }
+
+
+    const url =
+        getAppUrl();
+
+
+    if(!url){
+
+        setStatus(
+            "red",
+            "APP_URL tidak ditemukan"
+        );
+
+        showNotification(
+            "CONFIG APP_URL TIDAK DITEMUKAN",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    try{
+
+        if(
+            !html5QrCode
+        ){
+
+            html5QrCode =
+                new Html5Qrcode(
+                    "reader"
+                );
+
+        }
+
+
+        document
+            .getElementById(
+                "cameraOff"
+            )
+            .style.display =
+            "none";
+
+
+        setStatus(
+            "yellow",
+            "Menyalakan kamera..."
+        );
+
+
+        await html5QrCode.start(
+
+            {
+                facingMode:
+                    "environment"
+            },
+
+            {
+                fps:10,
+
+                qrbox:{
+                    width:260,
+                    height:160
+                },
+
+                aspectRatio:
+                    1.777778
+            },
+
+
+            function(decodedText){
+
+                handleCameraScan(
+                    decodedText
+                );
+
+            },
+
+            function(){}
+
+        );
+
+
+        cameraRunning =
+            true;
+
+
+        const btn =
+            document.getElementById(
+                "cameraToggle"
+            );
+
+
+        btn.innerText =
+            "KAMERA ON";
+
+        btn.classList.add(
+            "on"
+        );
+
+
+        setStatus(
+            "green",
+            "Kamera aktif • Siap scan"
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "CAMERA ERROR:",
+            error
+        );
+
+
+        cameraRunning =
+            false;
+
+
+        document
+            .getElementById(
+                "cameraOff"
+            )
+            .style.display =
+            "flex";
+
+
+        setStatus(
+            "red",
+            "Kamera gagal dibuka"
+        );
+
+
+        showNotification(
+            "IZINKAN AKSES KAMERA",
+            "error"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   STOP CAMERA
+========================================================= */
+
+async function stopCamera(){
+
+    cameraRunning =
+        false;
+
+
+    const btn =
+        document.getElementById(
+            "cameraToggle"
+        );
+
+
+    btn.innerText =
+        "KAMERA OFF";
+
+    btn.classList.remove(
+        "on"
+    );
+
+
+    try{
+
+        if(
+            html5QrCode
+        ){
+
+            await html5QrCode.stop();
+
+        }
+
+    }catch(e){}
+
+
+    document
+        .getElementById(
+            "cameraOff"
+        )
+        .style.display =
+        "flex";
+
+
+    setStatus(
+        "yellow",
+        "Kamera mati"
+    );
+
+}
+
+
+/* =========================================================
+   CAMERA SCAN
+========================================================= */
+
+async function handleCameraScan(
+    decodedText
+){
+
+    const resi =
+        normalizeResi(
+            decodedText
+        );
+
+
+    if(!resi){
+
+        return;
+
+    }
+
+
+    /*
+     * Kalau request masih berjalan,
+     * jangan proses barcode apa pun.
+     */
+
+    if(
+        requestRunning
+    ){
+
+        return;
+
+    }
+
+
+    /*
+     * Kalau barcode sama dengan yang
+     * baru saja diproses, abaikan.
+     */
+
+    if(
+        lockedResi === resi
+    ){
+
+        return;
+
+    }
+
+
+    lockedResi =
+        resi;
+
+
+    requestRunning =
+        true;
+
+
+    /*
+     * PAUSE kamera SEBELUM request.
+     *
+     * Ini bagian penting untuk mencegah
+     * satu resi masuk berkali-kali.
+     */
+
+    try{
+
+        if(
+            html5QrCode
+        ){
+
+            html5QrCode.pause(
+                true
+            );
+
+        }
+
+    }catch(e){}
+
+
+    await prosesScan(
+        resi,
+        true
+    );
+
+}
+
+
+/* =========================================================
+   PROSES SATU RESI
+========================================================= */
+
+async function prosesScan(
+    resi,
+    fromCamera=false
+){
+
+    resi =
+        normalizeResi(
+            resi
+        );
+
+
+    if(!resi){
+
+        if(
+            fromCamera
+        ){
+
+            selesaiScanKamera();
+
+        }
+
+        return;
+
+    }
+
+
+    setStatus(
+        "yellow",
+        "Mengecek " + resi + "..."
+    );
+
+
+    showNotification(
+        "Mengecek data retur...",
+        "info"
+    );
+
+
+    const url =
+        getAppUrl();
+
+
+    if(!url){
+
+        tambahHasil({
+
+            resi:resi,
+
+            status:"error",
+
+            message:
+                "APP_URL tidak ditemukan",
+
+            waktu:
+                new Date().toLocaleString(
+                    "id-ID"
+                )
+
+        });
+
+
+        setStatus(
+            "red",
+            "APP_URL tidak ditemukan"
+        );
+
+
+        selesaiScanKamera();
+
+        return;
+
+    }
+
+
+    try{
+
+        const response =
+            await fetch(
+
+                url,
+
+                {
+
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "text/plain;charset=utf-8"
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            source:
+                                "scanRetur",
+
+                            resi:
+                                resi
+
+                        })
+
+                }
+
+            );
+
+
+        const text =
+            await response.text();
+
+
+        console.log(
+            "SCAN RETUR:",
+            text
+        );
+
+
+        let result;
+
+
+        try{
+
+            result =
+                JSON.parse(
+                    text
+                );
+
+        }catch(e){
+
+            throw new Error(
+                "Response server bukan JSON"
+            );
+
+        }
+
+
+        handleServerResult(
+            result,
+            resi
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "SCAN ERROR:",
+            error
+        );
+
+
+        tambahHasil({
+
+            resi:resi,
+
+            status:"error",
+
+            message:
+                "Koneksi server gagal",
+
+            waktu:
+                new Date().toLocaleString(
+                    "id-ID"
+                )
+
+        });
+
+
+        setStatus(
+            "red",
+            "Koneksi server gagal"
+        );
+
+
+        showNotification(
+            "KONEKSI SERVER GAGAL",
+            "error"
+        );
+
+
+        speak(
+            "Koneksi server gagal"
+        );
+
+    }
+
+
+    /*
+     * Kamera jangan langsung aktif lagi.
+     *
+     * Beri jeda agar barcode yang masih
+     * berada di depan kamera tidak langsung
+     * terbaca ulang.
+     */
+
+    if(
+        fromCamera
+    ){
+
+        setTimeout(
+            function(){
+
+                selesaiScanKamera();
+
+            },
+            1200
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   HASIL SERVER
+========================================================= */
+
+function handleServerResult(
+    result,
+    resi
+){
+
+    const status =
+        String(
+            result.status || ""
+        ).toLowerCase();
+
+
+    /*
+     * SUCCESS
+     */
+
+    if(
+        status === "success"
+    ){
+
+        const data = {
+
+            resi:
+                normalizeResi(
+                    result.resi ||
+                    resi
+                ),
+
+            status:
+                "success",
+
+            orderId:
+                result.orderId ||
+                "",
+
+            sku:
+                result.sku ||
+                "",
+
+            warna:
+                result.warna ||
+                "",
+
+            size:
+                result.size ||
+                "",
+
+            qty:
+                Number(
+                    result.qty
+                ) || 0,
+
+            ekspedisi:
+                result.ekspedisi ||
+                "",
+
+            tglKembali:
+                result.tglKembali ||
+                "",
+
+            message:
+                result.message ||
+                "Barang sudah kembali",
+
+            waktu:
+                new Date().toLocaleString(
+                    "id-ID"
+                )
+
+        };
+
+
+        tambahHasil(
+            data
+        );
+
+
+        setStatus(
+            "green",
+            "Barang sudah kembali"
+        );
+
+
+        showNotification(
+            "BARANG SUDAH KEMBALI",
+            "success"
+        );
+
+
+        speak(
+            "Barang sudah kembali"
+        );
+
+
+        return;
+
+    }
+
+
+    /*
+     * DUPLICATE
+     */
+
+    if(
+        status === "duplicate"
+    ){
+
+        const data = {
+
+            resi:
+                normalizeResi(
+                    result.resi ||
+                    resi
+                ),
+
+            status:
+                "duplicate",
+
+            orderId:
+                result.orderId ||
+                "",
+
+            sku:
+                result.sku ||
+                "",
+
+            warna:
+                result.warna ||
+                "",
+
+            size:
+                result.size ||
+                "",
+
+            qty:
+                Number(
+                    result.qty
+                ) || 0,
+
+            ekspedisi:
+                result.ekspedisi ||
+                "",
+
+            tglKembali:
+                result.tglKembali ||
+                "",
+
+            message:
+                result.message ||
+                "Resi sudah kembali",
+
+            waktu:
+                new Date().toLocaleString(
+                    "id-ID"
+                )
+
+        };
+
+
+        tambahHasil(
+            data
+        );
+
+
+        setStatus(
+            "red",
+            "Resi sudah kembali"
+        );
+
+
+        showNotification(
+            "DOUBLE SCAN — RESI SUDAH KEMBALI",
+            "warning"
+        );
+
+
+        speak(
+            "Resi sudah kembali"
+        );
+
+
+        return;
+
+    }
+
+
+    /*
+     * NOT FOUND
+     */
+
+    if(
+        status === "notfound"
+    ){
+
+        tambahHasil({
+
+            resi:
+                normalizeResi(
+                    result.resi ||
+                    resi
+                ),
+
+            status:
+                "notfound",
+
+            message:
+                result.message ||
+                "Resi tidak ditemukan",
+
+            waktu:
+                new Date().toLocaleString(
+                    "id-ID"
+                )
+
+        });
+
+
+        setStatus(
+            "red",
+            "Resi tidak ditemukan"
+        );
+
+
+        showNotification(
+            "RESI TIDAK DITEMUKAN",
+            "error"
+        );
+
+
+        speak(
+            "Resi tidak ditemukan"
+        );
+
+
+        return;
+
+    }
+
+
+    /*
+     * ERROR
+     */
+
+    tambahHasil({
+
+        resi:
+            normalizeResi(
+                result.resi ||
+                resi
+            ),
+
+        status:
+            "error",
+
+        message:
+            result.message ||
+            "Scan gagal",
+
+        waktu:
+            new Date().toLocaleString(
+                "id-ID"
+            )
+
+    });
+
+
+    setStatus(
+        "red",
+        "Scan gagal"
+    );
+
+
+    showNotification(
+        result.message ||
+        "SCAN GAGAL",
+        "error"
+    );
+
+
+    speak(
+        "Scan gagal"
+    );
+
+}
+
+
+/* =========================================================
+   SELESAI SCAN KAMERA
+========================================================= */
+
+function selesaiScanKamera(){
+
+    requestRunning =
+        false;
+
+
+    /*
+     * Setelah jeda, kunci resi dibuka.
+     */
+
+    lockedResi =
+        "";
+
+
+    if(
+        !cameraRunning ||
+        currentMode !== "camera"
+    ){
+
+        return;
+
+    }
+
+
+    try{
+
+        if(
+            html5QrCode
+        ){
+
+            html5QrCode.resume();
+
+        }
+
+    }catch(e){}
+
+
+    setStatus(
+        "green",
+        "Kamera aktif • Siap scan"
+    );
+
+}
+
+
+/* =========================================================
+   MANUAL MODE
+========================================================= */
+
+async function setMode(
+    mode
+){
+
+    currentMode =
+        mode;
+
+
+    const cameraBtn =
+        document.getElementById(
+            "cameraModeBtn"
+        );
+
+    const manualBtn =
+        document.getElementById(
+            "manualModeBtn"
+        );
+
+    const manualPanel =
+        document.getElementById(
+            "manualPanel"
+        );
+
+
+    if(
+        mode === "manual"
+    ){
+
+        cameraBtn.classList.remove(
+            "active"
+        );
+
+        manualBtn.classList.add(
+            "active"
+        );
+
+
+        manualPanel.classList.add(
+            "open"
+        );
+
+
+        /*
+         * Manual tidak membutuhkan kamera.
+         */
+
+        if(
+            cameraRunning
+        ){
+
+            await stopCamera();
+
+        }
+
+
+        document
+            .getElementById(
+                "manualInput"
+            )
+            .focus();
+
+
+    }else{
+
+        manualBtn.classList.remove(
+            "active"
+        );
+
+        cameraBtn.classList.add(
+            "active"
+        );
+
+
+        manualPanel.classList.remove(
+            "open"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   PARSE MANUAL
+========================================================= */
+
+function parseManualInput(
+    text
+){
+
+    /*
+     * Bisa:
+     *
+     * Enter
+     * Spasi
+     * Koma
+     * Titik koma
+     * Tab
+     */
+
+    const list =
+        String(
+            text || ""
+        )
+
+        .split(
+            /[\s,;]+/
+        )
+
+        .map(
+            x =>
+                normalizeResi(x)
+        )
+
+        .filter(
+            Boolean
+        );
+
+
+    /*
+     * Hilangkan duplicate dari
+     * input manual yang sama.
+     */
+
+    return [
+        ...new Set(
+            list
+        )
+    ];
+
+}
+
+
+/* =========================================================
+   PROSES MANUAL MASSAL
+========================================================= */
+
+async function processManual(){
+
+    const textarea =
+        document.getElementById(
+            "manualInput"
+        );
+
+
+    const list =
+        parseManualInput(
+            textarea.value
+        );
+
+
+    if(
+        !list.length
+    ){
+
+        showNotification(
+            "Tidak ada resi",
+            "warning"
+        );
+
+        return;
+
+    }
+
+
+    const url =
+        getAppUrl();
+
+
+    if(!url){
+
+        showNotification(
+            "APP_URL tidak ditemukan",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    /*
+     * Proses satu per satu.
+     *
+     * Tidak dikirim bersamaan agar
+     * Apps Script tidak dibanjiri request.
+     */
+
+    let berhasil = 0;
+
+    let duplicate = 0;
+
+    let notfound = 0;
+
+    let error = 0;
+
+
+    for(
+        const resi of list
+    ){
+
+        /*
+         * Kalau resi sudah ada dalam
+         * hasil terakhir dengan status
+         * success/duplicate, tetap kita
+         * kirim ke backend supaya backend
+         * yang menentukan status sebenarnya.
+         */
+
+        await prosesScan(
+            resi,
+            false
+        );
+
+
+        const latest =
+            resultHistory[0];
+
+
+        if(
+            latest &&
+            latest.resi === resi
+        ){
+
+            if(
+                latest.status ===
+                "success"
+            ){
+
+                berhasil++;
+
+            }
+
+            else if(
+                latest.status ===
+                "duplicate"
+            ){
+
+                duplicate++;
+
+            }
+
+            else if(
+                latest.status ===
+                "notfound"
+            ){
+
+                notfound++;
+
+            }
+
+            else{
+
+                error++;
+
+            }
+
+        }
+
+    }
+
+
+    showNotification(
+
+        "Selesai: " +
+        berhasil +
+        " berhasil • " +
+        duplicate +
+        " double • " +
+        notfound +
+        " tidak ditemukan",
+
+        "success"
+
+    );
+
+}
+
+
+/* =========================================================
+   CLEAR MANUAL
+========================================================= */
+
+function clearManual(){
+
+    document
+        .getElementById(
+            "manualInput"
+        )
+        .value =
+        "";
+
+}
+
+
+/* =========================================================
+   TAMBAH HASIL
+========================================================= */
+
+function tambahHasil(
+    data
+){
+
+    resultHistory.unshift(
+        data
+    );
+
+
+    /*
+     * Maksimal 50 hasil.
+     */
+
+    resultHistory =
+        resultHistory.slice(
+            0,
+            50
+        );
+
+
+    try{
+
+        localStorage.setItem(
+
+            STORAGE_KEY,
+
+            JSON.stringify(
+                resultHistory
+            )
+
+        );
+
+    }catch(e){}
+
+
+    renderResults();
+
+}
+
+
+/* =========================================================
    PARSE ITEM
 ========================================================= */
 
-function parseItems(data){
+function parseItems(
+    data
+){
 
-    const skuRaw =
+    const skuList =
         String(
             data.sku || ""
-        ).trim();
+        )
+
+        .split("|")
+
+        .map(
+            x => x.trim()
+        )
+
+        .filter(
+            Boolean
+        );
 
 
-    const warnaRaw =
+    const warnaList =
         String(
             data.warna || ""
-        ).trim();
+        )
+
+        .split("|")
+
+        .map(
+            x => x.trim()
+        );
 
 
-    const sizeRaw =
+    const sizeList =
         String(
             data.size || ""
-        ).trim();
+        )
+
+        .split("|")
+
+        .map(
+            x => x.trim()
+        );
 
 
     const totalQty =
         Number(
             data.qty
         ) || 0;
-
-
-    const skuList =
-        skuRaw
-        ? skuRaw
-            .split("|")
-            .map(
-                x => x.trim()
-            )
-            .filter(Boolean)
-        : [];
-
-
-    const warnaList =
-        warnaRaw
-        ? warnaRaw
-            .split("|")
-            .map(
-                x => x.trim()
-            )
-            .filter(Boolean)
-        : [];
-
-
-    const sizeList =
-        sizeRaw
-        ? sizeRaw
-            .split("|")
-            .map(
-                x => x.trim()
-            )
-            .filter(Boolean)
-        : [];
 
 
     const itemCount =
@@ -1441,7 +2374,9 @@ function parseItems(data){
     const items = [];
 
 
-    /* SATU ITEM */
+    /*
+     * Satu barang.
+     */
 
     if(
         itemCount === 1
@@ -1472,40 +2407,27 @@ function parseItems(data){
     }
 
 
-    /* BANYAK ITEM */
-
-    let sisaQty =
-        totalQty;
-
+    /*
+     * Banyak barang.
+     *
+     * Untuk data:
+     *
+     * 069 | MACKER ROBLOX BAIM
+     * abu | abu
+     * 30-31 | 34-35
+     * qty 2
+     *
+     * hasil:
+     *
+     * 069               abu 30-31 1
+     * MACKER ROBLOX BAIM abu 34-35 1
+     */
 
     for(
         let i=0;
         i<itemCount;
         i++
     ){
-
-        let qtyItem = 1;
-
-
-        if(
-            i === itemCount - 1 &&
-            sisaQty > 0
-        ){
-
-            qtyItem =
-                sisaQty;
-
-        }
-
-
-        if(
-            sisaQty > 0
-        ){
-
-            sisaQty--;
-
-        }
-
 
         items.push({
 
@@ -1524,9 +2446,39 @@ function parseItems(data){
                 "-",
 
             qty:
-                qtyItem
+                1
 
         });
+
+    }
+
+
+    /*
+     * Kalau qty lebih besar daripada
+     * jumlah SKU, tambahkan sisanya
+     * ke item terakhir.
+     */
+
+    const currentQty =
+        items.reduce(
+            (sum,item) =>
+                sum +
+                Number(
+                    item.qty
+                ),
+            0
+        );
+
+
+    if(
+        totalQty > currentQty
+    ){
+
+        items[
+            items.length - 1
+        ].qty +=
+            totalQty -
+            currentQty;
 
     }
 
@@ -1537,81 +2489,87 @@ function parseItems(data){
 
 
 /* =========================================================
-   FORMAT DATE
+   BADGE
 ========================================================= */
 
-function formatDateTime(value){
+function getBadge(
+    status
+){
 
-    if(!value){
+    if(
+        status === "success"
+    ){
 
-        return "-";
+        return {
+            text:"BERHASIL",
+            cls:"badge-success"
+        };
+
+    }
+
+
+    if(
+        status === "duplicate"
+    ){
+
+        return {
+            text:"DOUBLE SCAN",
+            cls:"badge-duplicate"
+        };
 
     }
 
 
-    try{
+    if(
+        status === "notfound"
+    ){
 
-        const d =
-            new Date(value);
-
-
-        if(
-            isNaN(
-                d.getTime()
-            )
-        ){
-
-            return String(
-                value
-            );
-
-        }
-
-
-        return d.toLocaleString(
-            "id-ID",
-            {
-                day:"2-digit",
-                month:"2-digit",
-                year:"numeric",
-                hour:"2-digit",
-                minute:"2-digit",
-                second:"2-digit"
-            }
-        );
-
-    }catch(e){
-
-        return String(
-            value
-        );
+        return {
+            text:"TIDAK DITEMUKAN",
+            cls:"badge-notfound"
+        };
 
     }
+
+
+    return {
+        text:"ERROR",
+        cls:"badge-error"
+    };
 
 }
 
 
 /* =========================================================
-   RENDER HASIL
+   RENDER RESULTS
 ========================================================= */
 
-function renderResult(data){
+function renderResults(){
 
     const container =
         document.getElementById(
-            "resultContainer"
+            "resultsContainer"
         );
 
 
-    container.innerHTML =
-        "";
+    const count =
+        document.getElementById(
+            "resultsCount"
+        );
 
 
-    if(!data){
+    count.innerText =
+        resultHistory.length +
+        " hasil";
+
+
+    if(
+        !resultHistory.length
+    ){
 
         container.innerHTML = `
 
-            <div class="history-empty">
+            <div class="empty">
 
                 Belum ada hasil scan.
 
@@ -1624,407 +2582,114 @@ function renderResult(data){
     }
 
 
-    const items =
-        parseItems(data);
+    container.innerHTML = "";
 
 
-    let rows = "";
+    resultHistory.forEach(
+        function(data,index){
 
-
-    items.forEach(
-        function(item){
-
-            rows += `
-
-                <tr>
-
-                    <td>
-                        ${escapeHTML(
-                            item.nama
-                        )}
-                    </td>
-
-                    <td>
-                        ${escapeHTML(
-                            item.warna
-                        )}
-                    </td>
-
-                    <td>
-                        ${escapeHTML(
-                            item.size
-                        )}
-                    </td>
-
-                    <td>
-
-                        <span class="qty-badge">
-
-                            ${escapeHTML(
-                                item.qty
-                            )}
-
-                        </span>
-
-                    </td>
-
-                </tr>
-
-            `;
-
-        }
-    );
-
-
-    const total =
-        items.reduce(
-            function(sum,item){
-
-                return sum +
-                    Number(
-                        item.qty || 0
-                    );
-
-            },
-            0
-        );
-
-
-    container.innerHTML = `
-
-        <div class="result-card">
-
-            <div class="result-header">
-
-                <div class="result-resi">
-
-                    ${escapeHTML(
-                        data.resi
-                    )}
-
-                </div>
-
-                <div class="result-status">
-
-                    SUDAH KEMBALI
-
-                </div>
-
-            </div>
-
-
-            <div class="result-info">
-
-                <div class="info-box">
-
-                    <div class="info-label">
-                        EKSPEDISI
-                    </div>
-
-                    <div class="info-value">
-
-                        ${escapeHTML(
-                            data.ekspedisi ||
-                            "-"
-                        )}
-
-                    </div>
-
-                </div>
-
-
-                <div class="info-box">
-
-                    <div class="info-label">
-                        ORDER ID
-                    </div>
-
-                    <div class="info-value">
-
-                        ${escapeHTML(
-                            data.orderId ||
-                            "-"
-                        )}
-
-                    </div>
-
-                </div>
-
-
-                <div class="info-box">
-
-                    <div class="info-label">
-                        WAKTU KEMBALI
-                    </div>
-
-                    <div class="info-value">
-
-                        ${escapeHTML(
-                            data.waktuKembali ||
-                            "-"
-                        )}
-
-                    </div>
-
-                </div>
-
-
-                <div class="info-box">
-
-                    <div class="info-label">
-                        TOTAL
-                    </div>
-
-                    <div class="info-value">
-
-                        ${total} PASANG
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="item-title">
-
-                ISI PAKET
-
-            </div>
-
-
-            <table class="item-table">
-
-                <thead>
-
-                    <tr>
-
-                        <th>
-                            Barang
-                        </th>
-
-                        <th>
-                            Warna
-                        </th>
-
-                        <th>
-                            Size
-                        </th>
-
-                        <th>
-                            Qty
-                        </th>
-
-                    </tr>
-
-                </thead>
-
-
-                <tbody>
-
-                    ${rows}
-
-                </tbody>
-
-            </table>
-
-
-            <div class="total-box">
-
-                <span>
-                    TOTAL ISI PAKET
-                </span>
-
-                <span class="total-value">
-
-                    ${total} PASANG
-
-                </span>
-
-            </div>
-
-        </div>
-
-    `;
-
-}
-
-
-/* =========================================================
-   RESULT PANEL
-========================================================= */
-
-function openResultPanel(){
-
-    closeHistoryPanel();
-
-
-    document
-        .getElementById(
-            "resultPanel"
-        )
-        .classList.add(
-            "open"
-        );
-
-
-    if(
-        scanHistory.length
-    ){
-
-        renderResult(
-            scanHistory[0]
-        );
-
-    }else{
-
-        renderResult(
-            null
-        );
-
-    }
-
-}
-
-
-function closeResultPanel(){
-
-    document
-        .getElementById(
-            "resultPanel"
-        )
-        .classList.remove(
-            "open"
-        );
-
-}
-
-
-/* =========================================================
-   SAVE HISTORY
-========================================================= */
-
-function saveHistory(data){
-
-    scanHistory.unshift(
-        data
-    );
-
-
-    scanHistory =
-        scanHistory.slice(
-            0,
-            100
-        );
-
-
-    localStorage.setItem(
-        STORAGE_HISTORY,
-        JSON.stringify(
-            scanHistory
-        )
-    );
-
-
-    renderHistory();
-
-    updateDashboard();
-
-}
-
-
-/* =========================================================
-   HISTORY
-========================================================= */
-
-function renderHistory(){
-
-    const container =
-        document.getElementById(
-            "historyContainer"
-        );
-
-
-    if(!container){
-
-        return;
-
-    }
-
-
-    container.innerHTML =
-        "";
-
-
-    if(
-        scanHistory.length === 0
-    ){
-
-        container.innerHTML = `
-
-            <div class="history-empty">
-
-                Belum ada riwayat scan.
-
-            </div>
-
-        `;
-
-        return;
-
-    }
-
-
-    scanHistory.forEach(
-        function(item){
-
-            const items =
-                parseItems(item);
-
-
-            const total =
-                items.reduce(
-                    function(sum,x){
-
-                        return sum +
-                            Number(
-                                x.qty || 0
-                            );
-
-                    },
-                    0
+            const badge =
+                getBadge(
+                    data.status
                 );
 
 
-            const div =
+            const card =
                 document.createElement(
                     "div"
                 );
 
 
-            div.className =
-                "history-item";
+            card.className =
+                "result-card";
 
 
-            div.innerHTML = `
+            const items =
+                parseItems(
+                    data
+                );
 
-                <div class="history-item-top">
 
-                    <div>
+            let itemRows =
+                "";
 
-                        <div class="history-resi">
+
+            items.forEach(
+                function(item){
+
+                    itemRows += `
+
+                        <tr>
+
+                            <td>
+                                ${escapeHTML(
+                                    item.nama
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeHTML(
+                                    item.warna
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeHTML(
+                                    item.size
+                                )}
+                            </td>
+
+                            <td>
+
+                                <span
+                                    class="qty">
+
+                                    ${item.qty}
+
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+                    `;
+
+                }
+            );
+
+
+            const detail =
+                (
+                    data.status ===
+                    "success" ||
+                    data.status ===
+                    "duplicate"
+                );
+
+
+            card.innerHTML = `
+
+                <button
+                    class="result-head"
+                    type="button">
+
+                    <div
+                        class="result-head-left">
+
+                        <div
+                            class="result-resi">
 
                             ${escapeHTML(
-                                item.resi
+                                data.resi
                             )}
 
                         </div>
 
-
-                        <div class="history-time">
+                        <div
+                            class="result-time">
 
                             ${escapeHTML(
-                                item.waktuScan ||
+                                data.waktu ||
                                 "-"
                             )}
 
@@ -2033,43 +2698,270 @@ function renderHistory(){
                     </div>
 
 
-                    <div class="history-count">
+                    <div
+                        class="result-head-right">
 
-                        ${total} PASANG
+                        <span
+                            class="badge ${badge.cls}">
+
+                            ${badge.text}
+
+                        </span>
+
+                        <span
+                            class="arrow">
+
+                            ▶
+
+                        </span>
 
                     </div>
+
+                </button>
+
+
+                <div
+                    class="result-body">
+
+                    ${
+                        detail
+                        ?
+                        `
+
+                        <div
+                            class="info-grid">
+
+                            <div
+                                class="info-box">
+
+                                <div
+                                    class="info-label">
+
+                                    EKSPEDISI
+
+                                </div>
+
+                                <div
+                                    class="info-value">
+
+                                    ${escapeHTML(
+                                        data.ekspedisi ||
+                                        "-"
+                                    )}
+
+                                </div>
+
+                            </div>
+
+
+                            <div
+                                class="info-box">
+
+                                <div
+                                    class="info-label">
+
+                                    ORDER ID
+
+                                </div>
+
+                                <div
+                                    class="info-value">
+
+                                    ${escapeHTML(
+                                        data.orderId ||
+                                        "-"
+                                    )}
+
+                                </div>
+
+                            </div>
+
+
+                            <div
+                                class="info-box">
+
+                                <div
+                                    class="info-label">
+
+                                    TGL KEMBALI
+
+                                </div>
+
+                                <div
+                                    class="info-value">
+
+                                    ${escapeHTML(
+                                        data.tglKembali ||
+                                        "-"
+                                    )}
+
+                                </div>
+
+                            </div>
+
+
+                            <div
+                                class="info-box">
+
+                                <div
+                                    class="info-label">
+
+                                    TOTAL
+
+                                </div>
+
+                                <div
+                                    class="info-value">
+
+                                    ${parseItems(
+                                        data
+                                    ).reduce(
+                                        (
+                                            sum,
+                                            item
+                                        ) =>
+                                            sum +
+                                            Number(
+                                                item.qty ||
+                                                0
+                                            ),
+                                        0
+                                    )}
+                                    PASANG
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            class="items-title">
+
+                            ISI PAKET
+
+                        </div>
+
+
+                        <table
+                            class="item-table">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        Barang
+                                    </th>
+
+                                    <th>
+                                        Warna
+                                    </th>
+
+                                    <th>
+                                        Size
+                                    </th>
+
+                                    <th>
+                                        Qty
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                ${itemRows}
+
+                            </tbody>
+
+                        </table>
+
+                        `
+
+                        :
+
+                        `
+
+                        <div
+                            class="result-message">
+
+                            ${escapeHTML(
+                                data.message ||
+                                "Data tidak tersedia"
+                            )}
+
+                        </div>
+
+                        `
+                    }
 
                 </div>
 
             `;
 
 
-            div.addEventListener(
+            const head =
+                card.querySelector(
+                    ".result-head"
+                );
+
+
+            head.addEventListener(
                 "click",
                 function(){
 
-                    closeHistoryPanel();
-
-
-                    document
-                        .getElementById(
-                            "resultPanel"
-                        )
-                        .classList.add(
+                    const wasOpen =
+                        card.classList.contains(
                             "open"
                         );
 
 
-                    renderResult(
-                        item
-                    );
+                    /*
+                     * Tidak menutup card lain.
+                     *
+                     * Jadi beberapa detail
+                     * bisa terbuka bersamaan.
+                     */
+
+                    if(
+                        wasOpen
+                    ){
+
+                        card.classList.remove(
+                            "open"
+                        );
+
+                    }else{
+
+                        card.classList.add(
+                            "open"
+                        );
+
+                    }
+
+
+                    const arrow =
+                        card.querySelector(
+                            ".arrow"
+                        );
+
+
+                    arrow.innerText =
+                        card.classList.contains(
+                            "open"
+                        )
+                        ? "▼"
+                        : "▶";
 
                 }
             );
 
 
             container.appendChild(
-                div
+                card
             );
 
         }
@@ -2078,864 +2970,40 @@ function renderHistory(){
 }
 
 
-function openHistoryPanel(){
-
-    closeResultPanel();
-
-    renderHistory();
-
-
-    document
-        .getElementById(
-            "historyPanel"
-        )
-        .classList.add(
-            "open"
-        );
-
-}
-
-
-function closeHistoryPanel(){
-
-    document
-        .getElementById(
-            "historyPanel"
-        )
-        .classList.remove(
-            "open"
-        );
-
-}
-
-
 /* =========================================================
-   DASHBOARD
+   SERVICE WORKER
 ========================================================= */
 
-function updateDashboard(){
+if(
+    "serviceWorker" in navigator
+){
 
-    const now =
-        new Date();
+    window.addEventListener(
+        "load",
+        function(){
 
-
-    const today =
-        now.toDateString();
-
-
-    const yesterday =
-        new Date(
-            now.getTime() -
-            86400000
-        ).toDateString();
-
-
-    const day =
-        now.getDay();
-
-
-    const mondayOffset =
-        day === 0
-        ? 6
-        : day - 1;
-
-
-    const monday =
-        new Date(
-            now.getTime() -
-            mondayOffset * 86400000
-        );
-
-
-    monday.setHours(
-        0,0,0,0
-    );
-
-
-    let hariIni = 0;
-    let kemarin = 0;
-    let mingguIni = 0;
-
-
-    scanHistory.forEach(
-        function(item){
-
-            if(!item.waktuScan){
-
-                return;
-
-            }
-
-
-            const d =
-                new Date(
-                    item.waktuScan
-                );
-
-
-            if(
-                isNaN(
-                    d.getTime()
+            navigator.serviceWorker
+                .register(
+                    "./sw.js"
                 )
-            ){
-
-                return;
-
-            }
-
-
-            if(
-                d.toDateString() ===
-                today
-            ){
-
-                hariIni++;
-
-            }
-
-
-            if(
-                d.toDateString() ===
-                yesterday
-            ){
-
-                kemarin++;
-
-            }
-
-
-            if(
-                d >= monday
-            ){
-
-                mingguIni++;
-
-            }
-
-        }
-    );
-
-
-    document.getElementById(
-        "hariIni"
-    ).innerText =
-        hariIni;
-
-
-    document.getElementById(
-        "kemarin"
-    ).innerText =
-        kemarin;
-
-
-    document.getElementById(
-        "mingguIni"
-    ).innerText =
-        mingguIni;
-
-}
-
-
-/* =========================================================
-   PROSES HASIL SERVER
-========================================================= */
-
-function prosesHasilScan(
-    result,
-    resi
-){
-
-    /* =========================================
-       RESI TIDAK DITEMUKAN
-    ========================================= */
-
-    if(
-        result.status ===
-        "notfound"
-    ){
-
-        if(
-            SCAN_CONFIG.beepError
-        ){
-
-            beep(
-                250,
-                .25
-            );
-
-        }
-
-
-        setStatus(
-            "red",
-            ROBOT_CONFIG.pesan.resiTidakDitemukan
-        );
-
-
-        showNotif(
-            "RESI TIDAK DITEMUKAN",
-            "error"
-        );
-
-
-        speak(
-            ROBOT_CONFIG.pesan.resiTidakDitemukan
-        );
-
-
-        return;
-
-    }
-
-
-    /* =========================================
-       DOUBLE SCAN
-    ========================================= */
-
-    if(
-        result.status ===
-        "duplicate"
-    ){
-
-        if(
-            SCAN_CONFIG.beepError
-        ){
-
-            beep(
-                350,
-                .20
-            );
-
-        }
-
-
-        setStatus(
-            "red",
-            ROBOT_CONFIG.pesan.resiSudahKembali
-        );
-
-
-        showNotif(
-            "DOUBLE SCAN — RESI SUDAH KEMBALI",
-            "error"
-        );
-
-
-        speak(
-            ROBOT_CONFIG.pesan.resiSudahKembali
-        );
-
-
-        return;
-
-    }
-
-
-    /* =========================================
-       ERROR
-    ========================================= */
-
-    if(
-        result.status !==
-        "success"
-    ){
-
-        if(
-            SCAN_CONFIG.beepError
-        ){
-
-            beep(
-                250,
-                .25
-            );
-
-        }
-
-
-        setStatus(
-            "red",
-            ROBOT_CONFIG.pesan.scanGagal
-        );
-
-
-        showNotif(
-            "SCAN GAGAL",
-            "error"
-        );
-
-
-        speak(
-            ROBOT_CONFIG.pesan.scanGagal
-        );
-
-
-        return;
-
-    }
-
-
-    /* =========================================
-       DATA HASIL
-    ========================================= */
-
-    const now =
-        new Date();
-
-
-    const data = {
-
-        resi:
-            normalizeResi(
-                result.resi ||
-                resi
-            ),
-
-        status:
-            "SUDAH KEMBALI",
-
-        orderId:
-            result.orderId ||
-            "",
-
-        sku:
-            result.sku ||
-            "",
-
-        warna:
-            result.warna ||
-            "",
-
-        size:
-            result.size ||
-            "",
-
-        qty:
-            Number(
-                result.qty
-            ) || 0,
-
-        ekspedisi:
-            result.ekspedisi ||
-            "",
-
-        waktuKembali:
-            result.tglKembali
-            ? formatDateTime(
-                result.tglKembali
-            )
-            : formatDateTime(
-                now
-            ),
-
-        waktuScan:
-            formatDateTime(
-                now
-            )
-
-    };
-
-
-    /* SIMPAN RIWAYAT */
-
-    saveHistory(
-        data
-    );
-
-
-    /* FEEDBACK */
-
-    if(
-        SCAN_CONFIG.beepSuccess
-    ){
-
-        beep(
-            750,
-            .08
-        );
-
-    }
-
-
-    setStatus(
-        "green",
-        ROBOT_CONFIG.pesan.barangKembali
-    );
-
-
-    showNotif(
-        "✓ BARANG SUDAH KEMBALI",
-        "success"
-    );
-
-
-    /* ROBOT HANYA STATUS */
-
-    speak(
-        ROBOT_CONFIG.pesan.barangKembali
-    );
-
-
-    /* TAMPILKAN HASIL */
-
-    renderResult(
-        data
-    );
-
-}
-
-
-/* =========================================================
-   REQUEST KE APPS SCRIPT
-========================================================= */
-
-async function scanKeServer(
-    resi
-){
-
-    const url =
-        getTargetUrl();
-
-
-    if(!url){
-
-        setStatus(
-            "red",
-            "URL Apps Script tidak ditemukan"
-        );
-
-
-        showNotif(
-            "APP_URL TIDAK DITEMUKAN",
-            "error"
-        );
-
-
-        return;
-
-    }
-
-
-    try{
-
-        const response =
-            await fetch(
-
-                url,
-
-                {
-
-                    method:"POST",
-
-                    mode:"cors",
-
-                    headers:{
-
-                        "Content-Type":
-                            "text/plain;charset=utf-8"
-
-                    },
-
-                    body:
-                        JSON.stringify({
-
-                            source:
-                                "scanRetur",
-
-                            resi:
-                                resi
-
-                        })
-
-                }
-
-            );
-
-
-        const text =
-            await response.text();
-
-
-        console.log(
-            "SCAN RETUR RESPONSE:",
-            text
-        );
-
-
-        let result;
-
-
-        try{
-
-            result =
-                JSON.parse(
-                    text
-                );
-
-        }catch(e){
-
-            throw new Error(
-                "Response server bukan JSON"
-            );
-
-        }
-
-
-        prosesHasilScan(
-            result,
-            resi
-        );
-
-
-    }catch(error){
-
-        console.error(
-            "SCAN RETUR ERROR:",
-            error
-        );
-
-
-        setStatus(
-            "red",
-            "Koneksi ke server gagal"
-        );
-
-
-        showNotif(
-            "KONEKSI SERVER GAGAL",
-            "error"
-        );
-
-
-        speak(
-            ROBOT_CONFIG.pesan.scanGagal
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   START CAMERA
-========================================================= */
-
-async function mulaiScan(){
-
-    if(
-        cameraRunning
-    ){
-
-        return;
-
-    }
-
-
-    cameraRunning =
-        true;
-
-
-    updateCameraButton();
-
-
-    setStatus(
-        "yellow",
-        "Menyalakan kamera..."
-    );
-
-
-    try{
-
-        if(!html5QrCode){
-
-            html5QrCode =
-                new Html5Qrcode(
-                    "reader"
+                .catch(
+                    function(error){
+
+                        console.log(
+                            "SW:",
+                            error
+                        );
+
+                    }
                 );
 
         }
-
-
-        await html5QrCode.start(
-
-            {
-                facingMode:
-                    "environment"
-            },
-
-            {
-
-                fps:15,
-
-                qrbox:{
-                    width:280,
-                    height:180
-                },
-
-                aspectRatio:
-                    1.777778
-
-            },
-
-
-            function(decodedText){
-
-                if(
-                    processing
-                ){
-
-                    return;
-
-                }
-
-
-                processing =
-                    true;
-
-
-                const resi =
-                    normalizeResi(
-                        decodedText
-                    );
-
-
-                if(!resi){
-
-                    processing =
-                        false;
-
-                    return;
-
-                }
-
-
-                scanKeServer(
-                    resi
-                );
-
-
-                setTimeout(
-                    function(){
-
-                        processing =
-                            false;
-
-                    },
-                    SCAN_CONFIG.processingDelay
-                );
-
-            }
-
-        );
-
-
-        setStatus(
-            "green",
-            ROBOT_CONFIG.pesan.kameraAktif
-        );
-
-
-        speak(
-            ROBOT_CONFIG.pesan.kameraAktif
-        );
-
-
-    }catch(error){
-
-        console.error(
-            "CAMERA ERROR:",
-            error
-        );
-
-
-        cameraRunning =
-            false;
-
-
-        updateCameraButton();
-
-
-        setStatus(
-            "red",
-            ROBOT_CONFIG.pesan.kameraGagal
-        );
-
-
-        showNotif(
-            "IZINKAN AKSES KAMERA",
-            "error"
-        );
-
-
-        speak(
-            ROBOT_CONFIG.pesan.kameraGagal
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   STOP CAMERA
-========================================================= */
-
-async function berhentiScan(){
-
-    if(
-        !cameraRunning
-    ){
-
-        updateCameraButton();
-
-        return;
-
-    }
-
-
-    cameraRunning =
-        false;
-
-
-    updateCameraButton();
-
-
-    try{
-
-        if(html5QrCode){
-
-            await html5QrCode.stop();
-
-        }
-
-    }catch(e){
-
-        console.error(
-            "STOP CAMERA ERROR:",
-            e
-        );
-
-    }
-
-
-    setStatus(
-        "yellow",
-        ROBOT_CONFIG.pesan.kameraBerhenti
     );
 
 }
-
-
-/* =========================================================
-   TOGGLE CAMERA
-========================================================= */
-
-function toggleCamera(){
-
-    if(
-        cameraRunning
-    ){
-
-        berhentiScan();
-
-    }else{
-
-        mulaiScan();
-
-    }
-
-}
-
-
-/* =========================================================
-   UPDATE CAMERA BUTTON
-========================================================= */
-
-function updateCameraButton(){
-
-    const btn =
-        document.getElementById(
-            "cameraButton"
-        );
-
-
-    if(!btn){
-
-        return;
-
-    }
-
-
-    if(
-        cameraRunning
-    ){
-
-        btn.innerText =
-            "KAMERA OFF";
-
-
-        btn.classList.add(
-            "off"
-        );
-
-    }else{
-
-        btn.innerText =
-            "KAMERA ON";
-
-
-        btn.classList.remove(
-            "off"
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   TOUCH / SCROLL
-========================================================= */
-
-document.addEventListener(
-
-    "touchmove",
-
-    function(e){
-
-        if(
-            !e.target.closest(
-                ".result-panel"
-            ) &&
-            !e.target.closest(
-                ".history-panel"
-            )
-        ){
-
-            e.preventDefault();
-
-        }
-
-    },
-
-    {
-        passive:false
-    }
-
-);
 
 </script>
-
-
-<!-- =========================================================
-     HTML5 QR CODE
-========================================================= -->
-
-<script
-    src="https://unpkg.com/html5-qrcode"
-    type="text/javascript">
-</script>
-
 
 </body>
-
 </html>
+`
