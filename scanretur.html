@@ -1,410 +1,2771 @@
+# Scan Retur — SRF V3
+
+```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-<title>Scanner Retur</title>
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>SRF • Scan Retur</title>
 
 <style>
-    /* Reset & Full Screen Layout (Tanpa Scroll) */
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    html, body { width: 100%; height: 100vh; overflow: hidden; background: #0f172a; color: #f8fafc; display: flex; flex-direction: column; }
+/* =========================================================
+   RESET
+========================================================= */
 
-    /* Header Ringkas */
-    .app-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 8px 12px;
-        background: #1e293b;
-        border-bottom: 1px solid #334155;
-        font-size: 14px;
-        height: 45px;
-    }
-    .app-header a { color: #94a3b8; text-decoration: none; font-weight: 600; }
-    .app-header h3 { font-size: 14px; color: #f8fafc; }
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
 
-    /* Tombol Refresh di Header */
-    .refresh-btn {
-        background: #334155;
-        color: #f8fafc;
-        border: 1px solid #475569;
-        padding: 4px 10px;
-        border-radius: 6px;
-        font-size: 12px;
-        font-weight: 600;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 4px;
-    }
-    .refresh-btn:active {
-        background: #475569;
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+}
+
+html,
+body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:#0f172a;
+}
+
+body{
+    display:flex;
+    flex-direction:column;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.header{
+    height:52px;
+    flex-shrink:0;
+
+    background:#1e293b;
+    color:white;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:0 10px;
+
+    z-index:50;
+}
+
+.header-title{
+    font-size:15px;
+    font-weight:900;
+}
+
+.header-actions{
+    display:flex;
+    gap:5px;
+}
+
+.header-btn{
+    border:0;
+    border-radius:7px;
+
+    padding:7px 9px;
+
+    color:white;
+
+    font-size:10px;
+    font-weight:900;
+
+    cursor:pointer;
+    touch-action:manipulation;
+}
+
+.result-btn{
+    background:#2563eb;
+}
+
+.history-btn{
+    background:#7c3aed;
+}
+
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+.stats{
+    height:52px;
+    flex-shrink:0;
+
+    background:#334155;
+    color:white;
+
+    display:flex;
+    justify-content:space-around;
+    align-items:center;
+
+    text-align:center;
+}
+
+.stat{
+    font-size:10px;
+    color:#cbd5e1;
+}
+
+.stat strong{
+    display:block;
+
+    color:#38bdf8;
+
+    font-size:16px;
+
+    margin-top:1px;
+}
+
+
+/* =========================================================
+   SCANNER
+========================================================= */
+
+.scanner{
+    position:relative;
+
+    flex:1;
+    min-height:0;
+
+    background:#000;
+
+    overflow:hidden;
+}
+
+#reader{
+    position:absolute;
+
+    inset:0;
+
+    width:100%!important;
+    height:100%!important;
+
+    border:0!important;
+
+    background:#000;
+}
+
+#reader video{
+    width:100%!important;
+    height:100%!important;
+
+    object-fit:cover!important;
+}
+
+#reader img,
+#reader__dashboard{
+    display:none!important;
+}
+
+#reader__scan_region{
+    width:100%!important;
+    height:100%!important;
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.status-box{
+    position:absolute;
+
+    top:12px;
+    left:12px;
+    right:12px;
+
+    z-index:20;
+
+    background:rgba(15,23,42,.88);
+
+    backdrop-filter:blur(8px);
+
+    border-radius:10px;
+
+    padding:10px 12px;
+
+    display:flex;
+    align-items:center;
+    gap:9px;
+
+    color:white;
+}
+
+.lamp{
+    width:13px;
+    height:13px;
+    min-width:13px;
+
+    border-radius:50%;
+
+    background:#facc15;
+
+    box-shadow:
+        0 0 10px currentColor;
+}
+
+.status-text{
+    font-size:13px;
+    font-weight:800;
+
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+}
+
+
+/* =========================================================
+   NOTIFICATION
+========================================================= */
+
+.notif{
+    position:absolute;
+
+    top:75px;
+    left:50%;
+
+    transform:translateX(-50%);
+
+    z-index:40;
+
+    padding:10px 18px;
+
+    border-radius:25px;
+
+    font-size:13px;
+    font-weight:900;
+
+    display:none;
+
+    white-space:nowrap;
+
+    box-shadow:
+        0 5px 15px rgba(0,0,0,.35);
+}
+
+.notif.success{
+    background:#16a34a;
+    color:white;
+}
+
+.notif.warning{
+    background:#f59e0b;
+    color:white;
+}
+
+.notif.error{
+    background:#dc2626;
+    color:white;
+}
+
+
+/* =========================================================
+   HASIL SCAN PANEL
+========================================================= */
+
+.result-panel{
+    position:absolute;
+
+    inset:0;
+
+    z-index:100;
+
+    display:none;
+
+    overflow-y:auto;
+
+    background:#f1f5f9;
+
+    padding:12px;
+}
+
+.result-panel.open{
+    display:block;
+}
+
+.result-top{
+    display:flex;
+
+    align-items:center;
+    justify-content:space-between;
+
+    margin-bottom:10px;
+}
+
+.result-title{
+    color:#0f172a;
+
+    font-size:16px;
+    font-weight:900;
+}
+
+.result-close{
+    border:0;
+
+    background:#dc2626;
+    color:white;
+
+    border-radius:8px;
+
+    padding:8px 12px;
+
+    font-size:10px;
+    font-weight:900;
+
+    cursor:pointer;
+}
+
+.result-card{
+    background:white;
+
+    border-radius:14px;
+
+    padding:14px;
+
+    margin-bottom:12px;
+
+    box-shadow:
+        0 4px 14px rgba(15,23,42,.08);
+}
+
+.result-card:last-child{
+    margin-bottom:0;
+}
+
+.result-header{
+    display:flex;
+
+    align-items:flex-start;
+    justify-content:space-between;
+
+    gap:10px;
+
+    margin-bottom:10px;
+}
+
+.result-resi{
+    color:#0f172a;
+
+    font-size:15px;
+    font-weight:900;
+
+    word-break:break-all;
+}
+
+.result-status{
+    flex-shrink:0;
+
+    background:#dcfce7;
+    color:#166534;
+
+    padding:5px 8px;
+
+    border-radius:7px;
+
+    font-size:9px;
+    font-weight:900;
+}
+
+.result-info{
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:7px;
+
+    margin-bottom:12px;
+}
+
+.info-box{
+    background:#f8fafc;
+
+    border-radius:8px;
+
+    padding:8px;
+}
+
+.info-label{
+    color:#64748b;
+
+    font-size:9px;
+    font-weight:700;
+}
+
+.info-value{
+    color:#0f172a;
+
+    font-size:11px;
+    font-weight:900;
+
+    margin-top:2px;
+
+    word-break:break-word;
+}
+
+
+/* =========================================================
+   TABLE HASIL
+========================================================= */
+
+.item-title{
+    color:#0f172a;
+
+    font-size:12px;
+    font-weight:900;
+
+    margin-bottom:7px;
+}
+
+.item-table{
+    width:100%;
+
+    border-collapse:collapse;
+
+    font-size:11px;
+}
+
+.item-table th{
+    background:#f1f5f9;
+
+    color:#64748b;
+
+    padding:8px 6px;
+
+    text-align:left;
+
+    font-size:9px;
+    font-weight:900;
+}
+
+.item-table td{
+    padding:9px 6px;
+
+    border-bottom:
+        1px solid #e2e8f0;
+
+    color:#1e293b;
+
+    font-weight:700;
+
+    vertical-align:middle;
+}
+
+.item-table th:last-child,
+.item-table td:last-child{
+    text-align:center;
+}
+
+.item-table tbody tr:last-child td{
+    border-bottom:0;
+}
+
+.qty-badge{
+    display:inline-flex;
+
+    align-items:center;
+    justify-content:center;
+
+    min-width:28px;
+
+    padding:4px 6px;
+
+    border-radius:6px;
+
+    background:#dbeafe;
+    color:#1d4ed8;
+
+    font-size:10px;
+    font-weight:900;
+}
+
+.total-box{
+    display:flex;
+
+    justify-content:space-between;
+    align-items:center;
+
+    margin-top:10px;
+
+    padding-top:10px;
+
+    border-top:
+        2px solid #e2e8f0;
+
+    color:#0f172a;
+
+    font-size:12px;
+    font-weight:900;
+}
+
+.total-value{
+    color:#2563eb;
+
+    font-size:14px;
+}
+
+
+/* =========================================================
+   HISTORY
+========================================================= */
+
+.history-panel{
+    position:absolute;
+
+    inset:0;
+
+    z-index:100;
+
+    display:none;
+
+    overflow-y:auto;
+
+    background:#f1f5f9;
+
+    padding:12px;
+}
+
+.history-panel.open{
+    display:block;
+}
+
+.history-top{
+    display:flex;
+
+    align-items:center;
+    justify-content:space-between;
+
+    margin-bottom:10px;
+}
+
+.history-title{
+    color:#0f172a;
+
+    font-size:16px;
+    font-weight:900;
+}
+
+.history-close{
+    border:0;
+
+    background:#dc2626;
+    color:white;
+
+    border-radius:8px;
+
+    padding:8px 12px;
+
+    font-size:10px;
+    font-weight:900;
+}
+
+.history-empty{
+    background:white;
+
+    border-radius:12px;
+
+    padding:25px 15px;
+
+    text-align:center;
+
+    color:#94a3b8;
+
+    font-size:12px;
+    font-weight:700;
+}
+
+.history-item{
+    background:white;
+
+    border-radius:12px;
+
+    padding:12px;
+
+    margin-bottom:8px;
+
+    box-shadow:
+        0 3px 10px rgba(15,23,42,.06);
+}
+
+.history-item-top{
+    display:flex;
+
+    align-items:center;
+    justify-content:space-between;
+
+    gap:8px;
+}
+
+.history-resi{
+    color:#0f172a;
+
+    font-size:12px;
+    font-weight:900;
+
+    word-break:break-all;
+}
+
+.history-time{
+    color:#64748b;
+
+    font-size:9px;
+
+    margin-top:4px;
+}
+
+.history-count{
+    flex-shrink:0;
+
+    background:#dbeafe;
+    color:#1d4ed8;
+
+    padding:4px 7px;
+
+    border-radius:6px;
+
+    font-size:9px;
+    font-weight:900;
+}
+
+
+/* =========================================================
+   SCAN BUTTON
+========================================================= */
+
+.scan-area{
+    position:absolute;
+
+    left:14px;
+    right:14px;
+    bottom:14px;
+
+    z-index:30;
+}
+
+.scan-button{
+    width:100%;
+
+    height:58px;
+
+    border:0;
+
+    border-radius:30px;
+
+    background:#334155;
+
+    color:white;
+
+    font-size:15px;
+    font-weight:900;
+
+    box-shadow:
+        0 5px 15px rgba(0,0,0,.45);
+
+    cursor:pointer;
+
+    touch-action:none;
+
+    user-select:none;
+
+    -webkit-user-select:none;
+}
+
+.scan-button.active{
+    background:#16a34a;
+}
+
+.scan-button:active{
+    transform:scale(.98);
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:380px){
+
+    .header-title{
+        font-size:13px;
     }
 
-    /* Area Utama Kamera (Mendominasi Layar) */
-    .scanner-wrapper {
-        flex: 1;
-        position: relative;
-        background: #000;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
-    }
-    #reader {
-        width: 100% !important;
-        height: 100% !important;
-        border: none !important;
-    }
-    #reader video {
-        width: 100% !important;
-        height: 100% !important;
-        object-fit: cover !important;
+    .header-btn{
+        padding:6px;
+
+        font-size:9px;
     }
 
-    /* Lampu Indikator Melayang di Kamera */
-    .camera-overlay-top {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        right: 10px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        z-index: 10;
-        pointer-events: none;
-    }
-    .status-pill-floating {
-        background: rgba(15, 23, 42, 0.75);
-        backdrop-filter: blur(4px);
-        padding: 6px 12px;
-        border-radius: 20px;
-        font-size: 12px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        border: 1px solid rgba(255,255,255,0.1);
-    }
-    #bca-indicator {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background: #ff3333; /* Warna standby awal */
-        box-shadow: 0 0 8px currentColor;
-        transition: background 0.3s;
+    .status-text{
+        font-size:12px;
     }
 
-    /* Tombol Aksi Melayang (Input Manual) */
-    .floating-actions {
-        position: absolute;
-        bottom: 10px;
-        right: 10px;
-        z-index: 10;
-        display: flex;
-        gap: 8px;
-    }
-    .float-btn {
-        background: rgba(30, 41, 59, 0.85);
-        backdrop-filter: blur(4px);
-        color: white;
-        border: 1px solid rgba(255,255,255,0.2);
-        padding: 8px 12px;
-        border-radius: 8px;
-        font-size: 12px;
-        cursor: pointer;
+    .scan-button{
+        height:54px;
+
+        font-size:14px;
     }
 
-    /* Bagian Bawah: Riwayat Model Accordion / Dropdown */
-    .bottom-drawer {
-        background: #1e293b;
-        border-top: 1px solid #334155;
-        transition: max-height 0.3s ease-in-out;
-        max-height: 45px; /* Default tertutup, hanya terlihat bar judulnya */
-        overflow: hidden;
-        z-index: 20;
-    }
-    .bottom-drawer.open {
-        max-height: 200px; /* Terbuka maksimal muat beberapa baris */
-    }
-    .drawer-toggle {
-        padding: 10px 14px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        cursor: pointer;
-        font-size: 13px;
-        font-weight: 600;
-        background: #1e293b;
-    }
-    .drawer-content {
-        padding: 0 10px 10px 10px;
-        max-height: 150px;
-        overflow-y: auto;
-    }
-    .compact-table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 12px;
-    }
-    .compact-table th, .compact-table td {
-        padding: 6px 8px;
-        text-align: left;
-        border-bottom: 1px solid #334155;
-        color: #f8fafc;
+    .result-panel,
+    .history-panel{
+        padding:10px;
     }
 
-    /* Badge Status */
-    .badge { padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold; }
-    .badge-kembali { background: #065f46; color: #34d399; }
-    .badge-sudah { background: #7f1d1d; color: #f87171; }
-    .badge-tidak { background: #78350f; color: #fbbf24; }
+    .item-table{
+        font-size:10px;
+    }
 
-    /* Modal Input Manual (Pop-up Tersembunyi) */
-    #manualModal {
-        position: fixed;
-        top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0,0,0,0.6);
-        backdrop-filter: blur(3px);
-        display: none;
-        justify-content: center;
-        align-items: center;
-        z-index: 100;
+    .item-table th{
+        font-size:8px;
     }
-    .modal-box {
-        background: #1e293b;
-        padding: 20px;
-        border-radius: 12px;
-        width: 85%;
-        max-width: 320px;
-        border: 1px solid #334155;
-    }
-    .modal-box h3 { font-size: 15px; margin-bottom: 5px; }
-    .modal-box input {
-        width: 100%;
-        padding: 10px;
-        margin: 12px 0;
-        background: #0f172a;
-        border: 1px solid #475569;
-        color: white;
-        border-radius: 6px;
-        font-size: 14px;
-    }
-    .modal-buttons { display: flex; gap: 8px; justify-content: flex-end; }
-    .btn { padding: 8px 14px; border-radius: 6px; border: none; cursor: pointer; font-size: 12px; font-weight: 600; }
-    .btn-primary { background: #2563eb; color: white; }
-    .btn-secondary { background: #475569; color: white; }
 
-    #startBtn { display: none; }
+    .item-table td{
+        padding:8px 4px;
+    }
+}
+
 </style>
-
-<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#003399">
 </head>
+
 
 <body>
 
-<div class="app-header">
-    <a href="index.html">← Menu</a>
-    <h3>🔄 SCANNER RETUR</h3>
-    <button class="refresh-btn" onclick="location.reload()">🔄 Refresh</button>
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
+<header class="header">
+
+    <div class="header-title">
+        SRF • Scan Retur
+    </div>
+
+    <div class="header-actions">
+
+        <button
+            class="header-btn result-btn"
+            onclick="openResultPanel()">
+
+            HASIL SCAN
+        </button>
+
+        <button
+            class="header-btn history-btn"
+            onclick="openHistoryPanel()">
+
+            RIWAYAT
+        </button>
+
+    </div>
+
+</header>
+
+
+<!-- =========================================================
+     DASHBOARD
+========================================================= -->
+
+<div class="stats">
+
+    <div class="stat">
+        Hari Ini
+        <strong id="hariIni">0</strong>
+    </div>
+
+    <div class="stat">
+        Kemarin
+        <strong id="kemarin">0</strong>
+    </div>
+
+    <div class="stat">
+        Minggu Ini
+        <strong id="mingguIni">0</strong>
+    </div>
+
 </div>
 
-<div class="scanner-wrapper">
-    <div class="camera-overlay-top">
-        <div class="status-pill-floating">
-            <div id="bca-indicator"></div>
-            <span id="status-message">Menyalakan Kamera...</span>
-        </div>
-    </div>
+
+<!-- =========================================================
+     SCANNER
+========================================================= -->
+
+<div class="scanner">
 
     <div id="reader"></div>
 
-    <div class="floating-actions">
-        <button class="float-btn" onclick="toggleManualModal(true)">⌨ Input Manual</button>
-    </div>
-</div>
 
-<div class="bottom-drawer" id="bottomDrawer">
-    <div class="drawer-toggle" onclick="toggleDrawer()">
-        <span>📋 Riwayat Retur</span>
-        <span id="drawerArrow">▼</span>
-    </div>
-    <div class="drawer-content">
-        <table class="compact-table">
-            <thead>
-                <tr>
-                    <th>Resi</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody id="historyBody"></tbody>
-        </table>
-    </div>
-</div>
+    <!-- STATUS -->
 
-<div id="manualModal">
-    <div class="modal-box">
-        <h3>Input Manual Resi Retur</h3>
-        <input type="text" id="manualResi" placeholder="Ketik nomor resi...">
-        <div class="modal-buttons">
-            <button class="btn btn-secondary" onclick="toggleManualModal(false)">Batal</button>
-            <button class="btn btn-primary" onclick="submitManual()">Simpan</button>
+    <div class="status-box">
+
+        <div
+            id="lamp"
+            class="lamp">
         </div>
+
+        <div
+            id="statusText"
+            class="status-text">
+
+            Kamera mati, scanner siap
+
+        </div>
+
     </div>
+
+
+    <!-- NOTIFICATION -->
+
+    <div
+        id="notif"
+        class="notif">
+    </div>
+
+
+    <!-- =====================================================
+         HASIL SCAN
+    ====================================================== -->
+
+    <div
+        id="resultPanel"
+        class="result-panel">
+
+        <div class="result-top">
+
+            <div class="result-title">
+                HASIL SCAN
+            </div>
+
+            <button
+                class="result-close"
+                onclick="closeResultPanel()">
+
+                TUTUP
+
+            </button>
+
+        </div>
+
+        <div id="resultContainer"></div>
+
+    </div>
+
+
+    <!-- =====================================================
+         RIWAYAT
+    ====================================================== -->
+
+    <div
+        id="historyPanel"
+        class="history-panel">
+
+        <div class="history-top">
+
+            <div class="history-title">
+                RIWAYAT SCAN RETUR
+            </div>
+
+            <button
+                class="history-close"
+                onclick="closeHistoryPanel()">
+
+                TUTUP
+
+            </button>
+
+        </div>
+
+        <div id="historyContainer"></div>
+
+    </div>
+
+
+    <!-- =====================================================
+         SCAN BUTTON
+    ====================================================== -->
+
+    <div class="scan-area">
+
+        <button
+            id="scanButton"
+            class="scan-button">
+
+            📷 TAHAN UNTUK SCAN
+
+        </button>
+
+    </div>
+
 </div>
 
-<button id="startBtn" style="display:none;"></button>
 
-<!-- Memanggil file config.js sebelum script utama -->
+<!-- =========================================================
+     CONFIG
+========================================================= -->
+
 <script src="config.js"></script>
 
+
 <script>
-let html5QrCode = null;
 
-let scanHistory = JSON.parse(localStorage.getItem("returHistory") || "[]");
+/* =========================================================
+   CONFIG APPS SCRIPT
+========================================================= */
 
-window.onload = function() {
-    renderHistory();
-    startCamera();
+function getTargetUrl(){
+
+    try{
+
+        if(
+            typeof APP_URL !== "undefined" &&
+            APP_URL
+        ){
+
+            return String(APP_URL).trim();
+
+        }
+
+        if(
+            typeof CONFIG !== "undefined" &&
+            CONFIG &&
+            CONFIG.APP_URL
+        ){
+
+            return String(CONFIG.APP_URL).trim();
+
+        }
+
+    }catch(e){
+
+        console.error(
+            "CONFIG ERROR:",
+            e
+        );
+
+    }
+
+    return "";
+
+}
+
+
+/* =========================================================
+   ROBOT
+========================================================= */
+
+const ROBOT_CONFIG = {
+
+    enabled:true,
+
+    bahasa:"id-ID",
+
+    rate:1.15,
+
+    pitch:1.0,
+
+    volume:1.0,
+
+    pesan:{
+
+        siap:
+            "Kamera mati, scanner siap",
+
+        kameraAktif:
+            "Kamera aktif, siap scan",
+
+        kameraBerhenti:
+            "Kamera dimatikan",
+
+        kameraGagal:
+            "Tidak dapat membuka kamera",
+
+        barangKembali:
+            "Barang sudah kembali",
+
+        resiTidakDitemukan:
+            "Resi tidak ditemukan",
+
+        scanGagal:
+            "Scan gagal"
+
+    }
+
 };
 
-function robotBicara(teks) {
-    if ('speechSynthesis' in window) {
-        speechSynthesis.cancel();
-        const tts = new SpeechSynthesisUtterance(teks);
-        tts.lang = 'id-ID';
-        speechSynthesis.speak(tts);
-    }
+
+/* =========================================================
+   SCAN CONFIG
+========================================================= */
+
+const SCAN_CONFIG = {
+
+    processingDelay:1200,
+
+    beepSuccess:true,
+
+    beepError:true
+
+};
+
+
+/* =========================================================
+   STORAGE
+========================================================= */
+
+const STORAGE_HISTORY =
+    "srf_scan_retur_history_v3";
+
+let scanHistory = [];
+
+try{
+
+    scanHistory =
+        JSON.parse(
+            localStorage.getItem(
+                STORAGE_HISTORY
+            ) || "[]"
+        );
+
+}catch(e){
+
+    scanHistory = [];
+
 }
 
-function setLampu(warna, pesan) {
-    document.getElementById("bca-indicator").style.backgroundColor =
-        warna === "ijo" ? "#00cc44" :
-        warna === "kuning" ? "#ffcc00" : "#ff3333";
 
-    document.getElementById("status-message").innerText = pesan;
-}
+/* =========================================================
+   SCANNER VARIABLES
+========================================================= */
 
-function startCamera() {
-    if (html5QrCode) return;
+let html5QrCode = null;
 
-    html5QrCode = new Html5Qrcode("reader");
+let cameraRunning = false;
 
-    html5QrCode.start(
-        { facingMode: "environment" },
-        { fps: 10, qrbox: 220 },
-        (decodedText) => {
-            html5QrCode.pause(true);
-            prosesScan(decodedText.trim());
-        }
-    ).then(() => {
-        setLampu("ijo", "Siap Scan Returan!");
-        robotBicara("Sistem Retur Siap");
-    });
-}
+let processing = false;
 
-function toggleDrawer() {
-    const drawer = document.getElementById("bottomDrawer");
-    const arrow = document.getElementById("drawerArrow");
-    drawer.classList.toggle("open");
-    arrow.innerText = drawer.classList.contains("open") ? "▲" : "▼";
-}
 
-function toggleManualModal(show) {
-    const modal = document.getElementById("manualModal");
-    modal.style.display = show ? "flex" : "none";
-    if (show) {
-        setTimeout(() => document.getElementById("manualResi").focus(), 100);
-    }
-}
+/* =========================================================
+   INIT
+========================================================= */
 
-function submitManual() {
-    const input = document.getElementById("manualResi");
-    const val = input.value.trim();
-    if (!val) return;
-    prosesScan(val.toUpperCase());
-    input.value = "";
-    toggleManualModal(false);
-}
+window.addEventListener(
+    "load",
+    function(){
 
-document.getElementById("manualResi").addEventListener("keypress", (e) => {
-    if (e.key === "Enter") {
-        e.preventDefault();
-        submitManual();
-    }
-});
-
-async function prosesScan(resi) {
-    setLampu("kuning", "Memproses...");
-
-    try {
-        const r = await fetch(CONFIG.APP_URL, {
-            method: "POST",
-            body: JSON.stringify({
-                resi: resi,
-                source: "scanRetur"
-            })
-        });
-
-        const json = await r.json();
-
-        let badge = "badge-tidak";
-        let status = "ERROR";
-
-        if (json.status === "success") {
-            badge = "badge-kembali";
-            status = "KEMBALI";
-            setLampu("ijo", "Barang Sudah Kembali");
-            robotBicara("Barang Sudah Kembali");
-        } else if (json.status === "duplicate") {
-            badge = "badge-sudah";
-            status = "SUDAH";
-            setLampu("merah", "Sudah Pernah Scan");
-            robotBicara("Sudah Pernah Diproses");
-        } else {
-            badge = "badge-tidak";
-            status = "TIDAK DITEMUKAN";
-            setLampu("merah", "Resi Tidak Ditemukan");
-            robotBicara("Resi tidak ditemukan");
-        }
-
-        scanHistory.unshift({ resi, status, badge });
-        localStorage.setItem("returHistory", JSON.stringify(scanHistory.slice(0, 15)));
         renderHistory();
 
-    } catch(err) {
-        setLampu("merah", "Error Koneksi");
+        setStatus(
+            "yellow",
+            ROBOT_CONFIG.pesan.siap
+        );
+
+    }
+);
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+function setStatus(
+    type,
+    text
+){
+
+    const lamp =
+        document.getElementById(
+            "lamp"
+        );
+
+    const status =
+        document.getElementById(
+            "statusText"
+        );
+
+
+    status.innerText = text;
+
+
+    if(type === "green"){
+
+        lamp.style.background =
+            "#22c55e";
+
+        lamp.style.color =
+            "#22c55e";
+
     }
 
-    setTimeout(() => {
-        if (html5QrCode) {
-            html5QrCode.resume();
+    else if(type === "red"){
+
+        lamp.style.background =
+            "#ef4444";
+
+        lamp.style.color =
+            "#ef4444";
+
+    }
+
+    else{
+
+        lamp.style.background =
+            "#facc15";
+
+        lamp.style.color =
+            "#facc15";
+
+    }
+
+}
+
+
+/* =========================================================
+   NOTIFICATION
+========================================================= */
+
+function showNotif(
+    text,
+    type="success"
+){
+
+    const el =
+        document.getElementById(
+            "notif"
+        );
+
+    el.innerText = text;
+
+    el.className =
+        "notif " + type;
+
+    el.style.display =
+        "block";
+
+
+    clearTimeout(
+        window.notifTimer
+    );
+
+
+    window.notifTimer =
+        setTimeout(
+            function(){
+
+                el.style.display =
+                    "none";
+
+            },
+            1800
+        );
+
+}
+
+
+/* =========================================================
+   BEEP
+========================================================= */
+
+function beep(
+    freq=600,
+    duration=.08
+){
+
+    try{
+
+        const AudioContext =
+            window.AudioContext ||
+            window.webkitAudioContext;
+
+        const ctx =
+            new AudioContext();
+
+        const osc =
+            ctx.createOscillator();
+
+        osc.frequency.value =
+            freq;
+
+        osc.connect(
+            ctx.destination
+        );
+
+        osc.start();
+
+        osc.stop(
+            ctx.currentTime +
+            duration
+        );
+
+    }catch(e){}
+
+}
+
+
+/* =========================================================
+   ROBOT
+========================================================= */
+
+function speak(text){
+
+    if(
+        !ROBOT_CONFIG.enabled
+    ){
+
+        return;
+
+    }
+
+    if(
+        !("speechSynthesis" in window)
+    ){
+
+        return;
+
+    }
+
+
+    try{
+
+        speechSynthesis.cancel();
+
+
+        const voice =
+            new SpeechSynthesisUtterance(
+                text
+            );
+
+
+        voice.lang =
+            ROBOT_CONFIG.bahasa;
+
+        voice.rate =
+            ROBOT_CONFIG.rate;
+
+        voice.pitch =
+            ROBOT_CONFIG.pitch;
+
+        voice.volume =
+            ROBOT_CONFIG.volume;
+
+
+        speechSynthesis.speak(
+            voice
+        );
+
+    }catch(e){
+
+        console.error(
+            "ROBOT ERROR:",
+            e
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   NORMALIZE RESI
+========================================================= */
+
+function normalizeResi(resi){
+
+    return String(
+        resi || ""
+    )
+    .trim()
+    .toUpperCase();
+
+}
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHTML(text){
+
+    return String(text ?? "")
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+/* =========================================================
+   PARSE ITEM DARI DATA GOOGLE SHEET
+=========================================================
+
+   Contoh:
+
+   SKU:
+   069 | MACKER ROBLOX BAIM
+
+   WARNA:
+   abu | abu
+
+   SIZE:
+   30-31 | 34-35
+
+   QTY:
+   2
+
+   Hasil:
+
+   069                abu  30-31  1
+   MACKER ROBLOX BAIM abu  34-35  1
+
+========================================================= */
+
+function parseItems(data){
+
+    const skuRaw =
+        String(
+            data.sku || ""
+        ).trim();
+
+    const warnaRaw =
+        String(
+            data.warna || ""
+        ).trim();
+
+    const sizeRaw =
+        String(
+            data.size || ""
+        ).trim();
+
+    const totalQty =
+        Number(data.qty) || 0;
+
+
+    const skuList =
+        skuRaw
+            ? skuRaw
+                .split("|")
+                .map(x => x.trim())
+                .filter(Boolean)
+            : [];
+
+
+    const warnaList =
+        warnaRaw
+            ? warnaRaw
+                .split("|")
+                .map(x => x.trim())
+            : [];
+
+
+    const sizeList =
+        sizeRaw
+            ? sizeRaw
+                .split("|")
+                .map(x => x.trim())
+            : [];
+
+
+    /*
+     * Jumlah item ditentukan
+     * dari SKU.
+     */
+
+    const itemCount =
+        Math.max(
+            skuList.length,
+            warnaList.length,
+            sizeList.length,
+            1
+        );
+
+
+    const items = [];
+
+
+    /*
+     * Jika satu item,
+     * gunakan seluruh qty.
+     */
+
+    if(itemCount === 1){
+
+        items.push({
+
+            nama:
+                skuList[0] ||
+                "-",
+
+            warna:
+                warnaList[0] ||
+                "-",
+
+            size:
+                sizeList[0] ||
+                "-",
+
+            qty:
+                totalQty || 1
+
+        });
+
+
+        return items;
+
+    }
+
+
+    /*
+     * Jika banyak item:
+     *
+     * Qty total dibagi ke
+     * jumlah item.
+     *
+     * Contoh:
+     * 2 item + qty 2
+     * = masing-masing 1.
+     */
+
+    let sisaQty =
+        totalQty;
+
+
+    for(
+        let i=0;
+        i<itemCount;
+        i++
+    ){
+
+        let qtyItem = 1;
+
+
+        if(
+            i === itemCount - 1 &&
+            sisaQty > 0
+        ){
+
+            qtyItem =
+                sisaQty;
+
         }
-    }, 1500);
+
+
+        if(
+            sisaQty > 0
+        ){
+
+            sisaQty--;
+
+        }
+
+
+        items.push({
+
+            nama:
+                skuList[i] ||
+                "-",
+
+            warna:
+                warnaList[i] ||
+                warnaList[0] ||
+                "-",
+
+            size:
+                sizeList[i] ||
+                sizeList[0] ||
+                "-",
+
+            qty:
+                qtyItem
+
+        });
+
+    }
+
+
+    return items;
+
 }
 
-function renderHistory() {
-    document.getElementById("historyBody").innerHTML = scanHistory.map(item => `
-        <tr>
-            <td>${item.resi}</td>
-            <td>
-                <span class="badge ${item.badge}">
-                    ${item.status}
+
+/* =========================================================
+   FORMAT TANGGAL
+========================================================= */
+
+function formatDateTime(value){
+
+    if(!value){
+
+        return "-";
+
+    }
+
+
+    try{
+
+        const d =
+            new Date(value);
+
+
+        if(
+            isNaN(
+                d.getTime()
+            )
+        ){
+
+            return String(value);
+
+        }
+
+
+        return d.toLocaleString(
+            "id-ID",
+            {
+                day:"2-digit",
+                month:"2-digit",
+                year:"numeric",
+                hour:"2-digit",
+                minute:"2-digit",
+                second:"2-digit"
+            }
+        );
+
+    }catch(e){
+
+        return String(value);
+
+    }
+
+}
+
+
+/* =========================================================
+   RENDER HASIL SCAN
+========================================================= */
+
+function renderResult(data){
+
+    const container =
+        document.getElementById(
+            "resultContainer"
+        );
+
+
+    container.innerHTML = "";
+
+
+    if(!data){
+
+        container.innerHTML = `
+
+            <div class="history-empty">
+
+                Belum ada hasil scan.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    const items =
+        parseItems(data);
+
+
+    let rows = "";
+
+
+    items.forEach(
+        function(item){
+
+            rows += `
+
+                <tr>
+
+                    <td>
+
+                        ${escapeHTML(
+                            item.nama
+                        )}
+
+                    </td>
+
+                    <td>
+
+                        ${escapeHTML(
+                            item.warna
+                        )}
+
+                    </td>
+
+                    <td>
+
+                        ${escapeHTML(
+                            item.size
+                        )}
+
+                    </td>
+
+                    <td>
+
+                        <span
+                            class="qty-badge">
+
+                            ${escapeHTML(
+                                item.qty
+                            )}
+
+                        </span>
+
+                    </td>
+
+                </tr>
+
+            `;
+
+        }
+    );
+
+
+    const total =
+        items.reduce(
+            function(sum,item){
+
+                return sum +
+                    Number(item.qty || 0);
+
+            },
+            0
+        );
+
+
+    container.innerHTML = `
+
+        <div class="result-card">
+
+            <div class="result-header">
+
+                <div class="result-resi">
+
+                    ${escapeHTML(
+                        data.resi
+                    )}
+
+                </div>
+
+                <div class="result-status">
+
+                    SUDAH KEMBALI
+
+                </div>
+
+            </div>
+
+
+            <div class="result-info">
+
+                <div class="info-box">
+
+                    <div class="info-label">
+
+                        EKSPEDISI
+
+                    </div>
+
+                    <div class="info-value">
+
+                        ${escapeHTML(
+                            data.ekspedisi ||
+                            "-"
+                        )}
+
+                    </div>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <div class="info-label">
+
+                        ORDER ID
+
+                    </div>
+
+                    <div class="info-value">
+
+                        ${escapeHTML(
+                            data.orderId ||
+                            "-"
+                        )}
+
+                    </div>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <div class="info-label">
+
+                        WAKTU KEMBALI
+
+                    </div>
+
+                    <div class="info-value">
+
+                        ${escapeHTML(
+                            data.waktuKembali ||
+                            "-"
+                        )}
+
+                    </div>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <div class="info-label">
+
+                        TOTAL
+
+                    </div>
+
+                    <div class="info-value">
+
+                        ${total} PASANG
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="item-title">
+
+                ISI PAKET
+
+            </div>
+
+
+            <table class="item-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Barang
+                        </th>
+
+                        <th>
+                            Warna
+                        </th>
+
+                        <th>
+                            Size
+                        </th>
+
+                        <th>
+                            Qty
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    ${rows}
+
+                </tbody>
+
+            </table>
+
+
+            <div class="total-box">
+
+                <span>
+                    TOTAL ISI PAKET
                 </span>
-            </td>
-        </tr>
-    `).join("");
+
+                <span class="total-value">
+
+                    ${total} PASANG
+
+                </span>
+
+            </div>
+
+        </div>
+
+    `;
+
 }
+
+
+/* =========================================================
+   HASIL SCAN PANEL
+========================================================= */
+
+function openResultPanel(){
+
+    closeHistoryPanel();
+
+    document
+        .getElementById(
+            "resultPanel"
+        )
+        .classList.add(
+            "open"
+        );
+
+
+    if(scanHistory.length){
+
+        renderResult(
+            scanHistory[0]
+        );
+
+    }else{
+
+        renderResult(null);
+
+    }
+
+}
+
+
+function closeResultPanel(){
+
+    document
+        .getElementById(
+            "resultPanel"
+        )
+        .classList.remove(
+            "open"
+        );
+
+}
+
+
+/* =========================================================
+   RIWAYAT
+========================================================= */
+
+function saveHistory(data){
+
+    scanHistory.unshift(
+        data
+    );
+
+
+    /*
+     * Maksimal 100 hasil.
+     */
+
+    scanHistory =
+        scanHistory.slice(
+            0,
+            100
+        );
+
+
+    localStorage.setItem(
+        STORAGE_HISTORY,
+        JSON.stringify(
+            scanHistory
+        )
+    );
+
+
+    renderHistory();
+
+}
+
+
+function renderHistory(){
+
+    const container =
+        document.getElementById(
+            "historyContainer"
+        );
+
+
+    if(!container){
+
+        return;
+
+    }
+
+
+    container.innerHTML =
+        "";
+
+
+    if(
+        scanHistory.length === 0
+    ){
+
+        container.innerHTML = `
+
+            <div class="history-empty">
+
+                Belum ada riwayat scan.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    scanHistory.forEach(
+        function(item,index){
+
+            const items =
+                parseItems(item);
+
+
+            const total =
+                items.reduce(
+                    function(sum,x){
+
+                        return sum +
+                            Number(x.qty || 0);
+
+                    },
+                    0
+                );
+
+
+            const div =
+                document.createElement(
+                    "div"
+                );
+
+
+            div.className =
+                "history-item";
+
+
+            div.innerHTML = `
+
+                <div class="history-item-top">
+
+                    <div>
+
+                        <div class="history-resi">
+
+                            ${escapeHTML(
+                                item.resi
+                            )}
+
+                        </div>
+
+                        <div class="history-time">
+
+                            ${escapeHTML(
+                                item.waktuScan ||
+                                "-"
+                            )}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="history-count">
+
+                        ${total} PASANG
+
+                    </div>
+
+                </div>
+
+            `;
+
+
+            div.addEventListener(
+                "click",
+                function(){
+
+                    closeHistoryPanel();
+
+                    document
+                        .getElementById(
+                            "resultPanel"
+                        )
+                        .classList.add(
+                            "open"
+                        );
+
+                    renderResult(
+                        item
+                    );
+
+                }
+            );
+
+
+            container.appendChild(
+                div
+            );
+
+        }
+    );
+
+}
+
+
+function openHistoryPanel(){
+
+    closeResultPanel();
+
+    renderHistory();
+
+    document
+        .getElementById(
+            "historyPanel"
+        )
+        .classList.add(
+            "open"
+        );
+
+}
+
+
+function closeHistoryPanel(){
+
+    document
+        .getElementById(
+            "historyPanel"
+        )
+        .classList.remove(
+            "open"
+        );
+
+}
+
+
+/* =========================================================
+   PROSES HASIL DARI SERVER
+========================================================= */
+
+function prosesHasilScan(
+    result,
+    resi
+){
+
+    /*
+     * NOT FOUND
+     */
+
+    if(
+        result.status ===
+        "notfound"
+    ){
+
+        if(
+            SCAN_CONFIG.beepError
+        ){
+
+            beep(
+                250,
+                .25
+            );
+
+        }
+
+
+        setStatus(
+            "red",
+            ROBOT_CONFIG.pesan.resiTidakDitemukan
+        );
+
+
+        showNotif(
+            "RESI TIDAK DITEMUKAN",
+            "error"
+        );
+
+
+        speak(
+            ROBOT_CONFIG.pesan.resiTidakDitemukan
+        );
+
+
+        return;
+
+    }
+
+
+    /*
+     * ERROR
+     */
+
+    if(
+        result.status !==
+        "success"
+    ){
+
+        if(
+            SCAN_CONFIG.beepError
+        ){
+
+            beep(
+                250,
+                .25
+            );
+
+        }
+
+
+        setStatus(
+            "red",
+            ROBOT_CONFIG.pesan.scanGagal
+        );
+
+
+        showNotif(
+            "SCAN GAGAL",
+            "error"
+        );
+
+
+        speak(
+            ROBOT_CONFIG.pesan.scanGagal
+        );
+
+
+        return;
+
+    }
+
+
+    /*
+     * DATA HASIL
+     */
+
+    const data = {
+
+        resi:
+            normalizeResi(
+                result.resi ||
+                resi
+            ),
+
+        status:
+            "SUDAH KEMBALI",
+
+        orderId:
+            result.orderId ||
+            "",
+
+        sku:
+            result.sku ||
+            "",
+
+        warna:
+            result.warna ||
+            "",
+
+        size:
+            result.size ||
+            "",
+
+        qty:
+            Number(
+                result.qty
+            ) || 0,
+
+        ekspedisi:
+            result.ekspedisi ||
+            "",
+
+        waktuKembali:
+            formatDateTime(
+                new Date()
+            ),
+
+        waktuScan:
+            formatDateTime(
+                new Date()
+            )
+
+    };
+
+
+    /*
+     * Simpan riwayat
+     */
+
+    saveHistory(
+        data
+    );
+
+
+    /*
+     * Feedback
+     */
+
+    if(
+        SCAN_CONFIG.beepSuccess
+    ){
+
+        beep(
+            750,
+            .08
+        );
+
+    }
+
+
+    setStatus(
+        "green",
+        "Barang sudah kembali"
+    );
+
+
+    showNotif(
+        "✓ BARANG SUDAH KEMBALI",
+        "success"
+    );
+
+
+    /*
+     * ROBOT HANYA STATUS
+     */
+
+    speak(
+        ROBOT_CONFIG.pesan.barangKembali
+    );
+
+
+    /*
+     * Buka hasil otomatis
+     */
+
+    renderResult(
+        data
+    );
+
+}
+
+
+/* =========================================================
+   REQUEST SCAN RETUR
+========================================================= */
+
+async function scanKeServer(
+    resi
+){
+
+    const url =
+        getTargetUrl();
+
+
+    if(!url){
+
+        setStatus(
+            "red",
+            "URL Apps Script tidak ditemukan"
+        );
+
+
+        showNotif(
+            "APP_URL TIDAK DITEMUKAN",
+            "error"
+        );
+
+
+        return;
+
+    }
+
+
+    try{
+
+        const response =
+            await fetch(
+
+                url,
+
+                {
+
+                    method:"POST",
+
+                    mode:"cors",
+
+                    headers:{
+
+                        "Content-Type":
+                            "text/plain;charset=utf-8"
+
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            source:
+                                "scanRetur",
+
+                            resi:
+                                resi
+
+                        })
+
+                }
+
+            );
+
+
+        const text =
+            await response.text();
+
+
+        console.log(
+            "SCAN RETUR RESPONSE:",
+            text
+        );
+
+
+        let result;
+
+
+        try{
+
+            result =
+                JSON.parse(
+                    text
+                );
+
+        }catch(e){
+
+            throw new Error(
+                "Response server bukan JSON"
+            );
+
+        }
+
+
+        prosesHasilScan(
+            result,
+            resi
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "SCAN RETUR ERROR:",
+            error
+        );
+
+
+        setStatus(
+            "red",
+            "Koneksi ke server gagal"
+        );
+
+
+        showNotif(
+            "KONEKSI SERVER GAGAL",
+            "error"
+        );
+
+
+        speak(
+            ROBOT_CONFIG.pesan.scanGagal
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   START CAMERA
+========================================================= */
+
+async function mulaiScan(){
+
+    if(
+        cameraRunning
+    ){
+
+        return;
+
+    }
+
+
+    cameraRunning =
+        true;
+
+
+    const btn =
+        document.getElementById(
+            "scanButton"
+        );
+
+
+    btn.classList.add(
+        "active"
+    );
+
+
+    btn.innerText =
+        "🔴 LEPASKAN UNTUK BERHENTI";
+
+
+    setStatus(
+        "yellow",
+        "Menyalakan kamera..."
+    );
+
+
+    try{
+
+        if(!html5QrCode){
+
+            html5QrCode =
+                new Html5Qrcode(
+                    "reader"
+                );
+
+        }
+
+
+        await html5QrCode.start(
+
+            {
+                facingMode:
+                    "environment"
+            },
+
+            {
+
+                fps:15,
+
+                qrbox:{
+
+                    width:280,
+
+                    height:180
+
+                },
+
+                aspectRatio:
+                    1.777778
+
+            },
+
+
+            function(decodedText){
+
+                if(
+                    processing
+                ){
+
+                    return;
+
+                }
+
+
+                processing =
+                    true;
+
+
+                const resi =
+                    normalizeResi(
+                        decodedText
+                    );
+
+
+                if(!resi){
+
+                    processing =
+                        false;
+
+                    return;
+
+                }
+
+
+                scanKeServer(
+                    resi
+                );
+
+
+                setTimeout(
+                    function(){
+
+                        processing =
+                            false;
+
+                    },
+                    SCAN_CONFIG.processingDelay
+                );
+
+            }
+
+        );
+
+
+        setStatus(
+            "green",
+            ROBOT_CONFIG.pesan.kameraAktif
+        );
+
+
+        speak(
+            ROBOT_CONFIG.pesan.kameraAktif
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "CAMERA ERROR:",
+            error
+        );
+
+
+        cameraRunning =
+            false;
+
+
+        btn.classList.remove(
+            "active"
+        );
+
+
+        btn.innerText =
+            "📷 TAHAN UNTUK SCAN";
+
+
+        setStatus(
+            "red",
+            ROBOT_CONFIG.pesan.kameraGagal
+        );
+
+
+        showNotif(
+            "IZINKAN AKSES KAMERA",
+            "error"
+        );
+
+
+        speak(
+            ROBOT_CONFIG.pesan.kameraGagal
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   STOP CAMERA
+========================================================= */
+
+async function berhentiScan(){
+
+    if(
+        !cameraRunning
+    ){
+
+        return;
+
+    }
+
+
+    cameraRunning =
+        false;
+
+
+    const btn =
+        document.getElementById(
+            "scanButton"
+        );
+
+
+    btn.classList.remove(
+        "active"
+    );
+
+
+    btn.innerText =
+        "📷 TAHAN UNTUK SCAN";
+
+
+    try{
+
+        if(html5QrCode){
+
+            await html5QrCode.stop();
+
+        }
+
+    }catch(e){}
+
+
+    setStatus(
+        "yellow",
+        ROBOT_CONFIG.pesan.kameraBerhenti
+    );
+
+}
+
+
+/* =========================================================
+   HOLD BUTTON
+========================================================= */
+
+const scanButton =
+    document.getElementById(
+        "scanButton"
+    );
+
+
+scanButton.addEventListener(
+    "pointerdown",
+    function(e){
+
+        e.preventDefault();
+
+        mulaiScan();
+
+    }
+);
+
+
+scanButton.addEventListener(
+    "pointerup",
+    function(e){
+
+        e.preventDefault();
+
+        berhentiScan();
+
+    }
+);
+
+
+scanButton.addEventListener(
+    "pointercancel",
+    function(){
+
+        berhentiScan();
+
+    }
+);
+
+
+scanButton.addEventListener(
+    "pointerleave",
+    function(){
+
+        if(
+            cameraRunning
+        ){
+
+            berhentiScan();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   CEGAH SCROLL DI LUAR PANEL
+========================================================= */
+
+document.addEventListener(
+
+    "touchmove",
+
+    function(e){
+
+        if(
+            !e.target.closest(
+                ".result-panel"
+            ) &&
+            !e.target.closest(
+                ".history-panel"
+            )
+        ){
+
+            e.preventDefault();
+
+        }
+
+    },
+
+    {
+        passive:false
+    }
+
+);
+
 </script>
 
-<script>
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./service-worker.js");
-}
+
+<!-- =========================================================
+     HTML5 QR CODE
+========================================================= -->
+
+<script
+    src="https://unpkg.com/html5-qrcode"
+    type="text/javascript">
 </script>
+
 </body>
 </html>
+```
+
+**Catatan penting:** pada kode di atas, `<script src="html5-qrcode">` sengaja diletakkan di bagian paling bawah, tetapi fungsi scanner baru dijalankan setelah `load`, jadi library tetap sudah tersedia ketika scanner dipakai.
+
+Panel **HASIL SCAN** mengambil data dari respons `scanRetur()` yang sudah kamu punya: `resi`, `orderId`, `sku`, `warna`, `size`, `qty`, dan `ekspedisi`. Untuk contoh `069 | MACKER ROBLOX BAIM`, tampilannya akan menjadi dua baris barang terpisah. Robot hanya mengucapkan **“Barang sudah kembali.”**
