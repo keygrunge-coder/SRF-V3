@@ -73,20 +73,24 @@ body{
     align-items:center;
     justify-content:space-between;
 
-    padding:0 10px;
+    padding:0 8px;
 
-    z-index:50;
+    z-index:100;
 }
 
 .header-title{
 
     font-size:15px;
     font-weight:800;
+
+    white-space:nowrap;
 }
 
 .header-actions{
 
     display:flex;
+    align-items:center;
+
     gap:5px;
 }
 
@@ -98,14 +102,16 @@ body{
 
     padding:7px 9px;
 
-    border-radius:6px;
+    border-radius:7px;
 
-    font-size:11px;
+    font-size:10px;
     font-weight:800;
 
     cursor:pointer;
 
     touch-action:manipulation;
+
+    white-space:nowrap;
 }
 
 .refresh{
@@ -113,14 +119,28 @@ body{
     background:#d97706;
 }
 
-.clear{
 
-    background:#dc2626;
+/* =========================================================
+   CAMERA TOGGLE
+========================================================= */
+
+.camera-toggle{
+
+    min-width:105px;
+
+    background:#475569;
+
+    color:white;
 }
 
-.sync{
+.camera-toggle.on{
 
-    background:#2563eb;
+    background:#16a34a;
+}
+
+.camera-toggle.off{
+
+    background:#475569;
 }
 
 
@@ -141,12 +161,15 @@ body{
     display:flex;
 
     justify-content:space-around;
+
     align-items:center;
 
     text-align:center;
 }
 
 .stat{
+
+    min-width:33%;
 
     font-size:10px;
 
@@ -182,6 +205,11 @@ body{
     overflow:hidden;
 }
 
+
+/* =========================================================
+   CAMERA
+========================================================= */
+
 #reader{
 
     position:absolute;
@@ -194,6 +222,8 @@ body{
     border:0!important;
 
     background:#000;
+
+    overflow:hidden;
 }
 
 #reader video{
@@ -222,6 +252,61 @@ body{
 
 
 /* =========================================================
+   CAMERA OFF SCREEN
+========================================================= */
+
+.camera-off-screen{
+
+    position:absolute;
+
+    inset:0;
+
+    background:#020617;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    color:#64748b;
+
+    z-index:5;
+
+    text-align:center;
+}
+
+.camera-off-icon{
+
+    font-size:54px;
+
+    margin-bottom:12px;
+
+    opacity:.7;
+}
+
+.camera-off-title{
+
+    color:#cbd5e1;
+
+    font-size:17px;
+
+    font-weight:800;
+}
+
+.camera-off-subtitle{
+
+    margin-top:5px;
+
+    color:#64748b;
+
+    font-size:11px;
+}
+
+
+/* =========================================================
    STATUS
 ========================================================= */
 
@@ -235,13 +320,13 @@ body{
 
     z-index:20;
 
-    background:rgba(15,23,42,.88);
+    background:rgba(15,23,42,.82);
 
     backdrop-filter:blur(8px);
 
     border-radius:10px;
 
-    padding:10px 12px;
+    padding:9px 11px;
 
     display:flex;
 
@@ -254,10 +339,10 @@ body{
 
 .lamp{
 
-    width:13px;
-    height:13px;
+    width:12px;
+    height:12px;
 
-    min-width:13px;
+    min-width:12px;
 
     border-radius:50%;
 
@@ -269,7 +354,7 @@ body{
 
 .status-text{
 
-    font-size:13px;
+    font-size:12px;
 
     font-weight:700;
 
@@ -289,7 +374,7 @@ body{
 
     position:absolute;
 
-    top:75px;
+    top:68px;
 
     left:50%;
 
@@ -297,11 +382,11 @@ body{
 
     z-index:40;
 
-    padding:10px 18px;
+    padding:9px 16px;
 
     border-radius:25px;
 
-    font-size:13px;
+    font-size:12px;
 
     font-weight:800;
 
@@ -316,84 +401,109 @@ body{
 .notif.success{
 
     background:#16a34a;
+
     color:white;
 }
 
 .notif.warning{
 
     background:#f59e0b;
+
     color:white;
 }
 
 .notif.error{
 
     background:#dc2626;
+
     color:white;
 }
 
 
 /* =========================================================
-   TOMBOL ANTREAN RESI
+   BOTTOM ACTIONS
 ========================================================= */
 
-.queue-button{
+.bottom-actions{
 
     position:absolute;
 
-    right:15px;
-
-    bottom:86px;
-
-    width:54px;
-    height:54px;
-
-    border:0;
-
-    border-radius:50%;
-
-    background:#2563eb;
-
-    color:white;
-
-    display:flex;
-
-    align-items:center;
-    justify-content:center;
-
-    font-size:24px;
-
-    font-weight:900;
+    left:10px;
+    right:10px;
+    bottom:10px;
 
     z-index:30;
 
+    display:grid;
+
+    grid-template-columns:
+        1fr
+        1fr
+        1fr;
+
+    gap:7px;
+}
+
+.bottom-button{
+
+    height:48px;
+
+    border:0;
+
+    border-radius:12px;
+
+    color:white;
+
+    font-size:11px;
+
+    font-weight:900;
+
     box-shadow:
-        0 5px 12px rgba(0,0,0,.4);
+        0 4px 12px rgba(0,0,0,.45);
 
     cursor:pointer;
 
     touch-action:manipulation;
 
-    user-select:none;
+    position:relative;
+
+    white-space:nowrap;
 }
 
-.queue-button:active{
+.bottom-button:active{
 
-    transform:scale(.94);
+    transform:scale(.96);
 }
 
-.queue-icon{
+.sync-button{
 
-    line-height:1;
+    background:#2563eb;
 }
 
-.queue-count{
+.queue-button{
+
+    background:#7c3aed;
+}
+
+.history-button{
+
+    background:#475569;
+}
+
+
+/* =========================================================
+   BADGE
+========================================================= */
+
+.button-badge{
 
     position:absolute;
 
-    top:-4px;
-    right:-3px;
+    top:-5px;
+    right:-4px;
 
     min-width:20px;
+
     height:20px;
 
     padding:0 5px;
@@ -404,157 +514,191 @@ body{
 
     color:white;
 
+    border:2px solid #000;
+
     display:flex;
 
     align-items:center;
+
     justify-content:center;
 
-    font-size:10px;
+    font-size:9px;
 
     font-weight:900;
-
-    border:2px solid #000;
 }
 
 
 /* =========================================================
-   LABEL ANTREAN
+   PANEL OVERLAY
 ========================================================= */
 
-.queue-label{
+.panel-overlay{
 
-    position:absolute;
+    position:fixed;
 
-    right:12px;
+    inset:0;
 
-    bottom:66px;
+    background:rgba(0,0,0,.58);
 
-    z-index:29;
+    z-index:200;
 
-    background:rgba(15,23,42,.85);
+    display:none;
+
+    align-items:flex-end;
+}
+
+.panel-overlay.open{
+
+    display:flex;
+}
+
+
+/* =========================================================
+   PANEL
+========================================================= */
+
+.panel{
+
+    width:100%;
+
+    max-height:72vh;
+
+    background:#f8fafc;
+
+    border-radius:
+        18px 18px 0 0;
+
+    overflow:hidden;
+
+    animation:
+        panelUp .18s ease-out;
+}
+
+@keyframes panelUp{
+
+    from{
+        transform:translateY(100%);
+    }
+
+    to{
+        transform:translateY(0);
+    }
+}
+
+
+/* =========================================================
+   PANEL HEADER
+========================================================= */
+
+.panel-header{
+
+    height:54px;
+
+    background:#1e293b;
 
     color:white;
 
-    padding:3px 7px;
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    padding:0 14px;
+}
+
+.panel-title{
+
+    font-size:14px;
+
+    font-weight:900;
+}
+
+.panel-close{
+
+    width:34px;
+
+    height:34px;
+
+    border:0;
+
+    border-radius:50%;
+
+    background:#475569;
+
+    color:white;
+
+    font-size:18px;
+
+    font-weight:900;
+
+    cursor:pointer;
+}
+
+
+/* =========================================================
+   PANEL CONTENT
+========================================================= */
+
+.panel-content{
+
+    max-height:
+        calc(72vh - 54px);
+
+    overflow-y:auto;
+
+    -webkit-overflow-scrolling:touch;
+}
+
+
+/* =========================================================
+   QUEUE ITEM
+========================================================= */
+
+.queue-item{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:10px;
+
+    padding:12px 14px;
+
+    background:white;
+
+    border-bottom:
+        1px solid #e2e8f0;
+}
+
+.queue-resi{
+
+    flex:1;
+
+    min-width:0;
+
+    font-size:13px;
+
+    font-weight:800;
+
+    color:#0f172a;
+
+    word-break:break-all;
+}
+
+.queue-exp{
+
+    flex-shrink:0;
+
+    padding:4px 7px;
 
     border-radius:5px;
 
     font-size:9px;
 
-    font-weight:800;
-
-    pointer-events:none;
-}
-
-
-/* =========================================================
-   SCAN BUTTON
-========================================================= */
-
-.scan-area{
-
-    position:absolute;
-
-    left:14px;
-    right:14px;
-
-    bottom:14px;
-
-    z-index:30;
-}
-
-.scan-button{
-
-    width:100%;
-
-    height:58px;
-
-    border:0;
-
-    border-radius:30px;
-
-    background:#334155;
-
-    color:white;
-
-    font-size:15px;
-
     font-weight:900;
-
-    box-shadow:
-        0 5px 15px rgba(0,0,0,.45);
-
-    cursor:pointer;
-
-    touch-action:none;
-
-    user-select:none;
-
-    -webkit-user-select:none;
-}
-
-.scan-button.active{
-
-    background:#16a34a;
-}
-
-.scan-button:active{
-
-    transform:scale(.98);
-}
-
-
-/* =========================================================
-   TABLE
-========================================================= */
-
-table{
-
-    width:100%;
-
-    border-collapse:collapse;
-
-    font-size:12px;
-}
-
-th{
-
-    background:#f8fafc;
-
-    color:#64748b;
-
-    text-align:left;
-
-    padding:9px;
-
-    position:sticky;
-
-    top:0;
-
-    z-index:2;
-}
-
-td{
-
-    padding:9px;
-
-    border-bottom:
-        1px solid #e2e8f0;
-
-    word-break:break-all;
-}
-
-.badge{
-
-    display:inline-block;
-
-    padding:3px 7px;
-
-    border-radius:5px;
-
-    font-size:10px;
-
-    font-weight:800;
 }
 
 .badge-spx{
@@ -573,10 +717,178 @@ td{
 
 
 /* =========================================================
+   HISTORY ITEM
+========================================================= */
+
+.history-item{
+
+    padding:11px 14px;
+
+    background:white;
+
+    border-bottom:
+        1px solid #e2e8f0;
+}
+
+.history-top{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:8px;
+}
+
+.history-resi{
+
+    font-size:12px;
+
+    font-weight:800;
+
+    color:#0f172a;
+
+    word-break:break-all;
+}
+
+.history-time{
+
+    flex-shrink:0;
+
+    color:#64748b;
+
+    font-size:9px;
+}
+
+.history-bottom{
+
+    margin-top:5px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:6px;
+}
+
+.history-status{
+
+    font-size:9px;
+
+    color:#16a34a;
+
+    font-weight:800;
+}
+
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+.empty-state{
+
+    padding:40px 20px;
+
+    text-align:center;
+
+    color:#94a3b8;
+
+    background:white;
+}
+
+.empty-icon{
+
+    font-size:35px;
+
+    margin-bottom:8px;
+}
+
+.empty-title{
+
+    font-size:13px;
+
+    font-weight:800;
+
+    color:#64748b;
+}
+
+.empty-subtitle{
+
+    margin-top:4px;
+
+    font-size:10px;
+
+    color:#94a3b8;
+}
+
+
+/* =========================================================
+   SYNC PROGRESS
+========================================================= */
+
+.sync-progress{
+
+    position:absolute;
+
+    left:50%;
+
+    top:50%;
+
+    transform:translate(-50%,-50%);
+
+    z-index:150;
+
+    background:rgba(15,23,42,.95);
+
+    color:white;
+
+    padding:18px 22px;
+
+    border-radius:14px;
+
+    text-align:center;
+
+    display:none;
+
+    min-width:190px;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,.5);
+}
+
+.sync-progress.show{
+
+    display:block;
+}
+
+.sync-progress-title{
+
+    font-size:13px;
+
+    font-weight:900;
+}
+
+.sync-progress-text{
+
+    margin-top:7px;
+
+    font-size:11px;
+
+    color:#cbd5e1;
+}
+
+
+/* =========================================================
    MOBILE
 ========================================================= */
 
 @media(max-width:380px){
+
+    .header{
+
+        padding:0 6px;
+    }
 
     .header-title{
 
@@ -585,37 +897,37 @@ td{
 
     .header-btn{
 
-        padding:6px;
+        padding:6px 7px;
 
-        font-size:10px;
+        font-size:9px;
+    }
+
+    .camera-toggle{
+
+        min-width:94px;
     }
 
     .status-text{
 
-        font-size:12px;
+        font-size:11px;
     }
 
-    .scan-button{
+    .bottom-actions{
 
-        height:54px;
+        left:7px;
+        right:7px;
+        bottom:7px;
 
-        font-size:14px;
+        gap:5px;
     }
 
-    .queue-button{
+    .bottom-button{
 
-        width:50px;
-        height:50px;
+        height:46px;
 
-        right:12px;
+        font-size:10px;
 
-        bottom:84px;
-    }
-
-    .queue-label{
-
-        right:9px;
-        bottom:64px;
+        border-radius:10px;
     }
 }
 
@@ -652,20 +964,11 @@ td{
 
 
         <button
-            class="header-btn sync"
-            onclick="syncKeServer()">
+            id="cameraToggle"
+            class="header-btn camera-toggle off"
+            onclick="toggleCamera()">
 
-            ☁ Sync
-            <span id="syncCount">0</span>
-
-        </button>
-
-
-        <button
-            class="header-btn clear"
-            onclick="clearLocal()">
-
-            Clear
+            📷 KAMERA OFF
 
         </button>
 
@@ -722,7 +1025,30 @@ td{
 <div class="scanner">
 
 
+    <!-- CAMERA -->
+
     <div id="reader"></div>
+
+
+    <!-- CAMERA OFF -->
+
+    <div
+        id="cameraOffScreen"
+        class="camera-off-screen">
+
+        <div class="camera-off-icon">
+            📷
+        </div>
+
+        <div class="camera-off-title">
+            KAMERA MATI
+        </div>
+
+        <div class="camera-off-subtitle">
+            Tekan tombol KAMERA ON di atas
+        </div>
+
+    </div>
 
 
     <!-- STATUS -->
@@ -739,14 +1065,14 @@ td{
             id="statusText"
             class="status-text">
 
-            Tekan dan tahan untuk mulai scan
+            Kamera mati
 
         </div>
 
     </div>
 
 
-    <!-- NOTIF -->
+    <!-- NOTIFICATION -->
 
     <div
         id="notif"
@@ -754,97 +1080,21 @@ td{
     </div>
 
 
-    <!-- =====================================================
-         TOMBOL ANTREAN RESI
-
-         Input manual sudah DIHAPUS.
-    ====================================================== -->
-
-    <button
-        id="queueButton"
-        class="queue-button"
-        onclick="openQueue()"
-        title="Antrean Resi">
-
-        <span class="queue-icon">
-            ☷
-        </span>
-
-        <span
-            id="queueButtonCount"
-            class="queue-count">
-            0
-        </span>
-
-    </button>
-
-
-    <div class="queue-label">
-
-        Antrean Resi
-
-    </div>
-
-
-    <!-- =====================================================
-         DRAWER ANTREAN
-    ====================================================== -->
+    <!-- SYNC PROGRESS -->
 
     <div
-        id="drawer"
-        class="drawer">
+        id="syncProgress"
+        class="sync-progress">
 
-
-        <div
-            class="drawer-header"
-            onclick="toggleDrawer()">
-
-
-            <span>
-
-                ANTREAN BELUM SINKRON
-                (<span id="queueCount">0</span>)
-
-            </span>
-
-
-            <span id="drawerArrow">
-
-                ▲
-
-            </span>
-
+        <div class="sync-progress-title">
+            Sinkronisasi
         </div>
 
+        <div
+            id="syncProgressText"
+            class="sync-progress-text">
 
-        <div class="drawer-content">
-
-
-            <table>
-
-                <thead>
-
-                    <tr>
-
-                        <th>
-                            Resi
-                        </th>
-
-                        <th>
-                            Ekspedisi
-                        </th>
-
-                    </tr>
-
-                </thead>
-
-
-                <tbody
-                    id="historyBody">
-                </tbody>
-
-            </table>
-
+            Memproses...
 
         </div>
 
@@ -852,54 +1102,168 @@ td{
 
 
     <!-- =====================================================
-         SCAN BUTTON
+         BOTTOM BUTTONS
     ====================================================== -->
 
-    <div class="scan-area">
+    <div class="bottom-actions">
+
+
+        <!-- SYNC -->
 
         <button
-            id="scanButton"
-            class="scan-button">
+            class="bottom-button sync-button"
+            onclick="syncKeServer()">
 
-            📷 TAHAN UNTUK SCAN
+            ☁ SYNC
+
+            <span
+                id="syncCount"
+                class="button-badge">
+
+                0
+
+            </span>
 
         </button>
 
-    </div>
 
+        <!-- ANTREAN -->
+
+        <button
+            class="bottom-button queue-button"
+            onclick="openQueue()">
+
+            ☷ ANTREAN
+
+            <span
+                id="queueButtonCount"
+                class="button-badge">
+
+                0
+
+            </span>
+
+        </button>
+
+
+        <!-- RIWAYAT -->
+
+        <button
+            class="bottom-button history-button"
+            onclick="openHistory()">
+
+            ☷ RIWAYAT
+
+        </button>
+
+
+    </div>
 
 </div>
 
 
 <!-- =========================================================
-     CONFIG.JS
+     PANEL ANTREAN
+========================================================= -->
 
-     File config.js harus berada satu folder
-     dengan file HTML ini.
+<div
+    id="queueOverlay"
+    class="panel-overlay"
+    onclick="closePanelOutside(event)">
 
-     Bisa berisi:
+    <div class="panel">
 
-     const APP_URL = "URL_APPS_SCRIPT";
 
-     ATAU:
+        <div class="panel-header">
 
-     const CONFIG = {
-         APP_URL:"URL_APPS_SCRIPT"
-     };
+            <div class="panel-title">
 
+                ANTREAN RESI
+
+                (<span id="queueCount">
+                    0
+                </span>)
+
+            </div>
+
+
+            <button
+                class="panel-close"
+                onclick="closeQueue()">
+
+                ×
+
+            </button>
+
+        </div>
+
+
+        <div
+            id="queueContent"
+            class="panel-content">
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     PANEL RIWAYAT
+========================================================= -->
+
+<div
+    id="historyOverlay"
+    class="panel-overlay"
+    onclick="closePanelOutside(event)">
+
+    <div class="panel">
+
+
+        <div class="panel-header">
+
+            <div class="panel-title">
+
+                RIWAYAT RESI
+
+                (<span id="historyCount">
+                    0
+                </span>)
+
+            </div>
+
+
+            <button
+                class="panel-close"
+                onclick="closeHistory()">
+
+                ×
+
+            </button>
+
+        </div>
+
+
+        <div
+            id="historyContent"
+            class="panel-content">
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     CONFIG
 ========================================================= -->
 
 <script src="config.js"></script>
 
 
 <script>
-
-/* =========================================================
-   =========================================================
-   KONFIGURASI UTAMA
-   =========================================================
-   ========================================================= */
-
 
 /* =========================================================
    CONFIG APPS SCRIPT
@@ -914,7 +1278,9 @@ function getTargetUrl(){
             APP_URL
         ){
 
-            return String(APP_URL).trim();
+            return String(
+                APP_URL
+            ).trim();
 
         }
 
@@ -940,24 +1306,13 @@ function getTargetUrl(){
 
     }
 
-
     return "";
 
 }
 
 
 /* =========================================================
-   ROBOT / iROBOT
-   =========================================================
-
-   BAHASA DIKUNCI INDONESIA.
-
-   Jangan ubah:
-
-   bahasa:"id-ID"
-
-   Semua suara bisa diubah dari sini.
-
+   ROBOT
 ========================================================= */
 
 const ROBOT_CONFIG = {
@@ -973,20 +1328,16 @@ const ROBOT_CONFIG = {
     volume:1.0,
 
 
-    /* =====================================================
-       PESAN ROBOT
-    ===================================================== */
-
     pesan:{
 
         siap:
-            "Scanner siap",
+            "Kamera mati",
 
         kameraAktif:
             "Kamera aktif, siap scan",
 
         kameraBerhenti:
-            "Scanner berhenti",
+            "Kamera dimatikan",
 
         kameraGagal:
             "Tidak dapat membuka kamera",
@@ -1002,9 +1353,6 @@ const ROBOT_CONFIG = {
 
         jntBerhasil:
             "J dan T, berhasil",
-
-        resiMasukAntrean:
-            "Resi masuk antrean",
 
         syncMulai:
             "Memulai sinkronisasi",
@@ -1027,17 +1375,7 @@ const ROBOT_CONFIG = {
 
 
 /* =========================================================
-   PENGATURAN SCAN
-   =========================================================
-
-   Bagian ini bisa kamu ubah.
-
-   allowDoubleScan:
-
-   false = resi yang sama ditolak
-
-   true = resi yang sama boleh discan lagi
-
+   SCAN CONFIG
 ========================================================= */
 
 const SCAN_CONFIG = {
@@ -1056,16 +1394,6 @@ const SCAN_CONFIG = {
 
 };
 
-
-/* =========================================================
-   MODE DOUBLE SCAN
-
-   Kalau nanti mau ubah perilaku double:
-
-   "tolak"
-   "izinkan"
-
-========================================================= */
 
 const DOUBLE_SCAN_MODE = {
 
@@ -1145,6 +1473,8 @@ window.addEventListener(
 
         updateUI();
 
+        renderQueue();
+
         renderHistory();
 
         loadDashboard();
@@ -1153,6 +1483,8 @@ window.addEventListener(
             "yellow",
             ROBOT_CONFIG.pesan.siap
         );
+
+        updateCameraButton();
 
     }
 );
@@ -1339,8 +1671,7 @@ function beep(
 
 
 /* =========================================================
-   iROBOT
-   BAHASA INDONESIA SAJA
+   ROBOT VOICE
 ========================================================= */
 
 function speak(text){
@@ -1373,10 +1704,6 @@ function speak(text){
                 text
             );
 
-
-        /*
-         * BAHASA DIKUNCI ID
-         */
 
         voice.lang =
             "id-ID";
@@ -1414,9 +1741,7 @@ function speak(text){
    EKSPEDISI
 ========================================================= */
 
-function getEkspedisi(
-    resi
-){
+function getEkspedisi(resi){
 
     const r =
         String(resi)
@@ -1450,12 +1775,10 @@ function getEkspedisi(
 
 
 /* =========================================================
-   CEK DOUBLE
+   DOUBLE SCAN
 ========================================================= */
 
-function cekDouble(
-    resi
-){
+function cekDouble(resi){
 
     return localData.includes(
         resi
@@ -1465,12 +1788,10 @@ function cekDouble(
 
 
 /* =========================================================
-   SIMPAN RESI LOKAL
+   SIMPAN RESI
 ========================================================= */
 
-function simpanLokal(
-    resi
-){
+function simpanLokal(resi){
 
     resi =
         String(resi || "")
@@ -1492,8 +1813,8 @@ function simpanLokal(
 
 
     /* =====================================================
-       FORMAT RESI TIDAK DIKENAL
-    ===================================================== */
+       RESI TIDAK DIKENAL
+    ====================================================== */
 
     if(!ekspedisi){
 
@@ -1533,15 +1854,11 @@ function simpanLokal(
 
     /* =====================================================
        DOUBLE SCAN
-    ===================================================== */
+    ====================================================== */
 
     if(
         cekDouble(resi)
     ){
-
-        /*
-         * MODE TOLAK
-         */
 
         if(
             !SCAN_CONFIG.allowDoubleScan ||
@@ -1586,8 +1903,8 @@ function simpanLokal(
 
 
     /* =====================================================
-       TAMBAHKAN KE ANTREAN
-    ===================================================== */
+       TAMBAH ANTREAN
+    ====================================================== */
 
     localData.push(
         resi
@@ -1603,8 +1920,8 @@ function simpanLokal(
 
 
     /* =====================================================
-       HISTORY
-    ===================================================== */
+       RIWAYAT
+    ====================================================== */
 
     scanHistory.unshift({
 
@@ -1622,7 +1939,7 @@ function simpanLokal(
     scanHistory =
         scanHistory.slice(
             0,
-            200
+            500
         );
 
 
@@ -1636,7 +1953,7 @@ function simpanLokal(
 
     /* =====================================================
        FEEDBACK
-    ===================================================== */
+    ====================================================== */
 
     if(
         SCAN_CONFIG.beepSuccess
@@ -1664,10 +1981,6 @@ function simpanLokal(
     );
 
 
-    /*
-     * SUARA BERDASARKAN EKSPEDISI
-     */
-
     if(
         ekspedisi === "SPX"
     ){
@@ -1687,10 +2000,74 @@ function simpanLokal(
 
     updateUI();
 
+    renderQueue();
+
     renderHistory();
 
 
     return true;
+
+}
+
+
+/* =========================================================
+   CAMERA TOGGLE
+========================================================= */
+
+async function toggleCamera(){
+
+    if(cameraRunning){
+
+        await berhentiScan();
+
+    }else{
+
+        await mulaiScan();
+
+    }
+
+}
+
+
+/* =========================================================
+   UPDATE CAMERA BUTTON
+========================================================= */
+
+function updateCameraButton(){
+
+    const btn =
+        document.getElementById(
+            "cameraToggle"
+        );
+
+
+    if(cameraRunning){
+
+        btn.innerText =
+            "📷 KAMERA ON";
+
+        btn.classList.remove(
+            "off"
+        );
+
+        btn.classList.add(
+            "on"
+        );
+
+    }else{
+
+        btn.innerText =
+            "📷 KAMERA OFF";
+
+        btn.classList.remove(
+            "on"
+        );
+
+        btn.classList.add(
+            "off"
+        );
+
+    }
 
 }
 
@@ -1701,9 +2078,7 @@ function simpanLokal(
 
 async function mulaiScan(){
 
-    if(
-        cameraRunning
-    ){
+    if(cameraRunning){
 
         return;
 
@@ -1714,19 +2089,13 @@ async function mulaiScan(){
         true;
 
 
-    const btn =
-        document.getElementById(
-            "scanButton"
-        );
+    updateCameraButton();
 
 
-    btn.classList.add(
-        "active"
-    );
-
-
-    btn.innerText =
-        "🔴 LEPASKAN UNTUK BERHENTI";
+    document.getElementById(
+        "cameraOffScreen"
+    ).style.display =
+        "none";
 
 
     setStatus(
@@ -1759,10 +2128,8 @@ async function mulaiScan(){
                 fps:15,
 
                 qrbox:{
-
                     width:280,
                     height:180
-
                 },
 
                 aspectRatio:
@@ -1814,7 +2181,6 @@ async function mulaiScan(){
             ROBOT_CONFIG.pesan.kameraAktif
         );
 
-
     }catch(error){
 
         console.error(
@@ -1827,13 +2193,13 @@ async function mulaiScan(){
             false;
 
 
-        btn.classList.remove(
-            "active"
-        );
+        updateCameraButton();
 
 
-        btn.innerText =
-            "📷 TAHAN UNTUK SCAN";
+        document.getElementById(
+            "cameraOffScreen"
+        ).style.display =
+            "flex";
 
 
         setStatus(
@@ -1876,19 +2242,11 @@ async function berhentiScan(){
         false;
 
 
-    const btn =
-        document.getElementById(
-            "scanButton"
-        );
+    processing =
+        false;
 
 
-    btn.classList.remove(
-        "active"
-    );
-
-
-    btn.innerText =
-        "📷 TAHAN UNTUK SCAN";
+    updateCameraButton();
 
 
     try{
@@ -1899,7 +2257,20 @@ async function berhentiScan(){
 
         }
 
-    }catch(e){}
+    }catch(e){
+
+        console.log(
+            "STOP CAMERA:",
+            e
+        );
+
+    }
+
+
+    document.getElementById(
+        "cameraOffScreen"
+    ).style.display =
+        "flex";
 
 
     setStatus(
@@ -1911,138 +2282,57 @@ async function berhentiScan(){
 
 
 /* =========================================================
-   HOLD SCAN BUTTON
-========================================================= */
-
-const scanButton =
-    document.getElementById(
-        "scanButton"
-    );
-
-
-scanButton.addEventListener(
-    "pointerdown",
-    function(e){
-
-        e.preventDefault();
-
-        mulaiScan();
-
-    }
-);
-
-
-scanButton.addEventListener(
-    "pointerup",
-    function(e){
-
-        e.preventDefault();
-
-        berhentiScan();
-
-    }
-);
-
-
-scanButton.addEventListener(
-    "pointercancel",
-    function(){
-
-        berhentiScan();
-
-    }
-);
-
-
-scanButton.addEventListener(
-    "pointerleave",
-    function(){
-
-        if(cameraRunning){
-
-            berhentiScan();
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   BUKA ANTREAN
+   OPEN QUEUE
 ========================================================= */
 
 function openQueue(){
 
-    const drawer =
-        document.getElementById(
-            "drawer"
-        );
+    renderQueue();
 
 
-    const arrow =
-        document.getElementById(
-            "drawerArrow"
-        );
-
-
-    drawer.classList.add(
+    document.getElementById(
+        "queueOverlay"
+    ).classList.add(
         "open"
     );
-
-
-    arrow.innerText =
-        "▼";
 
 }
 
 
 /* =========================================================
-   DRAWER
+   CLOSE QUEUE
 ========================================================= */
 
-function toggleDrawer(){
+function closeQueue(){
 
-    const drawer =
-        document.getElementById(
-            "drawer"
-        );
-
-
-    const arrow =
-        document.getElementById(
-            "drawerArrow"
-        );
-
-
-    drawer.classList.toggle(
+    document.getElementById(
+        "queueOverlay"
+    ).classList.remove(
         "open"
     );
-
-
-    arrow.innerText =
-        drawer.classList.contains(
-            "open"
-        )
-        ? "▼"
-        : "▲";
 
 }
 
 
 /* =========================================================
-   RENDER ANTREAN
+   RENDER QUEUE
 ========================================================= */
 
-function renderHistory(){
+function renderQueue(){
 
-    const body =
+    const content =
         document.getElementById(
-            "historyBody"
+            "queueContent"
         );
 
 
-    body.innerHTML =
+    document.getElementById(
+        "queueCount"
+    ).innerText =
+        localData.length;
+
+
+    content.innerHTML =
         "";
 
 
@@ -2050,24 +2340,23 @@ function renderHistory(){
         localData.length === 0
     ){
 
-        body.innerHTML = `
+        content.innerHTML = `
 
-            <tr>
+            <div class="empty-state">
 
-                <td
-                    colspan="2"
-                    style="
-                        text-align:center;
-                        color:#94a3b8;
-                        padding:20px;
-                    "
-                >
+                <div class="empty-icon">
+                    ☷
+                </div>
 
+                <div class="empty-title">
                     Antrean kosong
+                </div>
 
-                </td>
+                <div class="empty-subtitle">
+                    Belum ada resi yang menunggu sinkronisasi
+                </div>
 
-            </tr>
+            </div>
 
         `;
 
@@ -2076,73 +2365,56 @@ function renderHistory(){
     }
 
 
-    /*
-     * Hanya tampilkan resi
-     * yang masih berada
-     * di antrean.
-     */
+    localData
+    .slice()
+    .reverse()
+    .forEach(
+        function(resi){
 
-    const data =
-        scanHistory.filter(
-            function(item){
-
-                return localData.includes(
-                    item.resi
+            const ekspedisi =
+                getEkspedisi(
+                    resi
                 );
 
-            }
-        );
-
-
-    data
-    .slice(0,100)
-    .forEach(
-        function(item){
 
             const badgeClass =
-                item.ekspedisi === "SPX"
-                ? "badge-spx"
-                : "badge-jnt";
+                ekspedisi === "SPX"
+                    ? "badge-spx"
+                    : "badge-jnt";
 
 
-            const tr =
+            const item =
                 document.createElement(
-                    "tr"
+                    "div"
                 );
 
 
-            tr.innerHTML = `
+            item.className =
+                "queue-item";
 
-                <td>
 
-                    <strong>
-                        ${escapeHTML(
-                            item.resi
-                        )}
-                    </strong>
+            item.innerHTML = `
 
-                </td>
+                <div class="queue-resi">
 
-                <td>
+                    ${escapeHTML(resi)}
 
-                    <span
-                        class="badge
-                        ${badgeClass}"
-                    >
+                </div>
 
-                        ${escapeHTML(
-                            item.ekspedisi
-                        )}
+                <div
+                    class="queue-exp ${badgeClass}">
 
-                    </span>
+                    ${escapeHTML(
+                        ekspedisi || "-"
+                    )}
 
-                </td>
+                </div>
 
             `;
 
 
-            body.appendChild(
-                tr
+            content.appendChild(
+                item
             );
 
         }
@@ -2152,12 +2424,204 @@ function renderHistory(){
 
 
 /* =========================================================
+   OPEN HISTORY
+========================================================= */
+
+function openHistory(){
+
+    renderHistory();
+
+
+    document.getElementById(
+        "historyOverlay"
+    ).classList.add(
+        "open"
+    );
+
+}
+
+
+/* =========================================================
+   CLOSE HISTORY
+========================================================= */
+
+function closeHistory(){
+
+    document.getElementById(
+        "historyOverlay"
+    ).classList.remove(
+        "open"
+    );
+
+}
+
+
+/* =========================================================
+   RENDER HISTORY
+========================================================= */
+
+function renderHistory(){
+
+    const content =
+        document.getElementById(
+            "historyContent"
+        );
+
+
+    document.getElementById(
+        "historyCount"
+    ).innerText =
+        scanHistory.length;
+
+
+    content.innerHTML =
+        "";
+
+
+    if(
+        scanHistory.length === 0
+    ){
+
+        content.innerHTML = `
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    ☷
+                </div>
+
+                <div class="empty-title">
+                    Riwayat kosong
+                </div>
+
+                <div class="empty-subtitle">
+                    Belum ada resi yang discan
+                </div>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    scanHistory
+    .slice(0,500)
+    .forEach(
+        function(item){
+
+            const badgeClass =
+                item.ekspedisi === "SPX"
+                    ? "badge-spx"
+                    : "badge-jnt";
+
+
+            const itemEl =
+                document.createElement(
+                    "div"
+                );
+
+
+            itemEl.className =
+                "history-item";
+
+
+            itemEl.innerHTML = `
+
+                <div class="history-top">
+
+                    <div class="history-resi">
+
+                        ${escapeHTML(
+                            item.resi
+                        )}
+
+                    </div>
+
+                    <div class="history-time">
+
+                        ${formatTanggal(
+                            item.waktu
+                        )}
+
+                    </div>
+
+                </div>
+
+
+                <div class="history-bottom">
+
+                    <span
+                        class="queue-exp ${badgeClass}">
+
+                        ${escapeHTML(
+                            item.ekspedisi
+                        )}
+
+                    </span>
+
+
+                    <span class="history-status">
+
+                        ✓ Sudah discan
+
+                    </span>
+
+                </div>
+
+            `;
+
+
+            content.appendChild(
+                itemEl
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   FORMAT TANGGAL
+========================================================= */
+
+function formatTanggal(waktu){
+
+    try{
+
+        const date =
+            new Date(
+                waktu
+            );
+
+
+        return date.toLocaleString(
+            "id-ID",
+            {
+                day:"2-digit",
+                month:"2-digit",
+                hour:"2-digit",
+                minute:"2-digit"
+            }
+        );
+
+    }catch(e){
+
+        return "-";
+
+    }
+
+}
+
+
+/* =========================================================
    ESCAPE HTML
 ========================================================= */
 
-function escapeHTML(
-    text
-){
+function escapeHTML(text){
 
     return String(text)
 
@@ -2190,7 +2654,27 @@ function escapeHTML(
 
 
 /* =========================================================
-   SYNC KE GOOGLE APPS SCRIPT
+   CLOSE PANEL OUTSIDE
+========================================================= */
+
+function closePanelOutside(event){
+
+    if(
+        event.target ===
+        event.currentTarget
+    ){
+
+        event.currentTarget.classList.remove(
+            "open"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   SYNC KE SERVER
 ========================================================= */
 
 async function syncKeServer(){
@@ -2225,10 +2709,6 @@ async function syncKeServer(){
         getTargetUrl();
 
 
-    /* =====================================================
-       CEK CONFIG
-    ===================================================== */
-
     if(!url){
 
         setStatus(
@@ -2251,6 +2731,23 @@ async function syncKeServer(){
         localData.length;
 
 
+    const progress =
+        document.getElementById(
+            "syncProgress"
+        );
+
+
+    const progressText =
+        document.getElementById(
+            "syncProgressText"
+        );
+
+
+    progress.classList.add(
+        "show"
+    );
+
+
     setStatus(
         "yellow",
         `Sync 0/${total}`
@@ -2267,17 +2764,13 @@ async function syncKeServer(){
     let berhasil = 0;
 
 
-    /*
-     * COPY ARRAY
-     */
-
     const daftarSync =
         [...localData];
 
 
     for(
-        let i = 0;
-        i < daftarSync.length;
+        let i=0;
+        i<daftarSync.length;
         i++
     ){
 
@@ -2287,8 +2780,12 @@ async function syncKeServer(){
 
         setStatus(
             "yellow",
-            `Sync ${i+1}/${total} • ${resi}`
+            `Sync ${i+1}/${total}`
         );
+
+
+        progressText.innerText =
+            `${i+1} / ${total} • ${resi}`;
 
 
         try{
@@ -2368,10 +2865,6 @@ async function syncKeServer(){
             }
 
 
-            /* =================================================
-               SUCCESS
-            ================================================= */
-
             if(
                 result.status ===
                 "success"
@@ -2381,11 +2874,6 @@ async function syncKeServer(){
 
             }
 
-
-            /* =================================================
-               DUPLICATE
-            ================================================= */
-
             else if(
                 result.status ===
                 "duplicate"
@@ -2394,11 +2882,6 @@ async function syncKeServer(){
                 berhasil++;
 
             }
-
-
-            /* =================================================
-               ERROR
-            ================================================= */
 
             else{
 
@@ -2440,8 +2923,8 @@ async function syncKeServer(){
 
 
     /* =====================================================
-       SIMPAN ANTREAN SISA
-    ===================================================== */
+       SIMPAN SISA
+    ====================================================== */
 
     localData =
         sisa;
@@ -2457,12 +2940,19 @@ async function syncKeServer(){
 
     updateUI();
 
+    renderQueue();
+
     renderHistory();
 
 
+    progress.classList.remove(
+        "show"
+    );
+
+
     /* =====================================================
-       HASIL SYNC
-    ===================================================== */
+       HASIL
+    ====================================================== */
 
     if(
         berhasil > 0
@@ -2577,72 +3067,6 @@ async function loadDashboard(){
 
 
 /* =========================================================
-   CLEAR ANTREAN LOKAL
-========================================================= */
-
-function clearLocal(){
-
-    if(
-        localData.length === 0
-    ){
-
-        alert(
-            "Antrean lokal sudah kosong."
-        );
-
-        return;
-
-    }
-
-
-    const yakin =
-        confirm(
-
-            "Hapus semua antrean scan yang belum sinkron dari HP?\n\nData di Google Sheet TIDAK akan dihapus."
-
-        );
-
-
-    if(!yakin){
-
-        return;
-
-    }
-
-
-    localData = [];
-
-
-    localStorage.removeItem(
-        STORAGE_DATA
-    );
-
-
-    updateUI();
-
-    renderHistory();
-
-
-    setStatus(
-        "green",
-        ROBOT_CONFIG.pesan.antreanDibersihkan
-    );
-
-
-    showNotif(
-        "ANTREAN DIBERSIHKAN",
-        "success"
-    );
-
-
-    speak(
-        ROBOT_CONFIG.pesan.antreanDibersihkan
-    );
-
-}
-
-
-/* =========================================================
    REFRESH
 ========================================================= */
 
@@ -2651,6 +3075,28 @@ function refreshApp(){
     location.reload();
 
 }
+
+
+/* =========================================================
+   ESCAPE BACK / PANEL
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    function(e){
+
+        if(
+            e.key === "Escape"
+        ){
+
+            closeQueue();
+
+            closeHistory();
+
+        }
+
+    }
+);
 
 
 /* =========================================================
@@ -2665,7 +3111,7 @@ document.addEventListener(
 
         if(
             !e.target.closest(
-                ".drawer-content"
+                ".panel-content"
             )
         ){
 
