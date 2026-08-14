@@ -85,7 +85,7 @@
         
         <div class="indicator-box">
             <div id="bca-indicator"></div>
-            <div id="status-message">Memuat Sistem...</div>
+            <div id="status-message">Menyiapkan Kamera...</div>
         </div>
 
         <div id="notif" class="notif-banner"></div>
@@ -97,7 +97,7 @@
 
     <div class="bottom-drawer" id="bottomDrawer">
         <div class="drawer-handle" onclick="toggleDrawer()">
-            <span>Riwayat Scan Lokal (<span id="history-count">0</span>)</span>
+            <span>Antrean Belum Sinkron (<span id="history-count">0</span>)</span>
             <span id="drawerArrow">▲</span>
         </div>
         <div class="drawer-content">
@@ -133,7 +133,13 @@
             return null;
         }
 
-        window.onload = function() { startCamera(); muatDataDashboardAwal(); };
+        // Delay sedikit saat pertama buka agar kamera tidak langsung mendeteksi barcode liar di awal
+        window.onload = function() { 
+            muatDataDashboardAwal(); 
+            setTimeout(() => {
+                startCamera();
+            }, 1000);
+        };
 
         let html5QrCode = null;
         let isProcessing = false;
@@ -163,7 +169,7 @@
                 window.speechSynthesis.cancel(); 
                 let tts = new SpeechSynthesisUtterance(teks); 
                 tts.lang = 'id-ID'; 
-                tts.rate = 1.2; 
+                tts.rate = 1.1; 
                 window.speechSynthesis.speak(tts); 
             } 
         }
@@ -187,7 +193,7 @@
         function updateCounters() {
             document.getElementById('local-slot').innerText = localData.length;
             document.getElementById('sync-count').innerText = localData.length;
-            document.getElementById('history-count').innerText = scanHistory.length;
+            document.getElementById('history-count').innerText = localData.length; // Menampilkan jumlah data belum sinkron
         }
 
         function muatDataDashboardAwal() {
@@ -210,7 +216,7 @@
             
             html5QrCode.start(
                 { facingMode: "environment" }, 
-                { fps: 20, qrbox: 200 }, 
+                { fps: 15, qrbox: 220 }, 
                 (decodedText) => { 
                     if(!isProcessing) { 
                         isProcessing = true; 
@@ -259,43 +265,56 @@
 
         function simpanLokal(resi) {
             let resiUpper = resi.toUpperCase();
-            let ekspedisi = (resiUpper.startsWith("SPX") || resiUpper.startsWith("SPXID")) ? "SPX" : "J&T";
+            
+            // Penentuan ekspedisi dan pelafalan suara yang jelas (Je En Te / S P X)
+            let ekspedisiLabel = (resiUpper.startsWith("SPX") || resiUpper.startsWith("SPXID")) ? "SPX" : "Je En Te";
+            let suaraEkspedisi = (ekspedisiLabel === "SPX") ? "S P X" : "Je En Te";
 
+            // Pengecekan Dobel ketat di memori lokal (antrean belum sinkron)
             let isDuplicate = localData.includes(resi);
 
             if (isDuplicate) {
                 beepDuplicate();
                 setLampuBca('merah', 'Dobel di HP!');
                 robotBicara("Dobel");
-                showNotif("⚠ RESI DOBEL (LOKAL)", "warning");
-                scanHistory.unshift({ resi, display: "DOBEL" });
+                showNotif("⚠ RESI DOBEL (SUDAH ADA DI ANTREAN)", "warning");
             } else {
                 beepSuccess();
-                setLampuBca('ijo', `Tersimpan! ${ekspedisi}`);
-                robotBicara(`${ekspedisi}, SUKSES.`);
+                setLampuBca('ijo', `Tersimpan! ${ekspedisiLabel}`);
+                robotBicara(`${suaraEkspedisi}, SUKSES.`);
                 showNotif("✓ TERSIMPAN LOKAL", "success");
 
                 localData.push(resi);
                 localStorage.setItem('resi_offline_v2', JSON.stringify(localData));
 
-                scanHistory.unshift({ resi, display: ekspedisi });
+                scanHistory.unshift({ resi, display: ekspedisiLabel });
+                localStorage.setItem("scanHistory_v2", JSON.stringify(scanHistory.slice(0, 100)));
             }
 
-            localStorage.setItem("scanHistory_v2", JSON.stringify(scanHistory.slice(0, 100)));
             updateCounters();
             renderHistory();
 
+            // Jeda sebelum kamera aktif kembali agar tidak scan resi yang sama berkali-kali secara tidak sengaja
             setTimeout(() => {
                 isProcessing = false;
                 if(html5QrCode) html5QrCode.resume();
-            }, 300);
+            }, 1200);
         }
 
         function renderHistory(){ 
             const body = document.getElementById("historyBody"); 
             body.innerHTML = ""; 
-            scanHistory.slice(0, 15).forEach(item => { 
-                let badge = item.display === "DOBEL" ? "badge-duplikat" : "badge-keluar"; 
+            
+            // Menampilkan data yang murni belum tersinkron (localData)
+            let currentAntrean = scanHistory.filter(item => localData.includes(item.resi));
+            
+            if(currentAntrean.length === 0) {
+                body.innerHTML = `<tr><td colspan="2" style="text-align:center; color:#94a3b8; padding: 15px;">Belum ada antrean resi baru.</td></tr>`;
+                return;
+            }
+
+            currentAntrean.slice(0, 20).forEach(item => { 
+                let badge = "badge-keluar"; 
                 body.innerHTML += `<tr><td style="font-weight:600;">${item.resi}</td><td><span class="badge ${badge}">${item.display}</span></td></tr>`; 
             }); 
         }
@@ -350,7 +369,6 @@
                 setLampuBca('kuning', `Sync (${i+1}/${localData.length}): ${resi}`);
 
                 try {
-                    // Mengirim source: "pengiriman" agar router doPost di Apps Script masuk ke handlePengiriman
                     let r = await fetch(url, { 
                         method: "POST", 
                         mode: "cors", 
@@ -380,6 +398,7 @@
             }
             
             updateCounters();
+            renderHistory();
 
             if(suksesCount > 0) {
                 setLampuBca('ijo', `Sync Selesai (${suksesCount} terkirim)!`);
