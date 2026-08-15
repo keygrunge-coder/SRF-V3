@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -6,867 +5,350 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>SRF - Pengiriman</title>
 <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
-
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
 html,body{width:100%;height:100%;overflow:hidden;background:#0f172a}
-body{display:flex;flex-direction:column}
-button{font:inherit}
-
-.header{
-    height:52px;flex-shrink:0;background:#1e293b;color:#fff;
-    display:flex;align-items:center;justify-content:space-between;
-    padding:0 9px;z-index:100
-}
-.header-title{font-size:15px;font-weight:900}
-.header-actions{display:flex;gap:5px}
-.header-btn{
-    border:0;color:#fff;padding:7px 9px;border-radius:7px;
-    font-size:11px;font-weight:900;cursor:pointer;touch-action:manipulation
-}
-.refresh{background:#d97706}
-.camera-on{background:#16a34a}
-.camera-off{background:#dc2626}
-
-.stats{
-    height:52px;flex-shrink:0;background:#334155;color:#fff;
-    display:flex;justify-content:space-around;align-items:center;text-align:center
-}
-.stat{font-size:10px;color:#cbd5e1}
-.stat strong{display:block;color:#38bdf8;font-size:16px;margin-top:1px}
-
+body{display:flex;flex-direction:column} button{font:inherit}
+.header{height:52px;flex-shrink:0;background:#1e293b;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 9px;z-index:100}
+.header-title{font-size:15px;font-weight:900}.header-actions{display:flex;gap:5px}
+.header-btn{border:0;color:#fff;padding:7px 9px;border-radius:7px;font-size:11px;font-weight:900;cursor:pointer;touch-action:manipulation}
+.refresh{background:#d97706}.camera-on{background:#16a34a}.camera-off{background:#dc2626}.robot-on{background:#2563eb}.robot-off{background:#475569}
+.header-btn:disabled{opacity:.55}
+.stats{height:52px;flex-shrink:0;background:#334155;color:#fff;display:flex;justify-content:space-around;align-items:center;text-align:center}
+.stat{font-size:10px;color:#cbd5e1}.stat strong{display:block;color:#38bdf8;font-size:16px;margin-top:1px}
 .scanner{position:relative;flex:1;min-height:0;background:#000;overflow:hidden}
 #reader{position:absolute;inset:0;width:100%!important;height:100%!important;border:0!important;background:#000}
 #reader video{width:100%!important;height:100%!important;object-fit:cover!important}
-#reader img,#reader__dashboard{display:none!important}
-#reader__scan_region{width:100%!important;height:100%!important}
-
-/* Saat kamera OFF, area tetap hitam */
-.camera-off-overlay{
-    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-    z-index:5;background:#000;color:#64748b;font-size:14px;font-weight:800;
-    pointer-events:none
-}
-
-.status-box{
-    position:absolute;top:12px;left:12px;right:12px;z-index:20;
-    background:rgba(15,23,42,.88);backdrop-filter:blur(8px);
-    border-radius:10px;padding:10px 12px;display:flex;align-items:center;
-    gap:9px;color:#fff;pointer-events:none
-}
+#reader img,#reader__dashboard{display:none!important} #reader__scan_region{width:100%!important;height:100%!important}
+.camera-off-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:5;background:#000;color:#64748b;font-size:14px;font-weight:800;pointer-events:none}
+.status-box{position:absolute;top:12px;left:12px;right:12px;z-index:20;background:rgba(15,23,42,.88);backdrop-filter:blur(8px);border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:9px;color:#fff;pointer-events:none}
 .lamp{width:13px;height:13px;min-width:13px;border-radius:50%;background:#facc15;box-shadow:0 0 10px currentColor}
 .status-text{font-size:13px;font-weight:800;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-
-.notif{
-    position:absolute;top:75px;left:50%;transform:translateX(-50%);
-    z-index:80;padding:10px 18px;border-radius:25px;font-size:13px;font-weight:900;
-    display:none;white-space:nowrap;box-shadow:0 5px 15px rgba(0,0,0,.35)
-}
-.notif.success{background:#16a34a;color:#fff}
-.notif.warning{background:#f59e0b;color:#fff}
-.notif.error{background:#dc2626;color:#fff}
-
-/* Tombol bawah */
-.bottom-actions{
-    position:absolute;left:10px;right:10px;bottom:10px;z-index:40;
-    display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px
-}
-.bottom-btn{
-    height:50px;border:0;border-radius:12px;color:#fff;
-    background:rgba(30,41,59,.94);font-size:11px;font-weight:900;
-    box-shadow:0 5px 14px rgba(0,0,0,.45);cursor:pointer;
-    touch-action:manipulation
-}
-.bottom-btn.sync{background:#2563eb}
-.bottom-btn.queue{background:#475569}
-.bottom-btn.history{background:#475569}
-.bottom-btn:active{transform:scale(.97)}
-.count{
-    display:inline-flex;min-width:20px;height:20px;padding:0 5px;
-    align-items:center;justify-content:center;border-radius:10px;
-    background:#dc2626;color:#fff;font-size:10px;margin-left:3px
-}
-
-/* Modal */
-.modal{
-    position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.68);
-    display:none;align-items:flex-end;justify-content:center
-}
-.modal.open{display:flex}
-.sheet{
-    width:100%;max-height:82vh;background:#f8fafc;border-radius:18px 18px 0 0;
-    overflow:hidden;display:flex;flex-direction:column
-}
-.sheet-head{
-    flex-shrink:0;background:#1e293b;color:#fff;padding:13px 15px;
-    display:flex;align-items:center;justify-content:space-between
-}
-.sheet-title{font-size:14px;font-weight:900}
-.sheet-close{
-    border:0;background:#475569;color:#fff;border-radius:8px;
-    padding:6px 10px;font-weight:900
-}
-.sheet-body{padding:12px;overflow:auto;-webkit-overflow-scrolling:touch}
-.toolbar{display:flex;gap:7px;margin-bottom:10px}
-.tool-btn{
-    border:0;border-radius:8px;padding:8px 10px;font-size:11px;font-weight:900;
-    background:#e2e8f0;color:#0f172a
-}
-.tool-btn.danger{background:#dc2626;color:#fff}
-.search{
-    width:100%;height:40px;border:1px solid #cbd5e1;border-radius:9px;
-    padding:0 11px;margin-bottom:10px;outline:none
-}
-.list{display:flex;flex-direction:column;gap:7px}
-.item{
-    background:#fff;border:1px solid #e2e8f0;border-radius:10px;
-    padding:10px;display:flex;align-items:center;justify-content:space-between;gap:8px
-}
-.item-main{min-width:0}
-.item-resi{font-size:13px;font-weight:900;color:#0f172a;word-break:break-all}
-.item-meta{font-size:10px;color:#64748b;margin-top:3px}
-.item-delete{
-    flex-shrink:0;border:0;background:#fee2e2;color:#b91c1c;
-    border-radius:7px;padding:7px 9px;font-size:10px;font-weight:900
-}
+.notif{position:absolute;top:75px;left:50%;transform:translateX(-50%);z-index:80;padding:10px 18px;border-radius:25px;font-size:13px;font-weight:900;display:none;white-space:nowrap;box-shadow:0 5px 15px rgba(0,0,0,.35)}
+.notif.success{background:#16a34a;color:#fff}.notif.warning{background:#f59e0b;color:#fff}.notif.error{background:#dc2626;color:#fff}
+.bottom-actions{position:absolute;left:10px;right:10px;bottom:10px;z-index:40;display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}
+.bottom-btn{height:50px;border:0;border-radius:12px;color:#fff;background:rgba(30,41,59,.94);font-size:11px;font-weight:900;box-shadow:0 5px 14px rgba(0,0,0,.45);cursor:pointer;touch-action:manipulation}
+.bottom-btn.sync{background:#2563eb}.bottom-btn.queue{background:#475569}.bottom-btn.history{background:#475569}.bottom-btn:active{transform:scale(.97)}
+.count{display:inline-flex;min-width:20px;height:20px;padding:0 5px;align-items:center;justify-content:center;border-radius:10px;background:#dc2626;color:#fff;font-size:10px;margin-left:3px}
+.modal{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.68);display:none;align-items:flex-end;justify-content:center}.modal.open{display:flex}
+.sheet{width:100%;max-height:82vh;background:#f8fafc;border-radius:18px 18px 0 0;overflow:hidden;display:flex;flex-direction:column}
+.sheet-head{flex-shrink:0;background:#1e293b;color:#fff;padding:13px 15px;display:flex;align-items:center;justify-content:space-between}
+.sheet-title{font-size:14px;font-weight:900}.sheet-close{border:0;background:#475569;color:#fff;border-radius:8px;padding:6px 10px;font-weight:900}
+.sheet-body{padding:12px;overflow:auto;-webkit-overflow-scrolling:touch}.toolbar{display:flex;gap:7px;margin-bottom:10px}
+.search{width:100%;height:40px;border:1px solid #cbd5e1;border-radius:9px;padding:0 11px;margin-bottom:10px;outline:none}
+.list{display:flex;flex-direction:column;gap:7px}.item{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:10px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.item-main{min-width:0}.item-resi{font-size:13px;font-weight:900;color:#0f172a;word-break:break-all}.item-meta{font-size:10px;color:#64748b;margin-top:3px}
+.item-delete{flex-shrink:0;border:0;background:#fee2e2;color:#b91c1c;border-radius:7px;padding:7px 9px;font-size:10px;font-weight:900}
 .empty{text-align:center;color:#94a3b8;padding:28px 10px;font-size:12px;font-weight:700}
-
-/* Menu tersembunyi riwayat */
-.history-menu{display:none;position:relative}
-.history-menu.open{display:block}
-.menu-box{
-    position:absolute;right:0;top:36px;z-index:10;width:190px;
-    background:#fff;border:1px solid #e2e8f0;border-radius:10px;
-    box-shadow:0 10px 25px rgba(0,0,0,.2);overflow:hidden
-}
-.menu-box button{
-    width:100%;border:0;background:#fff;text-align:left;padding:11px;
-    font-size:11px;font-weight:800
-}
-.menu-box button.danger{color:#dc2626}
-
-.form-box{display:none;margin-bottom:10px;background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:10px}
-.form-box.open{display:block}
-.form-box label{display:block;font-size:10px;font-weight:900;color:#475569;margin-bottom:5px}
-.form-row{display:flex;gap:6px}
-.form-row input{
-    flex:1;height:38px;border:1px solid #cbd5e1;border-radius:8px;
-    padding:0 9px;text-transform:uppercase;outline:none
-}
-.form-row button{border:0;border-radius:8px;padding:0 12px;background:#dc2626;color:#fff;font-size:11px;font-weight:900}
-
-@media(max-width:380px){
-    .header-title{font-size:13px}
-    .header-btn{padding:6px 7px;font-size:10px}
-    .status-text{font-size:12px}
-    .bottom-actions{left:7px;right:7px;gap:5px}
-    .bottom-btn{height:47px;font-size:10px}
-}
+.menu-box{position:absolute;right:0;top:36px;z-index:10;width:190px;background:#fff;border:1px solid #e2e8f0;border-radius:10px;box-shadow:0 10px 25px rgba(0,0,0,.2);overflow:hidden;display:none}
+.menu-box button{width:100%;border:0;background:#fff;text-align:left;padding:11px;font-size:11px;font-weight:800}.menu-box button.danger{color:#dc2626}
+.form-box{display:none;margin-bottom:10px;background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:10px}.form-box.open{display:block}
+.form-box label{display:block;font-size:10px;font-weight:900;color:#475569;margin-bottom:5px}.form-row{display:flex;gap:6px}
+.form-row input{flex:1;height:38px;border:1px solid #cbd5e1;border-radius:8px;padding:0 9px;text-transform:uppercase;outline:none}.form-row button{border:0;border-radius:8px;padding:0 12px;background:#dc2626;color:#fff;font-size:11px;font-weight:900}
+@media(max-width:380px){.header-title{font-size:13px}.header-btn{padding:6px 7px;font-size:10px}.status-text{font-size:12px}.bottom-actions{left:7px;right:7px;gap:5px}.bottom-btn{height:47px;font-size:10px}}
 </style>
 </head>
-
 <body>
-
 <header class="header">
-    <div class="header-title">SRF • Pengiriman</div>
-    <div class="header-actions">
-        <button id="cameraToggle" class="header-btn camera-off" onclick="toggleCamera()">📷 KAMERA OFF</button>
-        <button class="header-btn refresh" onclick="refreshApp()">↻ REFRESH</button>
-    </div>
+<div class="header-title">SRF • Pengiriman</div>
+<div class="header-actions">
+<button id="cameraToggle" class="header-btn camera-off" onclick="toggleCamera()">📷 KAMERA OFF</button>
+<button id="robotToggle" class="header-btn robot-on" onclick="toggleRobot()">🔊 ROBOT ON</button>
+<button class="header-btn refresh" onclick="refreshApp()">↻ REFRESH</button>
+</div>
 </header>
 
 <div class="stats">
-    <div class="stat">Hari Ini<strong id="hariIni">0</strong></div>
-    <div class="stat">Kemarin<strong id="kemarin">0</strong></div>
-    <div class="stat">Minggu Ini<strong id="mingguIni">0</strong></div>
+<div class="stat">Hari Ini<strong id="hariIni">0</strong></div>
+<div class="stat">Kemarin<strong id="kemarin">0</strong></div>
+<div class="stat">Minggu Ini<strong id="mingguIni">0</strong></div>
 </div>
 
 <div class="scanner">
-    <div id="reader"></div>
-    <div id="cameraOverlay" class="camera-off-overlay">KAMERA OFF</div>
-
-    <div class="status-box">
-        <div id="lamp" class="lamp"></div>
-        <div id="statusText" class="status-text">Kamera OFF</div>
-    </div>
-
-    <div id="notif" class="notif"></div>
-
-    <div class="bottom-actions">
-        <button class="bottom-btn sync" onclick="syncKeServer()">☁ SYNC <span id="syncCount" class="count">0</span></button>
-        <button class="bottom-btn queue" onclick="openQueue()">☷ ANTREAN <span id="queueButtonCount" class="count">0</span></button>
-        <button class="bottom-btn history" onclick="openHistory()">≡ RIWAYAT</button>
-    </div>
+<div id="reader"></div><div id="cameraOverlay" class="camera-off-overlay">KAMERA OFF</div>
+<div class="status-box"><div id="lamp" class="lamp"></div><div id="statusText" class="status-text">Kamera OFF</div></div>
+<div id="notif" class="notif"></div>
+<div class="bottom-actions">
+<button id="syncButton" class="bottom-btn sync" onclick="syncKeServer()">☁ SYNC <span id="syncCount" class="count">0</span></button>
+<button class="bottom-btn queue" onclick="openQueue()">☷ ANTREAN <span id="queueButtonCount" class="count">0</span></button>
+<button class="bottom-btn history" onclick="openHistory()">≡ RIWAYAT</button>
+</div>
 </div>
 
-<!-- ANTREAN -->
 <div id="queueModal" class="modal" onclick="closeModalOutside(event,'queueModal')">
-    <div class="sheet">
-        <div class="sheet-head">
-            <div class="sheet-title">ANTREAN BELUM SINKRON (<span id="queueCount">0</span>)</div>
-            <button class="sheet-close" onclick="closeModal('queueModal')">TUTUP</button>
-        </div>
-        <div class="sheet-body">
-            <div id="queueList" class="list"></div>
-        </div>
-    </div>
-</div>
+<div class="sheet"><div class="sheet-head"><div class="sheet-title">ANTREAN BELUM SINKRON (<span id="queueCount">0</span>)</div><button class="sheet-close" onclick="closeModal('queueModal')">TUTUP</button></div>
+<div class="sheet-body"><div id="queueList" class="list"></div></div></div></div>
 
-<!-- RIWAYAT -->
 <div id="historyModal" class="modal" onclick="closeModalOutside(event,'historyModal')">
-    <div class="sheet">
-        <div class="sheet-head">
-            <div class="sheet-title">RIWAYAT RESI</div>
-            <div style="display:flex;gap:6px;position:relative">
-                <button class="sheet-close" onclick="toggleHistoryMenu(event)">⋮</button>
-                <button class="sheet-close" onclick="closeModal('historyModal')">TUTUP</button>
-                <div id="historyMenu" class="menu-box">
-                    <button onclick="showDeleteOne(event)">Hapus Berdasarkan Resi</button>
-                    <button class="danger" onclick="deleteAllHistory(event)">Hapus Semua Riwayat</button>
-                </div>
-            </div>
-        </div>
-        <div class="sheet-body">
-            <div id="deleteOneBox" class="form-box">
-                <label>HAPUS RESI TERTENTU</label>
-                <div class="form-row">
-                    <input id="deleteResiInput" type="text" placeholder="Masukkan nomor resi">
-                    <button onclick="deleteOneHistory()">HAPUS</button>
-                </div>
-            </div>
-            <input id="historySearch" class="search" type="search" placeholder="Cari nomor resi..." oninput="renderHistory()">
-            <div id="historyList" class="list"></div>
-        </div>
-    </div>
-</div>
+<div class="sheet"><div class="sheet-head"><div class="sheet-title">RIWAYAT RESI</div>
+<div style="display:flex;gap:6px;position:relative"><button class="sheet-close" onclick="toggleHistoryMenu(event)">⋮</button><button class="sheet-close" onclick="closeModal('historyModal')">TUTUP</button>
+<div id="historyMenu" class="menu-box"><button onclick="showDeleteOne(event)">Hapus Berdasarkan Resi</button><button class="danger" onclick="deleteAllHistory(event)">Hapus Semua Riwayat</button></div></div></div>
+<div class="sheet-body"><div id="deleteOneBox" class="form-box"><label>HAPUS RESI TERTENTU</label><div class="form-row"><input id="deleteResiInput" type="text" placeholder="Masukkan nomor resi"><button onclick="deleteOneHistory()">HAPUS</button></div></div>
+<input id="historySearch" class="search" type="search" placeholder="Cari nomor resi..." oninput="renderHistory()"><div id="historyList" class="list"></div></div></div></div>
 
 <script src="config.js"></script>
 <script>
 /* =========================================================
-   KONFIGURASI
+   SEMUA ATURAN SUARA ROBOT DI SINI
 ========================================================= */
-const ROBOT_CONFIG = {
-    enabled:true,
-    bahasa:"id-ID",
-    rate:1.15,
-    pitch:1.0,
-    volume:1.0,
-    pesan:{
-        jntBerhasil:"Je en Te",
-        spxBerhasil:"SPX",
-        siap:"Kamera mati, scanner siap",
-        kameraAktif:"Kamera aktif, siap scan",
-        kameraBerhenti:"Kamera dimatikan",
-        kameraGagal:"Tidak dapat membuka kamera",
-        resiTidakDikenal:"Resi tidak dikenal",
-        doubleQueue:"Resi sudah di scan, masih dalam antrean",
-        doubleHistory:"Resi sudah pernah di scan",
-        serverDuplicate:"Resi sudah terinput di server",
-        resiMasukAntrean:"",
-        syncMulai:"Memulai sinkronisasi",
-        syncBerhasil:"Resi berhasil disinkronkan",
-        syncGagal:"Sinkronisasi gagal",
-        antreanKosong:"Antrean kosong",
-        antreanDibersihkan:"Antrean berhasil dibersihkan"
-    }
+const ROBOT_CONFIG={
+ enabled:true,
+ bahasa:"id-ID",
+ rate:1.15,
+ pitch:1,
+ volume:1,
+ beep:{enabled:true},
+ pesan:{
+  jntBerhasil:"Je en Te, berhasil, resi masuk antrean",
+  spxBerhasil:"S P X, berhasil, resi masuk antrean",
+  siap:"Kamera mati, scanner siap",
+  kameraAktif:"Kamera aktif, siap scan",
+  kameraBerhenti:"Kamera dimatikan",
+  kameraGagal:"Tidak dapat membuka kamera",
+  resiTidakDikenal:"Resi tidak dikenal",
+  doubleQueue:"Resi sudah di scan, masih dalam antrean",
+  doubleHistory:"Resi sudah pernah di scan",
+  syncMulai:"Memulai sinkronisasi",
+  syncBerhasil:"Resi berhasil disinkronkan",
+  syncGagal:"Sinkronisasi gagal",
+  antreanKosong:"Antrean kosong"
+ }
 };
 
-const SCAN_CONFIG = {
-    processingDelay:1200,
-    beepSuccess:true,
-    beepError:true,
-    beepDouble:true
-};
+const SCAN_CONFIG={processingDelay:1200};
+const STORAGE_DATA="srf_pengiriman_queue_v3";
+const STORAGE_HISTORY="srf_pengiriman_history_v3";
 
-const STORAGE_DATA = "srf_pengiriman_queue_v3";
-const STORAGE_HISTORY = "srf_pengiriman_history_v3";
+let localData=loadJSON(STORAGE_DATA,[]);
+let scanHistory=loadJSON(STORAGE_HISTORY,[]);
+let html5QrCode=null,cameraRunning=false,processing=false,syncRunning=false;
 
-let localData = loadJSON(STORAGE_DATA, []);
-let scanHistory = loadJSON(STORAGE_HISTORY, []);
-let html5QrCode = null;
-let cameraRunning = false;
-let processing = false;
-
-function loadJSON(key, fallback){
-    try{
-        const x = JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback));
-        return Array.isArray(x) ? x : fallback;
-    }catch(e){ return fallback; }
-}
-function saveData(){
-    localStorage.setItem(STORAGE_DATA, JSON.stringify(localData));
-    localStorage.setItem(STORAGE_HISTORY, JSON.stringify(scanHistory));
-}
-
-/* =========================================================
-   CONFIG
-========================================================= */
+function loadJSON(key,fallback){try{const x=JSON.parse(localStorage.getItem(key)||JSON.stringify(fallback));return Array.isArray(x)?x:fallback}catch(e){return fallback}}
+function saveData(){localStorage.setItem(STORAGE_DATA,JSON.stringify(localData));localStorage.setItem(STORAGE_HISTORY,JSON.stringify(scanHistory))}
 function getTargetUrl(){
-    try{
-        if(typeof APP_URL !== "undefined" && APP_URL) return String(APP_URL).trim();
-        if(typeof CONFIG !== "undefined" && CONFIG && CONFIG.APP_URL) return String(CONFIG.APP_URL).trim();
-    }catch(e){}
-    return "";
+ try{
+  if(typeof APP_URL!=="undefined"&&APP_URL)return String(APP_URL).trim();
+  if(typeof CONFIG!=="undefined"&&CONFIG&&CONFIG.APP_URL)return String(CONFIG.APP_URL).trim();
+ }catch(e){}
+ return "";
 }
 
-/* =========================================================
-   UI
-========================================================= */
 window.addEventListener("load",()=>{
-    updateUI();
-    renderQueue();
-    renderHistory();
-    loadDashboard();
-    setStatus("yellow",ROBOT_CONFIG.pesan.siap);
+ updateUI();renderQueue();renderHistory();loadDashboard();setStatus("yellow",ROBOT_CONFIG.pesan.siap);
 });
 
 function updateUI(){
-    const n=localData.length;
-    document.getElementById("syncCount").innerText=n;
-    document.getElementById("queueCount").innerText=n;
-    document.getElementById("queueButtonCount").innerText=n;
+ const n=localData.length;
+ document.getElementById("syncCount").innerText=n;
+ document.getElementById("queueCount").innerText=n;
+ document.getElementById("queueButtonCount").innerText=n;
 }
 
 function setStatus(type,text){
-    const lamp=document.getElementById("lamp");
-    const status=document.getElementById("statusText");
-    status.innerText=text;
-    const color=type==="green"?"#22c55e":type==="red"?"#ef4444":"#facc15";
-    lamp.style.background=color;
-    lamp.style.color=color;
+ const lamp=document.getElementById("lamp"),status=document.getElementById("statusText");
+ status.innerText=text;
+ const color=type==="green"?"#22c55e":type==="red"?"#ef4444":"#facc15";
+ lamp.style.background=color;lamp.style.color=color;
 }
 
 function showNotif(text,type="success"){
-    const el=document.getElementById("notif");
-    el.innerText=text;
-    el.className="notif "+type;
-    el.style.display="block";
-    clearTimeout(window.notifTimer);
-    window.notifTimer=setTimeout(()=>el.style.display="none",2500);
+ const el=document.getElementById("notif");el.innerText=text;el.className="notif "+type;el.style.display="block";
+ clearTimeout(window.notifTimer);window.notifTimer=setTimeout(()=>el.style.display="none",2500);
 }
 
-function beep(freq=600,duration=.08){
-    try{
-        const C=window.AudioContext||window.webkitAudioContext;
-        const ctx=new C(),osc=ctx.createOscillator();
-        osc.frequency.value=freq;osc.connect(ctx.destination);osc.start();
-        osc.stop(ctx.currentTime+duration);
-    }catch(e){}
+/* BEEP WAJIB: tidak ikut tombol ROBOT */
+function playTone(sequence){
+ if(!ROBOT_CONFIG.beep.enabled)return;
+ try{
+  const C=window.AudioContext||window.webkitAudioContext,ctx=new C();
+  let time=ctx.currentTime;
+  sequence.forEach(t=>{
+   const osc=ctx.createOscillator(),gain=ctx.createGain();
+   osc.type="sine";osc.frequency.value=t.freq;
+   gain.gain.setValueAtTime(.0001,time);
+   gain.gain.exponentialRampToValueAtTime(.25,time+.01);
+   gain.gain.exponentialRampToValueAtTime(.0001,time+t.duration);
+   osc.connect(gain);gain.connect(ctx.destination);
+   osc.start(time);osc.stop(time+t.duration);
+   time+=t.duration+.06;
+  });
+ }catch(e){}
 }
+function beepSuccess(){playTone([{freq:880,duration:.10}])}          // TRING
+function beepDouble(){playTone([{freq:420,duration:.12},{freq:260,duration:.18}])} // TETOT
+function beepError(){playTone([{freq:300,duration:.12},{freq:300,duration:.12},{freq:300,duration:.16}])} // TOTOTOTOT
 
 function speak(text){
-    if(!ROBOT_CONFIG.enabled || !("speechSynthesis" in window)) return;
-    try{
-        speechSynthesis.cancel();
-        const v=new SpeechSynthesisUtterance(text);
-        v.lang=ROBOT_CONFIG.bahasa;
-        v.rate=ROBOT_CONFIG.rate;
-        v.pitch=ROBOT_CONFIG.pitch;
-        v.volume=ROBOT_CONFIG.volume;
-        speechSynthesis.speak(v);
-    }catch(e){}
+ if(!ROBOT_CONFIG.enabled||!text||!("speechSynthesis" in window))return;
+ try{
+  speechSynthesis.cancel();
+  const v=new SpeechSynthesisUtterance(text);
+  v.lang=ROBOT_CONFIG.bahasa;v.rate=ROBOT_CONFIG.rate;v.pitch=ROBOT_CONFIG.pitch;v.volume=ROBOT_CONFIG.volume;
+  speechSynthesis.speak(v);
+ }catch(e){}
+}
+function toggleRobot(){
+ ROBOT_CONFIG.enabled=!ROBOT_CONFIG.enabled;
+ const b=document.getElementById("robotToggle");
+ b.className="header-btn "+(ROBOT_CONFIG.enabled?"robot-on":"robot-off");
+ b.innerText=ROBOT_CONFIG.enabled?"🔊 ROBOT ON":"🔇 ROBOT OFF";
+ if(ROBOT_CONFIG.enabled)speak("Suara robot aktif");
 }
 
-/* =========================================================
-   RESI / EKSPEDISI
-========================================================= */
-function normalizeResi(resi){
-    return String(resi||"").trim().toUpperCase();
+function normalizeResi(r){return String(r||"").trim().toUpperCase()}
+function getEkspedisi(r){
+ r=normalizeResi(r);
+ if(r.startsWith("SPX"))return"SPX";
+ if(r.startsWith("JX")||r.startsWith("JY")||r.startsWith("JZ"))return"J&T";
+ return null;
 }
-
-function getEkspedisi(resi){
-    const r=normalizeResi(resi);
-    if(r.startsWith("SPX")) return "SPX";
-    if(r.startsWith("JX")||r.startsWith("JY")||r.startsWith("JZ")) return "J&T";
-    return null;
-}
-
-/* =========================================================
-   WAKTU RIWAYAT
-========================================================= */
 function formatDateTime(iso){
-    const d=new Date(iso);
-    if(Number.isNaN(d.getTime())) return "-";
-    return d.toLocaleString("id-ID",{
-        day:"2-digit",month:"2-digit",year:"numeric",
-        hour:"2-digit",minute:"2-digit"
-    });
+ const d=new Date(iso);if(Number.isNaN(d.getTime()))return"-";
+ return d.toLocaleString("id-ID",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
 }
-
 function spokenDateTime(iso){
-    const d=new Date(iso);
-    if(Number.isNaN(d.getTime())) return "";
-    const now=new Date();
-    const day=d.toLocaleDateString("id-ID",{day:"numeric",month:"long",year:"numeric"});
-    const time=d.toLocaleTimeString("id-ID",{hour:"2-digit",minute:"2-digit"});
-    const today=d.toDateString()===now.toDateString();
-    const yesterday=new Date(now);
-    yesterday.setDate(now.getDate()-1);
-    const isYesterday=d.toDateString()===yesterday.toDateString();
-
-    if(today) return `hari ini pukul ${time}`;
-    if(isYesterday) return `kemarin pukul ${time}`;
-    return `tanggal ${day} pukul ${time}`;
+ const d=new Date(iso);if(Number.isNaN(d.getTime()))return"";
+ return d.toLocaleString("id-ID",{day:"numeric",month:"long",year:"numeric",hour:"2-digit",minute:"2-digit"});
 }
-
-/* =========================================================
-   CEK ANTREAN + RIWAYAT
-========================================================= */
-function findQueue(resi){
-    return localData.some(x=>normalizeResi(x)===normalizeResi(resi));
-}
-
-function findHistory(resi){
-    return scanHistory.find(x=>normalizeResi(x.resi)===normalizeResi(resi));
-}
+function findQueue(r){return localData.some(x=>normalizeResi(x)===normalizeResi(r))}
+function findHistory(r){return scanHistory.find(x=>normalizeResi(x.resi)===normalizeResi(r))}
 
 function doubleAlert(message,robotText){
-    if(SCAN_CONFIG.beepDouble) beep(300,.35);
-    setStatus("red",message);
-    showNotif("🔴 "+message,"error");
-    speak(robotText);
+ beepDouble();setStatus("red",message);showNotif("TETOT • "+message,"error");speak(robotText);
 }
 
 function simpanLokal(resi){
-    resi=normalizeResi(resi);
-    if(!resi) return false;
+ resi=normalizeResi(resi);if(!resi)return false;
+ const ekspedisi=getEkspedisi(resi);
+ if(!ekspedisi){beepError();setStatus("red",ROBOT_CONFIG.pesan.resiTidakDikenal);showNotif("TOTOTOTOT • RESI TIDAK DIKENAL","error");speak(ROBOT_CONFIG.pesan.resiTidakDikenal);return false}
+ if(findQueue(resi)){doubleAlert("RESI MASIH DI ANTREAN",ROBOT_CONFIG.pesan.doubleQueue);return false}
+ if(findHistory(resi)){doubleAlert("RESI SUDAH PERNAH DI-SCAN",ROBOT_CONFIG.pesan.doubleHistory);return false}
 
-    const ekspedisi=getEkspedisi(resi);
-    if(!ekspedisi){
-        if(SCAN_CONFIG.beepError) beep(250,.25);
-        setStatus("red",ROBOT_CONFIG.pesan.resiTidakDikenal);
-        showNotif("RESI TIDAK DIKENAL","error");
-        speak(ROBOT_CONFIG.pesan.resiTidakDikenal);
-        return false;
-    }
-
-    /* Lapis 1: antrean */
-    if(findQueue(resi)){
-        doubleAlert(
-            "RESI MASIH DI ANTREAN",
-            ROBOT_CONFIG.pesan.doubleQueue
-        );
-        return false;
-    }
-
-    /* Lapis 2: riwayat */
-    const old=findHistory(resi);
-    if(old){
-        const when=spokenDateTime(old.waktu);
-        doubleAlert(
-            "RESI SUDAH PERNAH DI-SCAN",
-            `${ROBOT_CONFIG.pesan.doubleHistory} ${when}`
-        );
-        return false;
-    }
-
-    /* Resi baru */
-    const waktu=new Date().toISOString();
-
-    localData.push(resi);
-    scanHistory.unshift({
-        resi:resi,
-        ekspedisi:ekspedisi,
-        waktu:waktu,
-        status:"ANTREAN"
-    });
-
-    scanHistory=scanHistory.slice(0,5000);
-    saveData();
-    updateUI();
-    renderQueue();
-    renderHistory();
-
-    if(SCAN_CONFIG.beepSuccess) beep(750,.08);
-    setStatus("green",`${ekspedisi} • berhasil • masuk antrean`);
-    showNotif("✓ RESI MASUK ANTREAN","success");
-    speak(
-        ekspedisi==="SPX"
-        ? "S P X, berhasil, resi masuk antrean"
-        : "J EN T, berhasil, resi masuk antrean"
-    );
-    return true;
+ const waktu=new Date().toISOString();
+ localData.push(resi);
+ scanHistory.unshift({resi,ekspedisi,waktu,status:"ANTREAN"});
+ scanHistory=scanHistory.slice(0,5000);saveData();updateUI();renderQueue();renderHistory();
+ beepSuccess();setStatus("green",`${ekspedisi} • berhasil • masuk antrean`);showNotif("TRING • RESI MASUK ANTREAN","success");
+ speak(ekspedisi==="SPX"?ROBOT_CONFIG.pesan.spxBerhasil:ROBOT_CONFIG.pesan.jntBerhasil);
+ return true;
 }
 
-/* =========================================================
-   KAMERA ON / OFF
-========================================================= */
-async function toggleCamera(){
-    if(cameraRunning) await stopCamera();
-    else await startCamera();
-}
-
+async function toggleCamera(){if(cameraRunning)await stopCamera();else await startCamera()}
 async function startCamera(){
-    if(cameraRunning) return;
-
-    const btn=document.getElementById("cameraToggle");
-    const overlay=document.getElementById("cameraOverlay");
-
-    setStatus("yellow","Menyalakan kamera...");
-    btn.disabled=true;
-
-    try{
-        if(!html5QrCode) html5QrCode=new Html5Qrcode("reader");
-
-        await html5QrCode.start(
-            {facingMode:"environment"},
-            {
-                fps:15,
-                qrbox:{width:280,height:180},
-                aspectRatio:1.777778
-            },
-            decodedText=>{
-                if(processing) return;
-                processing=true;
-                simpanLokal(decodedText);
-                setTimeout(()=>processing=false,SCAN_CONFIG.processingDelay);
-            }
-        );
-
-        cameraRunning=true;
-        btn.disabled=false;
-        btn.className="header-btn camera-on";
-        btn.innerText="📷 KAMERA ON";
-        overlay.style.display="none";
-        setStatus("green",ROBOT_CONFIG.pesan.kameraAktif);
-        speak(ROBOT_CONFIG.pesan.kameraAktif);
-    }catch(error){
-        console.error("CAMERA ERROR",error);
-        cameraRunning=false;
-        btn.disabled=false;
-        btn.className="header-btn camera-off";
-        btn.innerText="📷 KAMERA OFF";
-        overlay.style.display="flex";
-        setStatus("red",ROBOT_CONFIG.pesan.kameraGagal);
-        showNotif("IZINKAN AKSES KAMERA","error");
-        speak(ROBOT_CONFIG.pesan.kameraGagal);
-    }
+ if(cameraRunning)return;
+ const btn=document.getElementById("cameraToggle"),overlay=document.getElementById("cameraOverlay");
+ setStatus("yellow","Menyalakan kamera...");btn.disabled=true;
+ try{
+  if(!html5QrCode)html5QrCode=new Html5Qrcode("reader");
+  await html5QrCode.start({facingMode:"environment"},{fps:15,qrbox:{width:280,height:180},aspectRatio:1.777778},
+   decodedText=>{
+    if(processing||syncRunning)return;
+    processing=true;simpanLokal(decodedText);
+    setTimeout(()=>processing=false,SCAN_CONFIG.processingDelay);
+   });
+  cameraRunning=true;btn.disabled=false;btn.className="header-btn camera-on";btn.innerText="📷 KAMERA ON";overlay.style.display="none";
+  setStatus("green",ROBOT_CONFIG.pesan.kameraAktif);speak(ROBOT_CONFIG.pesan.kameraAktif);
+ }catch(error){
+  console.error("CAMERA ERROR",error);cameraRunning=false;btn.disabled=false;btn.className="header-btn camera-off";btn.innerText="📷 KAMERA OFF";
+  overlay.style.display="flex";beepError();setStatus("red",ROBOT_CONFIG.pesan.kameraGagal);showNotif("TOTOTOTOT • IZINKAN AKSES KAMERA","error");speak(ROBOT_CONFIG.pesan.kameraGagal);
+ }
 }
-
 async function stopCamera(){
-    if(!cameraRunning) return;
-
-    cameraRunning=false;
-    const btn=document.getElementById("cameraToggle");
-    const overlay=document.getElementById("cameraOverlay");
-
-    try{
-        if(html5QrCode) await html5QrCode.stop();
-    }catch(e){}
-
-    btn.className="header-btn camera-off";
-    btn.innerText="📷 KAMERA OFF";
-    overlay.style.display="flex";
-    setStatus("yellow",ROBOT_CONFIG.pesan.kameraBerhenti);
+ if(!cameraRunning)return;
+ cameraRunning=false;const btn=document.getElementById("cameraToggle"),overlay=document.getElementById("cameraOverlay");
+ try{if(html5QrCode)await html5QrCode.stop()}catch(e){}
+ btn.className="header-btn camera-off";btn.innerText="📷 KAMERA OFF";overlay.style.display="flex";setStatus("yellow",ROBOT_CONFIG.pesan.kameraBerhenti);
 }
 
-/* =========================================================
-   ANTREAN
-========================================================= */
-function openQueue(){
-    renderQueue();
-    document.getElementById("queueModal").classList.add("open");
-}
-
+function openQueue(){renderQueue();document.getElementById("queueModal").classList.add("open")}
 function renderQueue(){
-    const list=document.getElementById("queueList");
-    list.innerHTML="";
-
-    if(localData.length===0){
-        list.innerHTML='<div class="empty">Antrean kosong</div>';
-        return;
-    }
-
-    localData.forEach((resi,i)=>{
-        const e=getEkspedisi(resi)||"-";
-        const div=document.createElement("div");
-        div.className="item";
-        div.innerHTML=`
-            <div class="item-main">
-                <div class="item-resi">${escapeHTML(resi)}</div>
-                <div class="item-meta">${escapeHTML(e)} • antrean #${i+1}</div>
-            </div>
-        `;
-        list.appendChild(div);
-    });
+ const list=document.getElementById("queueList");list.innerHTML="";
+ if(!localData.length){list.innerHTML='<div class="empty">Antrean kosong</div>';return}
+ localData.forEach((resi,i)=>{
+  const e=getEkspedisi(resi)||"-",div=document.createElement("div");div.className="item";
+  div.innerHTML=`<div class="item-main"><div class="item-resi">${escapeHTML(resi)}</div><div class="item-meta">${escapeHTML(e)} • antrean #${i+1}</div></div>`;
+  list.appendChild(div);
+ });
 }
 
-/* =========================================================
-   RIWAYAT
-========================================================= */
-function openHistory(){
-    document.getElementById("historyModal").classList.add("open");
-    document.getElementById("historyMenu").style.display="none";
-    renderHistory();
-}
-
+function openHistory(){document.getElementById("historyModal").classList.add("open");document.getElementById("historyMenu").style.display="none";renderHistory()}
 function renderHistory(){
-    const list=document.getElementById("historyList");
-    const search=normalizeResi(document.getElementById("historySearch")?.value||"");
-    list.innerHTML="";
-
-    let data=scanHistory;
-    if(search) data=data.filter(x=>normalizeResi(x.resi).includes(search));
-
-    if(data.length===0){
-        list.innerHTML='<div class="empty">Riwayat kosong</div>';
-        return;
-    }
-
-    data.forEach(item=>{
-        const div=document.createElement("div");
-        div.className="item";
-        div.innerHTML=`
-            <div class="item-main">
-                <div class="item-resi">${escapeHTML(item.resi)}</div>
-                <div class="item-meta">
-                    ${escapeHTML(item.ekspedisi||"-")} • ${escapeHTML(formatDateTime(item.waktu))}
-                </div>
-            </div>
-            <button class="item-delete" onclick="deleteOneHistoryDirect('${escapeJS(item.resi)}')">HAPUS</button>
-        `;
-        list.appendChild(div);
-    });
+ const list=document.getElementById("historyList"),search=normalizeResi(document.getElementById("historySearch")?.value||"");list.innerHTML="";
+ let data=scanHistory;if(search)data=data.filter(x=>normalizeResi(x.resi).includes(search));
+ if(!data.length){list.innerHTML='<div class="empty">Riwayat kosong</div>';return}
+ data.forEach(item=>{
+  const div=document.createElement("div");div.className="item";
+  div.innerHTML=`<div class="item-main"><div class="item-resi">${escapeHTML(item.resi)}</div><div class="item-meta">${escapeHTML(item.ekspedisi||"-")} • ${escapeHTML(formatDateTime(item.waktu))} • ${escapeHTML(item.status||"")}</div></div><button class="item-delete" onclick="deleteOneHistoryDirect('${escapeJS(item.resi)}')">HAPUS</button>`;
+  list.appendChild(div);
+ });
 }
-
-function toggleHistoryMenu(e){
-    e.stopPropagation();
-    const m=document.getElementById("historyMenu");
-    m.style.display=m.style.display==="block"?"none":"block";
-}
-
-function showDeleteOne(e){
-    e.stopPropagation();
-    document.getElementById("historyMenu").style.display="none";
-    document.getElementById("deleteOneBox").classList.add("open");
-    document.getElementById("deleteResiInput").focus();
-}
-
+function toggleHistoryMenu(e){e.stopPropagation();const m=document.getElementById("historyMenu");m.style.display=m.style.display==="block"?"none":"block"}
+function showDeleteOne(e){e.stopPropagation();document.getElementById("historyMenu").style.display="none";document.getElementById("deleteOneBox").classList.add("open");document.getElementById("deleteResiInput").focus()}
 function deleteOneHistory(){
-    const resi=normalizeResi(document.getElementById("deleteResiInput").value);
-    if(!resi) return alert("Masukkan nomor resi.");
-
-    const before=scanHistory.length;
-    scanHistory=scanHistory.filter(x=>normalizeResi(x.resi)!==resi);
-
-    if(scanHistory.length===before){
-        showNotif("RESI TIDAK ADA DI RIWAYAT","warning");
-        return;
-    }
-
-    saveData();
-    document.getElementById("deleteResiInput").value="";
-    document.getElementById("deleteOneBox").classList.remove("open");
-    renderHistory();
-    showNotif("RIWAYAT RESI DIHAPUS","success");
+ const resi=normalizeResi(document.getElementById("deleteResiInput").value);if(!resi)return alert("Masukkan nomor resi.");
+ const before=scanHistory.length;scanHistory=scanHistory.filter(x=>normalizeResi(x.resi)!==resi);
+ if(scanHistory.length===before){showNotif("RESI TIDAK ADA DI RIWAYAT","warning");return}
+ saveData();document.getElementById("deleteResiInput").value="";document.getElementById("deleteOneBox").classList.remove("open");renderHistory();showNotif("RIWAYAT RESI DIHAPUS","success");
 }
-
 function deleteOneHistoryDirect(resi){
-    if(!confirm(`Hapus riwayat ${resi}?`)) return;
-    scanHistory=scanHistory.filter(x=>normalizeResi(x.resi)!==normalizeResi(resi));
-    saveData();
-    renderHistory();
-    showNotif("RIWAYAT DIHAPUS","success");
+ if(!confirm(`Hapus riwayat ${resi}?`))return;
+ scanHistory=scanHistory.filter(x=>normalizeResi(x.resi)!==normalizeResi(resi));saveData();renderHistory();showNotif("RIWAYAT DIHAPUS","success");
 }
-
 function deleteAllHistory(e){
-    e.stopPropagation();
-    document.getElementById("historyMenu").style.display="none";
-
-    if(scanHistory.length===0){
-        showNotif("RIWAYAT SUDAH KOSONG","warning");
-        return;
-    }
-
-    const ok=confirm(
-        "Hapus SEMUA riwayat scan di HP?\n\nData di Google Sheet TIDAK akan dihapus."
-    );
-    if(!ok) return;
-
-    scanHistory=[];
-    saveData();
-    renderHistory();
-    showNotif("SEMUA RIWAYAT DIHAPUS","success");
+ e.stopPropagation();document.getElementById("historyMenu").style.display="none";
+ if(!scanHistory.length){showNotif("RIWAYAT SUDAH KOSONG","warning");return}
+ if(!confirm("Hapus SEMUA riwayat scan di HP?\n\nData di Google Sheet TIDAK akan dihapus."))return;
+ scanHistory=[];saveData();renderHistory();showNotif("SEMUA RIWAYAT DIHAPUS","success");
 }
 
-/* =========================================================
-   SYNC
-========================================================= */
+/* SYNC DIKUNCI: tidak bisa ditekan dua kali */
 async function syncKeServer(){
-    if(localData.length===0){
-        setStatus("yellow",ROBOT_CONFIG.pesan.antreanKosong);
-        showNotif("ANTREAN KOSONG","warning");
-        speak(ROBOT_CONFIG.pesan.antreanKosong);
-        return;
-    }
+ if(syncRunning)return;
+ if(localData.length===0){setStatus("yellow",ROBOT_CONFIG.pesan.antreanKosong);showNotif("ANTREAN KOSONG","warning");speak(ROBOT_CONFIG.pesan.antreanKosong);return}
+ const url=getTargetUrl();
+ if(!url){beepError();setStatus("red","URL Apps Script tidak ditemukan");showNotif("TOTOTOTOT • APP_URL TIDAK DITEMUKAN","error");return}
 
-    const url=getTargetUrl();
-    if(!url){
-        setStatus("red","URL Apps Script tidak ditemukan");
-        showNotif("APP_URL TIDAK DITEMUKAN","error");
-        alert("APP_URL tidak ditemukan dari config.js");
-        return;
-    }
+ syncRunning=true;
+ const syncBtn=document.getElementById("syncButton");syncBtn.disabled=true;syncBtn.innerText="☁ SYNCING...";
+ const daftar=[...localData],total=daftar.length;let sisa=[],berhasil=0,duplicate=0,gagal=0;
+ setStatus("yellow",`Sync 0/${total}`);speak(ROBOT_CONFIG.pesan.syncMulai);
 
-    const daftar=[...localData];
-    const total=daftar.length;
-    let sisa=[];
-    let berhasil=0;
-    let duplicate=0;
-    let gagal=0;
-
-    setStatus("yellow",`Sync 0/${total}`);
-    speak(ROBOT_CONFIG.pesan.syncMulai);
-
-    for(let i=0;i<daftar.length;i++){
-        const resi=daftar[i];
-        setStatus("yellow",`Sync ${i+1}/${total} • ${resi}`);
-
-        try{
-            const response=await fetch(url,{
-                method:"POST",
-                mode:"cors",
-                headers:{"Content-Type":"text/plain;charset=utf-8"},
-                body:JSON.stringify({
-                    source:"pengiriman",
-                    resi:resi
-                })
-            });
-
-            const text=await response.text();
-            let result;
-
-            try{ result=JSON.parse(text); }
-            catch(e){
-                sisa.push(resi);
-                gagal++;
-                continue;
-            }
-
-            if(result.status==="success"){
-                berhasil++;
-                markHistorySynced(resi,"TERKIRIM");
-            }
-            else if(result.status==="duplicate"){
-                /*
-                 * DOUBLE dari server:
-                 * jangan dianggap sukses biasa.
-                 * Tetap beri tanda merah dan simpan status DOUBLE di riwayat.
-                 */
-                duplicate++;
-                markHistorySynced(resi,"DOUBLE",result);
-            }
-            else{
-                sisa.push(resi);
-                gagal++;
-            }
-
-        }catch(error){
-            console.error("SYNC ERROR",resi,error);
-            sisa.push(resi);
-            gagal++;
-        }
-
-        await new Promise(r=>setTimeout(r,250));
-    }
-
-    localData=sisa;
-    saveData();
-    updateUI();
-    renderQueue();
-    renderHistory();
-
-    if(duplicate>0){
-        setStatus("red",`${duplicate} RESI DOUBLE DARI SERVER`);
-        showNotif(`🔴 ${duplicate} RESI DOUBLE`,"error");
-        speak(`${duplicate} resi terdeteksi double oleh server`);
-    }else if(berhasil>0){
-        setStatus("green",`Sync selesai • ${berhasil} berhasil`);
-        showNotif(`✓ ${berhasil} RESI TERSINKRON`,"success");
-        speak(`${berhasil} ${ROBOT_CONFIG.pesan.syncBerhasil}`);
-    }else{
-        setStatus("red","Tidak ada resi yang berhasil disinkronkan");
-        showNotif("SYNC GAGAL","error");
-        speak(ROBOT_CONFIG.pesan.syncGagal);
-    }
-
-    if(gagal>0){
-        console.warn("Sync gagal:",gagal);
-    }
+ try{
+  for(let i=0;i<daftar.length;i++){
+   const resi=daftar[i];setStatus("yellow",`Sync ${i+1}/${total} • ${resi}`);
+   try{
+    const response=await fetch(url,{method:"POST",mode:"cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({source:"pengiriman",resi})});
+    const text=await response.text();let result;
+    try{result=JSON.parse(text)}catch(e){sisa.push(resi);gagal++;continue}
+    if(result.status==="success"){berhasil++;markHistorySynced(resi,"TERKIRIM")}
+    else if(result.status==="duplicate"){duplicate++;markHistorySynced(resi,"DOUBLE",result)}
+    else{sisa.push(resi);gagal++}
+   }catch(error){console.error("SYNC ERROR",resi,error);sisa.push(resi);gagal++}
+   await new Promise(r=>setTimeout(r,250));
+  }
+ }finally{
+  localData=sisa;saveData();updateUI();renderQueue();renderHistory();syncRunning=false;syncBtn.disabled=false;syncBtn.innerHTML='☁ SYNC <span id="syncCount" class="count">'+localData.length+'</span>';
+ }
+ if(duplicate>0){beepDouble();setStatus("red",`${duplicate} RESI DOUBLE DARI SERVER`);showNotif(`TETOT • ${duplicate} RESI DOUBLE`,"error");speak(`${duplicate} resi terdeteksi double oleh server`)}
+ else if(berhasil>0){beepSuccess();setStatus("green",`Sync selesai • ${berhasil} berhasil`);showNotif(`TRING • ${berhasil} RESI TERSINKRON`,"success");speak(`${berhasil} ${ROBOT_CONFIG.pesan.syncBerhasil}`)}
+ else{beepError();setStatus("red","Tidak ada resi yang berhasil disinkronkan");showNotif("TOTOTOTOT • SYNC GAGAL","error");speak(ROBOT_CONFIG.pesan.syncGagal)}
 }
 
 function markHistorySynced(resi,status,serverResult=null){
-    const item=findHistory(resi);
-    if(!item) return;
-
-    item.status=status;
-
-    if(serverResult){
-        item.serverMessage=
-            serverResult.message ||
-            serverResult.keterangan ||
-            "DOUBLE SCAN";
-        item.serverTime=
-            serverResult.tglScan ||
-            serverResult.scanTime ||
-            null;
-    }
-
-    item.syncTime=new Date().toISOString();
+ const item=findHistory(resi);if(!item)return;item.status=status;
+ if(serverResult){item.serverMessage=serverResult.message||serverResult.keterangan||"DOUBLE SCAN";item.serverTime=serverResult.tglScan||serverResult.scanTime||null}
+ item.syncTime=new Date().toISOString();
 }
-
-/* =========================================================
-   DASHBOARD
-========================================================= */
 async function loadDashboard(){
-    const url=getTargetUrl();
-    if(!url) return;
-
-    try{
-        const response=await fetch(url+"?action=getDashboard");
-        const data=await response.json();
-
-        if(data.status==="success"){
-            document.getElementById("hariIni").innerText=data.hariIni||0;
-            document.getElementById("kemarin").innerText=data.kemarin||0;
-            document.getElementById("mingguIni").innerText=data.mingguIni||0;
-        }
-    }catch(e){
-        console.log("Dashboard tidak tersedia",e);
-    }
+ const url=getTargetUrl();if(!url)return;
+ try{const response=await fetch(url+"?action=getDashboard");const data=await response.json();if(data.status==="success"){document.getElementById("hariIni").innerText=data.hariIni||0;document.getElementById("kemarin").innerText=data.kemarin||0;document.getElementById("mingguIni").innerText=data.mingguIni||0}}catch(e){console.log("Dashboard tidak tersedia",e)}
 }
-
-/* =========================================================
-   MODAL / UTIL
-========================================================= */
-function closeModal(id){
-    document.getElementById(id).classList.remove("open");
-    if(id==="historyModal"){
-        document.getElementById("historyMenu").style.display="none";
-        document.getElementById("deleteOneBox").classList.remove("open");
-    }
-}
-function closeModalOutside(e,id){
-    if(e.target.id===id) closeModal(id);
-}
-function refreshApp(){ location.reload(); }
-
-function escapeHTML(text){
-    return String(text)
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
-}
-function escapeJS(text){
-    return String(text).replace(/\\/g,"\\\\").replace(/'/g,"\\'");
-}
-
-/* Jangan biarkan halaman ikut scroll */
-document.addEventListener("touchmove",e=>{
-    if(!e.target.closest(".sheet-body")) e.preventDefault();
-},{passive:false});
+function closeModal(id){document.getElementById(id).classList.remove("open");if(id==="historyModal"){document.getElementById("historyMenu").style.display="none";document.getElementById("deleteOneBox").classList.remove("open")}}
+function closeModalOutside(e,id){if(e.target.id===id)closeModal(id)}
+function refreshApp(){location.reload()}
+function escapeHTML(t){return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
+function escapeJS(t){return String(t).replace(/\\/g,"\\\\").replace(/'/g,"\\'")}
+document.addEventListener("touchmove",e=>{if(!e.target.closest(".sheet-body"))e.preventDefault()},{passive:false});
 </script>
 </body>
 </html>
