@@ -1,37 +1,32 @@
-```html
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
 
 <meta name="viewport"
-      content="width=device-width,
-               initial-scale=1.0,
-               maximum-scale=1.0,
-               user-scalable=no">
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-<title>SRF • Scan Retur</title>
+<meta name="theme-color" content="#0f172a">
+
+<title>SRF V3 - Scan Retur</title>
+
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
 <style>
 *{
     box-sizing:border-box;
     margin:0;
     padding:0;
-    font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Roboto,
-        Arial,
-        sans-serif;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
 }
 
-html,
-body{
+html,body{
     width:100%;
     height:100%;
     overflow:hidden;
     background:#0f172a;
+    color:#fff;
 }
 
 body{
@@ -39,35 +34,29 @@ body{
     flex-direction:column;
 }
 
-/* =========================================================
+/* =========================
    HEADER
-========================================================= */
+========================= */
 
 .header{
-    height:52px;
+    height:48px;
     flex-shrink:0;
-
-    background:#1e293b;
-    color:white;
 
     display:flex;
     align-items:center;
     justify-content:space-between;
 
-    padding:0 10px;
+    padding:0 12px;
+
+    background:#0f172a;
+    border-bottom:1px solid #334155;
 }
 
-.back-btn{
+.header a{
     color:#cbd5e1;
     text-decoration:none;
-
-    font-size:11px;
-    font-weight:800;
-
-    padding:7px 9px;
-
-    border-radius:7px;
-    background:#334155;
+    font-size:12px;
+    font-weight:700;
 }
 
 .header-title{
@@ -76,80 +65,52 @@ body{
 }
 
 .header-right{
-    display:flex;
-    gap:5px;
+    width:45px;
 }
 
-.header-btn{
-    border:0;
-    color:white;
+/* =========================
+   CAMERA
+========================= */
 
-    padding:7px 9px;
-
-    border-radius:7px;
-
-    font-size:9px;
-    font-weight:900;
-
-    cursor:pointer;
-}
-
-.result-btn{
-    background:#2563eb;
-}
-
-.manual-btn{
-    background:#7c3aed;
-}
-
-/* =========================================================
-   SCANNER
-========================================================= */
-
-.scanner{
+.camera-area{
     position:relative;
-
     flex:1;
+
     min-height:0;
 
     background:#000;
-
     overflow:hidden;
 }
 
 #reader{
-    position:absolute;
-    inset:0;
+    width:100% !important;
+    height:100% !important;
 
-    width:100%!important;
-    height:100%!important;
-
-    border:0!important;
-    background:#000;
+    border:none !important;
 }
 
 #reader video{
-    width:100%!important;
-    height:100%!important;
+    width:100% !important;
+    height:100% !important;
 
-    object-fit:cover!important;
+    object-fit:cover !important;
 }
 
-#reader img,
+/* Hilangkan UI bawaan html5-qrcode */
 #reader__dashboard{
-    display:none!important;
+    display:none !important;
 }
 
 #reader__scan_region{
-    width:100%!important;
-    height:100%!important;
+    width:100% !important;
+    height:100% !important;
 }
 
-/* =========================================================
-   STATUS
-========================================================= */
+/* =========================
+   CAMERA OVERLAY
+========================= */
 
-.status-box{
+.camera-status{
     position:absolute;
 
     top:10px;
@@ -158,350 +119,344 @@ body{
 
     z-index:20;
 
-    background:rgba(15,23,42,.88);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
 
-    backdrop-filter:blur(8px);
+    pointer-events:none;
+}
 
-    border-radius:10px;
-
-    padding:9px 11px;
-
+.status-pill{
     display:flex;
     align-items:center;
     gap:8px;
 
-    color:white;
+    padding:7px 11px;
+
+    background:rgba(15,23,42,.82);
+    border:1px solid rgba(255,255,255,.12);
+
+    border-radius:20px;
+
+    font-size:11px;
+    font-weight:800;
+
+    backdrop-filter:blur(5px);
 }
 
-.lamp{
-    width:12px;
-    height:12px;
-    min-width:12px;
+.status-dot{
+    width:9px;
+    height:9px;
 
     border-radius:50%;
 
-    background:#facc15;
+    background:#f59e0b;
 
-    box-shadow:0 0 10px currentColor;
+    box-shadow:0 0 8px currentColor;
 }
 
-.status-text{
-    flex:1;
+.count-pill{
+    padding:7px 11px;
 
-    font-size:12px;
-    font-weight:800;
-
-    overflow:hidden;
-    white-space:nowrap;
-    text-overflow:ellipsis;
-}
-
-/* =========================================================
-   NOTIFICATION
-========================================================= */
-
-.notif{
-    position:absolute;
-
-    top:60px;
-    left:50%;
-
-    transform:translateX(-50%);
-
-    z-index:40;
-
-    display:none;
-
-    padding:9px 15px;
+    background:rgba(15,23,42,.82);
+    border:1px solid rgba(255,255,255,.12);
 
     border-radius:20px;
 
     font-size:11px;
     font-weight:900;
 
-    white-space:nowrap;
-
-    box-shadow:0 5px 15px rgba(0,0,0,.4);
+    backdrop-filter:blur(5px);
 }
 
-.notif.success{
-    background:#16a34a;
-    color:white;
-}
+/* =========================
+   CAMERA FRAME
+========================= */
 
-.notif.warning{
-    background:#d97706;
-    color:white;
-}
-
-.notif.error{
-    background:#dc2626;
-    color:white;
-}
-
-.notif.info{
-    background:#2563eb;
-    color:white;
-}
-
-/* =========================================================
-   CAMERA BUTTON
-========================================================= */
-
-.camera-area{
+.scan-frame{
     position:absolute;
 
-    left:12px;
-    right:12px;
-    bottom:12px;
+    top:50%;
+    left:50%;
 
-    z-index:25;
+    transform:translate(-50%,-50%);
+
+    width:min(72vw,300px);
+    height:150px;
+
+    border:2px solid rgba(255,255,255,.8);
+
+    border-radius:16px;
+
+    z-index:10;
+
+    pointer-events:none;
+
+    box-shadow:
+        0 0 0 9999px rgba(0,0,0,.15);
 }
 
-.camera-btn{
-    width:100%;
-    height:52px;
+.scan-line{
+    position:absolute;
 
-    border:0;
-    border-radius:27px;
+    left:10px;
+    right:10px;
 
-    background:#334155;
-    color:white;
+    top:50%;
 
-    font-size:14px;
-    font-weight:900;
+    height:2px;
 
-    box-shadow:0 5px 15px rgba(0,0,0,.45);
+    background:#22c55e;
+
+    box-shadow:0 0 10px #22c55e;
+
+    animation:scanLine 1.8s linear infinite;
+}
+
+@keyframes scanLine{
+    0%{top:15%}
+    50%{top:85%}
+    100%{top:15%}
+}
+
+/* =========================
+   FLOATING BUTTON
+========================= */
+
+.camera-buttons{
+    position:absolute;
+
+    left:10px;
+    right:10px;
+    bottom:10px;
+
+    z-index:30;
+
+    display:flex;
+    justify-content:flex-end;
+}
+
+.float-btn{
+    border:1px solid rgba(255,255,255,.18);
+
+    background:rgba(15,23,42,.88);
+
+    color:#fff;
+
+    padding:9px 13px;
+
+    border-radius:9px;
+
+    font-size:11px;
+    font-weight:800;
 
     cursor:pointer;
 
-    touch-action:manipulation;
+    backdrop-filter:blur(5px);
 }
 
-.camera-btn.active{
-    background:#16a34a;
+/* =========================
+   BOTTOM PANEL
+========================= */
+
+.bottom-panel{
+    flex-shrink:0;
+
+    height:40vh;
+    min-height:220px;
+    max-height:380px;
+
+    background:#0f172a;
+
+    border-top:1px solid #334155;
+
+    display:flex;
+    flex-direction:column;
 }
 
-.camera-btn:active{
-    transform:scale(.98);
+/* =========================
+   TABS
+========================= */
+
+.tabs{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+
+    height:43px;
+
+    flex-shrink:0;
+
+    border-bottom:1px solid #334155;
 }
 
-/* =========================================================
-   PANEL
-========================================================= */
+.tab{
+    border:0;
 
-.panel{
-    position:absolute;
-    inset:0;
+    background:#1e293b;
 
-    z-index:100;
+    color:#94a3b8;
 
+    font-size:10px;
+    font-weight:900;
+
+    cursor:pointer;
+
+    border-right:1px solid #334155;
+}
+
+.tab:last-child{
+    border-right:0;
+}
+
+.tab.active{
+    background:#334155;
+    color:#fff;
+}
+
+/* =========================
+   TAB CONTENT
+========================= */
+
+.tab-content{
+    flex:1;
+
+    min-height:0;
+
+    overflow:hidden;
+}
+
+.tab-pane{
     display:none;
+
+    height:100%;
 
     overflow-y:auto;
 
-    background:#f1f5f9;
-
-    padding:12px;
+    padding:8px;
 }
 
-.panel.open{
+.tab-pane.active{
     display:block;
 }
 
-.panel-top{
+/* =========================
+   PROCESS ITEM
+========================= */
+
+.item{
+    background:#1e293b;
+
+    border:1px solid #334155;
+
+    border-radius:9px;
+
+    padding:9px 10px;
+
+    margin-bottom:7px;
+}
+
+.item-top{
     display:flex;
+    justify-content:space-between;
     align-items:center;
-    justify-content:space-between;
-
-    margin-bottom:10px;
-}
-
-.panel-title{
-    color:#0f172a;
-
-    font-size:16px;
-    font-weight:900;
-}
-
-.close-btn{
-    border:0;
-
-    background:#dc2626;
-    color:white;
-
-    padding:8px 11px;
-
-    border-radius:8px;
-
-    font-size:9px;
-    font-weight:900;
-}
-
-/* =========================================================
-   HASIL ITEM
-========================================================= */
-
-.result-item{
-    background:white;
-
-    border-radius:12px;
-
-    padding:11px;
-
-    margin-bottom:8px;
-
-    box-shadow:0 3px 10px rgba(15,23,42,.07);
-}
-
-.result-item-top{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
 
     gap:8px;
 }
 
-.result-resi{
-    color:#0f172a;
-
+.resi{
     font-size:12px;
     font-weight:900;
 
     word-break:break-all;
 }
 
-.result-time{
-    margin-top:3px;
-
+.time{
     color:#64748b;
-
     font-size:9px;
+    margin-top:3px;
 }
 
-.result-status{
+.badge{
     flex-shrink:0;
 
-    padding:5px 7px;
+    padding:4px 7px;
 
-    border-radius:6px;
+    border-radius:5px;
 
-    font-size:8px;
+    font-size:9px;
     font-weight:900;
 }
 
-.status-process{
-    background:#fef3c7;
-    color:#92400e;
+.badge-process{
+    background:#78350f;
+    color:#fbbf24;
 }
 
-.status-success{
-    background:#dcfce7;
-    color:#166534;
+.badge-success{
+    background:#064e3b;
+    color:#34d399;
 }
 
-.status-double{
-    background:#fee2e2;
-    color:#991b1b;
+.badge-notfound{
+    background:#7f1d1d;
+    color:#f87171;
 }
 
-.status-notfound{
-    background:#ffedd5;
-    color:#9a3412;
+.badge-timeout{
+    background:#713f12;
+    color:#fde047;
 }
 
-.status-timeout{
-    background:#e0e7ff;
-    color:#3730a3;
-}
-
-.status-error{
-    background:#fee2e2;
-    color:#991b1b;
+.badge-already{
+    background:#4c1d95;
+    color:#c4b5fd;
 }
 
 .retry-btn{
-    margin-top:8px;
+    margin-top:7px;
+
+    width:100%;
 
     border:0;
 
     background:#2563eb;
-    color:white;
+    color:#fff;
 
-    padding:7px 10px;
+    padding:7px;
 
-    border-radius:7px;
-
-    font-size:9px;
-    font-weight:900;
-}
-
-.result-detail{
-    display:none;
-
-    margin-top:9px;
-
-    padding-top:9px;
-
-    border-top:1px solid #e2e8f0;
-}
-
-.result-item.detail-open .result-detail{
-    display:block;
-}
-
-.detail-row{
-    display:grid;
-    grid-template-columns:90px 1fr;
-
-    gap:5px;
-
-    padding:4px 0;
+    border-radius:6px;
 
     font-size:10px;
-}
-
-.detail-label{
-    color:#64748b;
-    font-weight:700;
-}
-
-.detail-value{
-    color:#0f172a;
     font-weight:900;
 
-    word-break:break-word;
+    cursor:pointer;
 }
 
-/* =========================================================
+/* =========================
    EMPTY
-========================================================= */
+========================= */
 
 .empty{
-    background:white;
-
-    border-radius:12px;
-
-    padding:25px 15px;
-
     text-align:center;
 
-    color:#94a3b8;
+    color:#64748b;
 
-    font-size:12px;
+    font-size:11px;
     font-weight:700;
+
+    padding:25px 10px;
 }
 
-/* =========================================================
-   MANUAL MODAL
-========================================================= */
+/* =========================
+   MODAL
+========================= */
 
-.manual-modal{
+.modal{
     position:fixed;
 
     inset:0;
 
-    z-index:200;
+    z-index:100;
 
     display:none;
 
@@ -510,18 +465,16 @@ body{
 
     background:rgba(0,0,0,.65);
 
-    backdrop-filter:blur(4px);
-
-    padding:15px;
+    padding:20px;
 }
 
-.manual-modal.open{
+.modal.show{
     display:flex;
 }
 
-.manual-box{
+.modal-box{
     width:100%;
-    max-width:390px;
+    max-width:360px;
 
     background:#1e293b;
 
@@ -529,261 +482,343 @@ body{
 
     border-radius:14px;
 
-    padding:15px;
+    padding:16px;
 }
 
-.manual-title{
-    color:white;
-
+.modal-title{
     font-size:15px;
     font-weight:900;
 
     margin-bottom:5px;
 }
 
-.manual-info{
-    color:#94a3b8;
-
+.modal-desc{
     font-size:10px;
+
+    color:#94a3b8;
 
     line-height:1.5;
 
     margin-bottom:10px;
 }
 
-#manualInput{
+textarea{
     width:100%;
-
-    min-height:180px;
+    height:150px;
 
     resize:none;
 
-    background:#0f172a;
+    padding:10px;
 
-    color:white;
+    border-radius:8px;
 
     border:1px solid #475569;
 
-    border-radius:9px;
+    background:#0f172a;
 
-    padding:10px;
+    color:#fff;
 
     outline:none;
 
     font-size:12px;
-    font-weight:700;
 }
 
-.manual-actions{
+.modal-actions{
     display:grid;
     grid-template-columns:1fr 1fr;
 
-    gap:7px;
+    gap:8px;
 
-    margin-top:8px;
+    margin-top:10px;
 }
 
-.manual-actions button{
+.modal-btn{
     border:0;
 
-    padding:11px;
+    padding:10px;
 
-    border-radius:8px;
+    border-radius:7px;
 
-    color:white;
+    font-size:11px;
+    font-weight:900;
+
+    cursor:pointer;
+}
+
+.btn-cancel{
+    background:#475569;
+    color:#fff;
+}
+
+.btn-submit{
+    background:#2563eb;
+    color:#fff;
+}
+
+.btn-clear{
+    width:100%;
+
+    margin-top:8px;
+
+    background:#991b1b;
+    color:#fff;
+
+    border:0;
+
+    padding:9px;
+
+    border-radius:7px;
 
     font-size:10px;
     font-weight:900;
+
+    cursor:pointer;
 }
 
-.cancel-btn{
-    background:#475569;
+/* =========================
+   TOAST
+========================= */
+
+.toast{
+    position:fixed;
+
+    left:50%;
+    bottom:calc(40vh + 15px);
+
+    transform:translateX(-50%) translateY(20px);
+
+    z-index:200;
+
+    opacity:0;
+
+    pointer-events:none;
+
+    min-width:230px;
+    max-width:90%;
+
+    text-align:center;
+
+    padding:10px 13px;
+
+    border-radius:9px;
+
+    background:#020617;
+
+    border:1px solid #334155;
+
+    color:#fff;
+
+    font-size:11px;
+    font-weight:900;
+
+    transition:.2s;
 }
 
-.process-btn{
-    background:#2563eb;
+.toast.show{
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
 }
 
-/* =========================================================
+/* =========================
    RESPONSIVE
-========================================================= */
+========================= */
 
-@media(max-width:380px){
+@media(max-height:650px){
 
-    .header-title{
-        font-size:12px;
+    .bottom-panel{
+        height:38vh;
+        min-height:190px;
     }
 
-    .header-btn{
-        padding:6px;
-        font-size:8px;
+    .scan-frame{
+        height:125px;
     }
-
-    .status-text{
-        font-size:11px;
-    }
-
-    .camera-btn{
-        height:50px;
-        font-size:13px;
-    }
-
 }
+
 </style>
-
-<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-
 </head>
 
 <body>
 
+<!-- =========================
+     HEADER
+========================= -->
+
 <header class="header">
 
-    <a href="index.html" class="back-btn">
-        MENU
-    </a>
+    <a href="index.html">← Menu</a>
 
     <div class="header-title">
-        SRF • SCAN RETUR
+        SCAN RETUR
     </div>
 
-    <div class="header-right">
-
-        <button
-            class="header-btn manual-btn"
-            onclick="openManual()">
-
-            MANUAL
-
-        </button>
-
-        <button
-            class="header-btn result-btn"
-            onclick="openResults()">
-
-            HASIL
-
-        </button>
-
-    </div>
+    <div class="header-right"></div>
 
 </header>
 
 
-<div class="scanner">
+<!-- =========================
+     CAMERA
+========================= -->
+
+<section class="camera-area">
 
     <div id="reader"></div>
 
+    <div class="camera-status">
 
-    <div class="status-box">
-
-        <div
-            id="lamp"
-            class="lamp">
+        <div class="status-pill">
+            <span class="status-dot" id="statusDot"></span>
+            <span id="cameraStatus">
+                MENYALAKAN KAMERA...
+            </span>
         </div>
 
-        <div
-            id="statusText"
-            class="status-text">
-
-            Kamera mati, scanner siap
-
+        <div class="count-pill">
+            ANTREAN <span id="processCount">0</span>
         </div>
 
     </div>
 
-
-    <div
-        id="notif"
-        class="notif">
+    <div class="scan-frame">
+        <div class="scan-line"></div>
     </div>
 
-
-    <div class="camera-area">
+    <div class="camera-buttons">
 
         <button
-            id="cameraButton"
-            class="camera-btn">
+            class="float-btn"
+            onclick="openManual()">
 
-            AKTIFKAN KAMERA
+            INPUT MANUAL
+
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     BOTTOM PANEL
+========================= -->
+
+<section class="bottom-panel">
+
+    <div class="tabs">
+
+        <button
+            class="tab active"
+            data-tab="process"
+            onclick="openTab('process')">
+
+            PROSES
+            (<span id="processTabCount">0</span>)
+
+        </button>
+
+        <button
+            class="tab"
+            data-tab="history"
+            onclick="openTab('history')">
+
+            RIWAYAT
+            (<span id="historyCount">0</span>)
+
+        </button>
+
+        <button
+            class="tab"
+            data-tab="notfound"
+            onclick="openTab('notfound')">
+
+            TIDAK DITEMUKAN
+            (<span id="notfoundCount">0</span>)
 
         </button>
 
     </div>
 
 
-    <!-- =====================================================
-         HASIL
-    ====================================================== -->
+    <div class="tab-content">
 
-    <div
-        id="resultPanel"
-        class="panel">
+        <div
+            id="tab-process"
+            class="tab-pane active">
 
-        <div class="panel-top">
-
-            <div class="panel-title">
-                HASIL SCAN
+            <div
+                id="processList">
             </div>
 
+        </div>
+
+
+        <div
+            id="tab-history"
+            class="tab-pane">
+
+            <div
+                id="historyList">
+            </div>
+
+        </div>
+
+
+        <div
+            id="tab-notfound"
+            class="tab-pane">
+
+            <div
+                id="notfoundList">
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     MANUAL MODAL
+========================= -->
+
+<div
+    id="manualModal"
+    class="modal">
+
+    <div class="modal-box">
+
+        <div class="modal-title">
+            Input Manual Resi
+        </div>
+
+        <div class="modal-desc">
+
+            Bisa masukkan satu atau banyak resi.
+            Pisahkan dengan Enter atau spasi.
+
+        </div>
+
+        <textarea
+            id="manualInput"
+            placeholder="JY1261687193
+JY1262837600
+JY1197060858"></textarea>
+
+        <div class="modal-actions">
+
             <button
-                class="close-btn"
-                onclick="closeResults()">
+                class="modal-btn btn-cancel"
+                onclick="closeManual()">
 
                 TUTUP
 
             </button>
 
-        </div>
-
-        <div id="resultList"></div>
-
-    </div>
-
-</div>
-
-
-<!-- =========================================================
-     MANUAL
-========================================================= -->
-
-<div
-    id="manualModal"
-    class="manual-modal">
-
-    <div class="manual-box">
-
-        <div class="manual-title">
-            INPUT MANUAL RESI
-        </div>
-
-        <div class="manual-info">
-            Bisa masukkan satu atau banyak resi.
-            Pisahkan dengan ENTER, spasi, koma, atau titik koma.
-            Ketik CLEAR untuk menghapus riwayat lokal.
-        </div>
-
-        <textarea
-            id="manualInput"
-            placeholder="Contoh:
-
-JY1261687193
-JY1262837600
-JY1197060858"></textarea>
-
-        <div class="manual-actions">
-
             <button
-                class="cancel-btn"
-                onclick="closeManual()">
-
-                BATAL
-
-            </button>
-
-            <button
-                class="process-btn"
-                onclick="processManual()">
+                class="modal-btn btn-submit"
+                onclick="submitManual()">
 
                 PROSES
 
@@ -791,12 +826,28 @@ JY1197060858"></textarea>
 
         </div>
 
+        <button
+            class="btn-clear"
+            onclick="clearLocalData()">
+
+            CLEAR RIWAYAT & CACHE
+
+        </button>
+
     </div>
 
 </div>
 
 
-<script src="config.js"></script>
+<!-- =========================
+     TOAST
+========================= -->
+
+<div
+    id="toast"
+    class="toast">
+</div>
+
 
 <script>
 
@@ -804,286 +855,1460 @@ JY1197060858"></textarea>
    CONFIG
 ========================================================= */
 
-function getAppUrl(){
-
-    try{
-
-        if(
-            typeof APP_URL !== "undefined" &&
-            APP_URL
-        ){
-
-            return String(APP_URL).trim();
-
-        }
-
-        if(
-            typeof CONFIG !== "undefined" &&
-            CONFIG &&
-            CONFIG.APP_URL
-        ){
-
-            return String(CONFIG.APP_URL).trim();
-
-        }
-
-    }catch(e){
-
-        console.error(e);
-
-    }
-
-    return "";
-
-}
+const APP_URL =
+"https://script.google.com/macros/s/AKfycbyuJTOZaFhOZ52fKFKPCxFIulD5rTFJb6VehsELtOZgjmaJf0Epc4Jm71gcPVLtE9sJK/exec";
 
 
 /* =========================================================
-   CONFIG SCANNER
+   SETTINGS
 ========================================================= */
 
-const REQUEST_TIMEOUT = 10000;
+const REQUEST_TIMEOUT = 8000;
 
-const CAMERA_RESUME_DELAY = 1200;
-
-const STORAGE_KEY =
-    "srf_scan_retur_results_v4";
+/*
+   Maksimal request yang berjalan bersamaan.
+   Dibuat terbatas agar Apps Script tidak dibanjiri
+   ketika user scan sangat cepat.
+*/
+const MAX_CONCURRENT = 3;
 
 
 /* =========================================================
-   STATE
+   LOCAL STORAGE
+========================================================= */
+
+const STORAGE_PROCESS =
+"SRF_V3_RETUR_PROCESS";
+
+const STORAGE_HISTORY =
+"SRF_V3_RETUR_HISTORY";
+
+const STORAGE_NOTFOUND =
+"SRF_V3_RETUR_NOTFOUND";
+
+
+let processList =
+loadStorage(STORAGE_PROCESS);
+
+let historyList =
+loadStorage(STORAGE_HISTORY);
+
+let notFoundList =
+loadStorage(STORAGE_NOTFOUND);
+
+
+/* =========================================================
+   RUNTIME
 ========================================================= */
 
 let html5QrCode = null;
 
-let cameraRunning = false;
+let cameraStarted = false;
 
-let cameraStarting = false;
+let runningRequests = 0;
 
-let scanLocked = false;
+let requestQueue = [];
 
-let activeRequests = new Map();
+let lastCameraText = "";
 
-let results = [];
+let lastCameraTime = 0;
 
 
 /* =========================================================
-   LOAD LOCAL
+   STORAGE
 ========================================================= */
 
-try{
+function loadStorage(key){
 
-    results =
-        JSON.parse(
-            localStorage.getItem(
-                STORAGE_KEY
-            ) || "[]"
-        );
+    try{
 
-    if(!Array.isArray(results)){
+        const data =
+            JSON.parse(
+                localStorage.getItem(key) || "[]"
+            );
 
-        results = [];
+        return Array.isArray(data)
+            ? data
+            : [];
+
+    }catch(e){
+
+        return [];
 
     }
 
-}catch(e){
+}
 
-    results = [];
+
+function saveStorage(){
+
+    localStorage.setItem(
+        STORAGE_PROCESS,
+        JSON.stringify(processList)
+    );
+
+    localStorage.setItem(
+        STORAGE_HISTORY,
+        JSON.stringify(historyList)
+    );
+
+    localStorage.setItem(
+        STORAGE_NOTFOUND,
+        JSON.stringify(notFoundList)
+    );
 
 }
 
 
 /* =========================================================
-   INIT
-========================================================= */
-
-window.addEventListener(
-    "load",
-    function(){
-
-        renderResults();
-
-        setStatus(
-            "yellow",
-            "Kamera mati, scanner siap"
-        );
-
-    }
-);
-
-
-/* =========================================================
-   NORMALIZE
+   NORMALIZE RESI
 ========================================================= */
 
 function normalizeResi(value){
 
     return String(value || "")
-        .trim()
-        .toUpperCase();
+        .toUpperCase()
+        .replace(/[^A-Z0-9]/g,"")
+        .trim();
 
 }
 
 
 /* =========================================================
-   ESCAPE
+   CEK RESI LOKAL
 ========================================================= */
 
-function escapeHTML(value){
+function findLocalResi(resi){
 
-    return String(value ?? "")
+    const r =
+        normalizeResi(resi);
 
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
+    if(
+        processList.some(
+            x => x.resi === r
+        )
+    ){
+
+        return "process";
+
+    }
+
+    if(
+        historyList.some(
+            x => x.resi === r
+        )
+    ){
+
+        return "history";
+
+    }
+
+    if(
+        notFoundList.some(
+            x => x.resi === r
+        )
+    ){
+
+        return "notfound";
+
+    }
+
+    return null;
 
 }
 
 
 /* =========================================================
-   TIME
+   ADD PROCESS
 ========================================================= */
 
-function getTime(){
+function addToProcess(resi){
 
-    return new Date().toLocaleString(
-        "id-ID",
-        {
-            day:"2-digit",
-            month:"2-digit",
-            year:"numeric",
-            hour:"2-digit",
-            minute:"2-digit",
-            second:"2-digit"
-        }
-    );
+    const item = {
+
+        resi: resi,
+
+        status:"MEMERIKSA",
+
+        time:new Date().toISOString(),
+
+        retrying:false
+
+    };
+
+    processList.unshift(item);
+
+    saveStorage();
+
+    renderAll();
+
+    return item;
 
 }
 
 
 /* =========================================================
-   STATUS
+   REMOVE PROCESS
 ========================================================= */
 
-function setStatus(type,text){
+function removeProcess(resi){
 
-    const lamp =
-        document.getElementById("lamp");
-
-    const status =
-        document.getElementById("statusText");
-
-
-    if(type === "green"){
-
-        lamp.style.background="#22c55e";
-        lamp.style.color="#22c55e";
-
-    }
-    else if(type === "red"){
-
-        lamp.style.background="#ef4444";
-        lamp.style.color="#ef4444";
-
-    }
-    else if(type === "blue"){
-
-        lamp.style.background="#38bdf8";
-        lamp.style.color="#38bdf8";
-
-    }
-    else{
-
-        lamp.style.background="#facc15";
-        lamp.style.color="#facc15";
-
-    }
-
-
-    status.innerText = text;
-
-}
-
-
-/* =========================================================
-   NOTIF
-========================================================= */
-
-function showNotif(text,type="info"){
-
-    const el =
-        document.getElementById("notif");
-
-    el.innerText = text;
-
-    el.className =
-        "notif " + type;
-
-    el.style.display="block";
-
-
-    clearTimeout(
-        window.notifTimer
-    );
-
-
-    window.notifTimer =
-        setTimeout(
-            function(){
-
-                el.style.display="none";
-
-            },
-            1800
+    const index =
+        processList.findIndex(
+            x => x.resi === resi
         );
 
+    if(index !== -1){
+
+        return processList.splice(
+            index,
+            1
+        )[0];
+
+    }
+
+    return null;
+
 }
 
 
 /* =========================================================
-   BEEP
+   ADD HISTORY
 ========================================================= */
 
-function beep(
-    frequency=700,
-    duration=.08
+function addHistory(
+    resi,
+    status
 ){
+
+    /*
+       Hapus kalau ternyata masih ada
+       di process.
+    */
+
+    removeProcess(resi);
+
+    /*
+       Jangan masukkan dua kali.
+    */
+
+    if(
+        historyList.some(
+            x => x.resi === resi
+        )
+    ){
+
+        saveStorage();
+
+        renderAll();
+
+        return;
+
+    }
+
+    historyList.unshift({
+
+        resi:resi,
+
+        status:status,
+
+        time:new Date().toISOString()
+
+    });
+
+    /*
+       Batasi history lokal.
+       Bisa dinaikkan kalau diperlukan.
+    */
+
+    historyList =
+        historyList.slice(0,500);
+
+    saveStorage();
+
+    renderAll();
+
+}
+
+
+/* =========================================================
+   ADD NOT FOUND
+========================================================= */
+
+function addNotFound(resi){
+
+    removeProcess(resi);
+
+    if(
+        notFoundList.some(
+            x => x.resi === resi
+        )
+    ){
+
+        saveStorage();
+
+        renderAll();
+
+        return;
+
+    }
+
+    notFoundList.unshift({
+
+        resi:resi,
+
+        status:"TIDAK DITEMUKAN",
+
+        time:new Date().toISOString()
+
+    });
+
+    notFoundList =
+        notFoundList.slice(0,500);
+
+    saveStorage();
+
+    renderAll();
+
+}
+
+
+/* =========================================================
+   SCAN BARCODE
+========================================================= */
+
+function onScanSuccess(decodedText){
+
+    const resi =
+        normalizeResi(decodedText);
+
+    if(!resi){
+
+        return;
+
+    }
+
+
+    /*
+       Anti spam dari kamera.
+       Tetap ada walaupun local check
+       sudah bekerja.
+    */
+
+    const now =
+        Date.now();
+
+    if(
+        resi === lastCameraText &&
+        now - lastCameraTime < 1000
+    ){
+
+        return;
+
+    }
+
+    lastCameraText = resi;
+
+    lastCameraTime = now;
+
+
+    /*
+       PENTING:
+       CEK LOKAL SEBELUM REQUEST.
+    */
+
+    const localStatus =
+        findLocalResi(resi);
+
+
+    if(localStatus === "process"){
+
+        showToast(
+            "RESI SUDAH MASUK DAFTAR PROSES"
+        );
+
+        speak(
+            "Resi sudah masuk daftar proses"
+        );
+
+        return;
+
+    }
+
+
+    if(localStatus === "history"){
+
+        showToast(
+            "RESI SUDAH PERNAH DIPROSES"
+        );
+
+        speak(
+            "Resi sudah pernah diproses"
+        );
+
+        return;
+
+    }
+
+
+    if(localStatus === "notfound"){
+
+        showToast(
+            "RESI SUDAH ADA DI DAFTAR TIDAK DITEMUKAN"
+        );
+
+        speak(
+            "Resi sudah ada di daftar tidak ditemukan"
+        );
+
+        return;
+
+    }
+
+
+    /*
+       Resi baru.
+       LANGSUNG masukkan antrean.
+    */
+
+    addToProcess(resi);
+
+    requestQueue.push(resi);
+
+    updateProcessCount();
+
+    runQueue();
+
+}
+
+
+/* =========================================================
+   QUEUE PROCESSOR
+========================================================= */
+
+function runQueue(){
+
+    while(
+        runningRequests < MAX_CONCURRENT &&
+        requestQueue.length > 0
+    ){
+
+        const resi =
+            requestQueue.shift();
+
+        checkResi(resi);
+
+    }
+
+}
+
+
+/* =========================================================
+   CHECK RESI
+========================================================= */
+
+async function checkResi(resi){
+
+    runningRequests++;
+
+    updateProcessStatus(
+        resi,
+        "MEMERIKSA"
+    );
 
     try{
 
-        const AudioContext =
-            window.AudioContext ||
-            window.webkitAudioContext;
+        const controller =
+            new AbortController();
 
-        const ctx =
-            new AudioContext();
+        const timeout =
+            setTimeout(
+                () => controller.abort(),
+                REQUEST_TIMEOUT
+            );
 
-        const oscillator =
-            ctx.createOscillator();
 
-        oscillator.frequency.value =
-            frequency;
+        const response =
+            await fetch(
+                APP_URL,
+                {
+                    method:"POST",
 
-        oscillator.connect(
-            ctx.destination
+                    body:JSON.stringify({
+
+                        resi:resi,
+
+                        source:"scanRetur"
+
+                    }),
+
+                    signal:controller.signal
+
+                }
+            );
+
+
+        clearTimeout(timeout);
+
+
+        if(!response.ok){
+
+            throw new Error(
+                "HTTP " + response.status
+            );
+
+        }
+
+
+        const json =
+            await response.json();
+
+
+        /*
+           =========================
+           SUCCESS
+           =========================
+        */
+
+        if(
+            json.status === "success"
+        ){
+
+            addHistory(
+                resi,
+                "BERHASIL"
+            );
+
+            showToast(
+                resi + " • BERHASIL"
+            );
+
+            speak(
+                "Barang sudah kembali"
+            );
+
+        }
+
+
+        /*
+           =========================
+           ALREADY SCANNED
+           =========================
+        */
+
+        else if(
+            json.status === "already_scanned"
+        ){
+
+            /*
+               Dari sisi scanner,
+               backend bilang resi sudah
+               pernah diproses.
+
+               Masukkan ke history supaya
+               scan berikutnya langsung ditolak.
+            */
+
+            addHistory(
+                resi,
+                "SUDAH PERNAH DIPROSES"
+            );
+
+            showToast(
+                resi + " • SUDAH PERNAH DIPROSES"
+            );
+
+            speak(
+                "Resi sudah pernah diproses"
+            );
+
+        }
+
+
+        /*
+           =========================
+           NOT FOUND
+           =========================
+        */
+
+        else if(
+            json.status === "not_found" ||
+            json.status === "notfound" ||
+            json.status === "error_not_found"
+        ){
+
+            addNotFound(resi);
+
+            showToast(
+                resi + " • TIDAK DITEMUKAN"
+            );
+
+            speak(
+                "Resi tidak ditemukan"
+            );
+
+        }
+
+
+        /*
+           =========================
+           UNKNOWN RESPONSE
+           =========================
+        */
+
+        else{
+
+            /*
+               Jangan langsung dianggap
+               tidak ditemukan.
+
+               Supaya aman, tetap dianggap
+               error dan bisa dicoba lagi.
+            */
+
+            setProcessTimeout(
+                resi,
+                "RESPON TIDAK DIKENALI"
+            );
+
+            showToast(
+                resi + " • RESPON TIDAK DIKENALI"
+            );
+
+        }
+
+
+    }catch(error){
+
+        console.error(
+            "Scan retur error:",
+            error
         );
 
-        oscillator.start();
 
-        oscillator.stop(
-            ctx.currentTime +
-            duration
+        /*
+           Abort = TIMEOUT.
+           Error jaringan juga dibuat
+           sebagai status coba lagi.
+        */
+
+        setProcessTimeout(
+            resi,
+            "TIMEOUT"
         );
 
-    }catch(e){}
+        showToast(
+            resi + " • TIMEOUT / COBA LAGI"
+        );
+
+        speak(
+            "Pengecekan gagal, coba lagi"
+        );
+
+    }
+
+
+    runningRequests--;
+
+    updateProcessCount();
+
+    renderAll();
+
+    /*
+       Jalankan antrean berikutnya.
+    */
+
+    runQueue();
 
 }
 
 
 /* =========================================================
-   ROBOT
+   UPDATE PROCESS STATUS
+========================================================= */
+
+function updateProcessStatus(
+    resi,
+    status
+){
+
+    const item =
+        processList.find(
+            x => x.resi === resi
+        );
+
+    if(!item){
+
+        return;
+
+    }
+
+    item.status =
+        status;
+
+    item.retrying = false;
+
+    saveStorage();
+
+    renderAll();
+
+}
+
+
+/* =========================================================
+   TIMEOUT
+========================================================= */
+
+function setProcessTimeout(
+    resi,
+    message
+){
+
+    const item =
+        processList.find(
+            x => x.resi === resi
+        );
+
+    if(!item){
+
+        return;
+
+    }
+
+    item.status =
+        "TIMEOUT";
+
+    item.message =
+        message;
+
+    item.retrying =
+        false;
+
+    saveStorage();
+
+    renderAll();
+
+}
+
+
+/* =========================================================
+   RETRY
+========================================================= */
+
+function retryResi(resi){
+
+    /*
+       Jangan retry kalau sudah ada request
+       aktif untuk resi tersebut.
+    */
+
+    const item =
+        processList.find(
+            x => x.resi === resi
+        );
+
+    if(!item){
+
+        return;
+
+    }
+
+
+    if(
+        item.status === "MEMERIKSA"
+    ){
+
+        showToast(
+            "Resi masih sedang diperiksa"
+        );
+
+        return;
+
+    }
+
+
+    /*
+       Pastikan belum masuk history/notfound.
+    */
+
+    if(
+        historyList.some(
+            x => x.resi === resi
+        )
+    ){
+
+        return;
+
+    }
+
+    if(
+        notFoundList.some(
+            x => x.resi === resi
+        )
+    ){
+
+        return;
+
+    }
+
+
+    item.status =
+        "MEMERIKSA";
+
+    item.retrying =
+        true;
+
+    item.time =
+        new Date().toISOString();
+
+
+    saveStorage();
+
+    renderAll();
+
+
+    requestQueue.push(
+        resi
+    );
+
+    runQueue();
+
+}
+
+
+/* =========================================================
+   MANUAL INPUT
+========================================================= */
+
+function openManual(){
+
+    document
+        .getElementById("manualModal")
+        .classList.add("show");
+
+    setTimeout(
+        () => {
+            document
+                .getElementById("manualInput")
+                .focus();
+        },
+        100
+    );
+
+}
+
+
+function closeManual(){
+
+    document
+        .getElementById("manualModal")
+        .classList.remove("show");
+
+}
+
+
+/* =========================================================
+   PARSE MANUAL
+========================================================= */
+
+function submitManual(){
+
+    const text =
+        document
+            .getElementById("manualInput")
+            .value;
+
+
+    if(!text.trim()){
+
+        showToast(
+            "Masukkan resi terlebih dahulu"
+        );
+
+        return;
+
+    }
+
+
+    /*
+       Bisa dipisahkan:
+       Enter
+       spasi
+       koma
+       titik koma
+       tab
+    */
+
+    const rawList =
+        text
+            .toUpperCase()
+            .split(/[\s,;]+/)
+            .map(x => normalizeResi(x))
+            .filter(Boolean);
+
+
+    /*
+       Hilangkan duplikat dari input
+       manual sendiri.
+    */
+
+    const uniqueList =
+        [...new Set(rawList)];
+
+
+    let masuk = 0;
+    let ditolak = 0;
+
+
+    uniqueList.forEach(
+        resi => {
+
+            const localStatus =
+                findLocalResi(resi);
+
+
+            if(localStatus){
+
+                ditolak++;
+
+                return;
+
+            }
+
+
+            addToProcess(resi);
+
+            requestQueue.push(resi);
+
+            masuk++;
+
+        }
+    );
+
+
+    document
+        .getElementById("manualInput")
+        .value = "";
+
+
+    closeManual();
+
+
+    renderAll();
+
+    updateProcessCount();
+
+    runQueue();
+
+
+    showToast(
+        `${masuk} resi masuk antrean` +
+        (ditolak
+            ? ` • ${ditolak} ditolak`
+            : "")
+    );
+
+}
+
+
+/* =========================================================
+   CLEAR LOCAL DATA
+========================================================= */
+
+function clearLocalData(){
+
+    const yakin =
+        confirm(
+            "Hapus semua Riwayat, Daftar Proses, dan Daftar Tidak Ditemukan di HP ini?"
+        );
+
+
+    if(!yakin){
+
+        return;
+
+    }
+
+
+    /*
+       Jangan hapus request yang sedang berjalan
+       secara diam-diam.
+    */
+
+    if(runningRequests > 0){
+
+        alert(
+            "Masih ada proses yang berjalan. Tunggu sampai selesai sebelum CLEAR."
+        );
+
+        return;
+
+    }
+
+
+    processList = [];
+
+    historyList = [];
+
+    notFoundList = [];
+
+    requestQueue = [];
+
+
+    localStorage.removeItem(
+        STORAGE_PROCESS
+    );
+
+    localStorage.removeItem(
+        STORAGE_HISTORY
+    );
+
+    localStorage.removeItem(
+        STORAGE_NOTFOUND
+    );
+
+
+    renderAll();
+
+    updateProcessCount();
+
+    showToast(
+        "CACHE & RIWAYAT BERHASIL DIBERSIHKAN"
+    );
+
+    speak(
+        "Data lokal sudah dibersihkan"
+    );
+
+}
+
+
+/* =========================================================
+   TABS
+========================================================= */
+
+function openTab(name){
+
+    document
+        .querySelectorAll(".tab")
+        .forEach(
+            btn => {
+
+                btn.classList.toggle(
+                    "active",
+                    btn.dataset.tab === name
+                );
+
+            }
+        );
+
+
+    document
+        .querySelectorAll(".tab-pane")
+        .forEach(
+            pane => {
+
+                pane.classList.toggle(
+                    "active",
+                    pane.id === "tab-" + name
+                );
+
+            }
+        );
+
+}
+
+
+/* =========================================================
+   RENDER ALL
+========================================================= */
+
+function renderAll(){
+
+    renderProcess();
+
+    renderHistory();
+
+    renderNotFound();
+
+    updateCounts();
+
+}
+
+
+/* =========================================================
+   RENDER PROCESS
+========================================================= */
+
+function renderProcess(){
+
+    const box =
+        document.getElementById(
+            "processList"
+        );
+
+
+    if(!processList.length){
+
+        box.innerHTML =
+            `<div class="empty">
+                Tidak ada resi yang sedang diproses.
+             </div>`;
+
+        return;
+
+    }
+
+
+    box.innerHTML =
+        processList.map(
+            item => {
+
+                let badgeClass =
+                    "badge-process";
+
+                let button = "";
+
+
+                if(
+                    item.status === "TIMEOUT"
+                ){
+
+                    badgeClass =
+                        "badge-timeout";
+
+
+                    button =
+                        `<button
+                            class="retry-btn"
+                            onclick="retryResi('${escapeHtml(item.resi)}')">
+                            COBA LAGI
+                         </button>`;
+
+                }
+
+
+                return `
+                    <div class="item">
+
+                        <div class="item-top">
+
+                            <div>
+                                <div class="resi">
+                                    ${escapeHtml(item.resi)}
+                                </div>
+
+                                <div class="time">
+                                    ${formatTime(item.time)}
+                                </div>
+                            </div>
+
+                            <span
+                                class="badge ${badgeClass}">
+                                ${escapeHtml(item.status)}
+                            </span>
+
+                        </div>
+
+                        ${button}
+
+                    </div>
+                `;
+
+            }
+        ).join("");
+
+}
+
+
+/* =========================================================
+   RENDER HISTORY
+========================================================= */
+
+function renderHistory(){
+
+    const box =
+        document.getElementById(
+            "historyList"
+        );
+
+
+    if(!historyList.length){
+
+        box.innerHTML =
+            `<div class="empty">
+                Belum ada riwayat.
+             </div>`;
+
+        return;
+
+    }
+
+
+    box.innerHTML =
+        historyList.map(
+            item => {
+
+                let badgeClass =
+                    "badge-success";
+
+
+                if(
+                    item.status ===
+                    "SUDAH PERNAH DIPROSES"
+                ){
+
+                    badgeClass =
+                        "badge-already";
+
+                }
+
+
+                return `
+                    <div class="item">
+
+                        <div class="item-top">
+
+                            <div>
+
+                                <div class="resi">
+                                    ${escapeHtml(item.resi)}
+                                </div>
+
+                                <div class="time">
+                                    ${formatTime(item.time)}
+                                </div>
+
+                            </div>
+
+                            <span
+                                class="badge ${badgeClass}">
+                                ${escapeHtml(item.status)}
+                            </span>
+
+                        </div>
+
+                    </div>
+                `;
+
+            }
+        ).join("");
+
+}
+
+
+/* =========================================================
+   RENDER NOT FOUND
+========================================================= */
+
+function renderNotFound(){
+
+    const box =
+        document.getElementById(
+            "notfoundList"
+        );
+
+
+    if(!notFoundList.length){
+
+        box.innerHTML =
+            `<div class="empty">
+                Belum ada resi tidak ditemukan.
+             </div>`;
+
+        return;
+
+    }
+
+
+    box.innerHTML =
+        notFoundList.map(
+            item => {
+
+                return `
+                    <div class="item">
+
+                        <div class="item-top">
+
+                            <div>
+
+                                <div class="resi">
+                                    ${escapeHtml(item.resi)}
+                                </div>
+
+                                <div class="time">
+                                    ${formatTime(item.time)}
+                                </div>
+
+                            </div>
+
+                            <span
+                                class="badge badge-notfound">
+                                TIDAK DITEMUKAN
+                            </span>
+
+                        </div>
+
+                    </div>
+                `;
+
+            }
+        ).join("");
+
+}
+
+
+/* =========================================================
+   COUNTS
+========================================================= */
+
+function updateCounts(){
+
+    document
+        .getElementById("processCount")
+        .innerText =
+        processList.length;
+
+
+    document
+        .getElementById("processTabCount")
+        .innerText =
+        processList.length;
+
+
+    document
+        .getElementById("historyCount")
+        .innerText =
+        historyList.length;
+
+
+    document
+        .getElementById("notfoundCount")
+        .innerText =
+        notFoundList.length;
+
+}
+
+
+function updateProcessCount(){
+
+    updateCounts();
+
+}
+
+
+/* =========================================================
+   CAMERA STATUS
+========================================================= */
+
+function setCameraStatus(
+    text,
+    color
+){
+
+    document
+        .getElementById(
+            "cameraStatus"
+        )
+        .innerText =
+        text;
+
+
+    document
+        .getElementById(
+            "statusDot"
+        )
+        .style.background =
+        color;
+
+}
+
+
+/* =========================================================
+   CAMERA
+========================================================= */
+
+async function startCamera(){
+
+    if(cameraStarted){
+
+        return;
+
+    }
+
+
+    try{
+
+        html5QrCode =
+            new Html5Qrcode(
+                "reader"
+            );
+
+
+        await html5QrCode.start(
+
+            {
+                facingMode:"environment"
+            },
+
+            {
+                fps:10,
+
+                qrbox:{
+                    width:260,
+                    height:140
+                },
+
+                aspectRatio:1.777
+
+            },
+
+            onScanSuccess,
+
+            () => {}
+
+        );
+
+
+        cameraStarted = true;
+
+
+        setCameraStatus(
+            "KAMERA SIAP SCAN",
+            "#22c55e"
+        );
+
+
+        speak(
+            "Scanner retur siap"
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "Camera error:",
+            error
+        );
+
+
+        setCameraStatus(
+            "KAMERA GAGAL / IZINKAN KAMERA",
+            "#ef4444"
+        );
+
+
+        showToast(
+            "Kamera tidak dapat digunakan. Pastikan izin kamera diberikan."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   SPEECH
 ========================================================= */
 
 function speak(text){
@@ -1101,17 +2326,19 @@ function speak(text){
 
         speechSynthesis.cancel();
 
-
         const voice =
             new SpeechSynthesisUtterance(
                 text
             );
 
-        voice.lang="id-ID";
-        voice.rate=1.1;
-        voice.pitch=1;
-        voice.volume=1;
+        voice.lang =
+            "id-ID";
 
+        voice.rate =
+            1;
+
+        voice.pitch =
+            1;
 
         speechSynthesis.speak(
             voice
@@ -1123,30 +2350,72 @@ function speak(text){
 
 
 /* =========================================================
-   SAVE
+   TOAST
 ========================================================= */
 
-function saveResults(){
+let toastTimer = null;
+
+function showToast(text){
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+
+    toast.innerText =
+        text;
+
+
+    toast.classList.add(
+        "show"
+    );
+
+
+    clearTimeout(
+        toastTimer
+    );
+
+
+    toastTimer =
+        setTimeout(
+            () => {
+
+                toast.classList.remove(
+                    "show"
+                );
+
+            },
+            2200
+        );
+
+}
+
+
+/* =========================================================
+   FORMAT TIME
+========================================================= */
+
+function formatTime(value){
 
     try{
 
-        results =
-            results.slice(
-                0,
-                100
+        return new Date(value)
+            .toLocaleString(
+                "id-ID",
+                {
+                    day:"2-digit",
+                    month:"2-digit",
+                    year:"numeric",
+                    hour:"2-digit",
+                    minute:"2-digit",
+                    second:"2-digit"
+                }
             );
-
-        localStorage.setItem(
-            STORAGE_KEY,
-            JSON.stringify(results)
-        );
 
     }catch(e){
 
-        console.error(
-            "LOCAL STORAGE ERROR",
-            e
-        );
+        return "";
 
     }
 
@@ -1154,1571 +2423,95 @@ function saveResults(){
 
 
 /* =========================================================
-   FIND EXISTING
+   ESCAPE HTML
 ========================================================= */
 
-function findActiveRequest(resi){
+function escapeHtml(value){
 
-    return activeRequests.has(
-        resi
-    );
+    return String(value)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
 
 }
 
 
 /* =========================================================
-   ADD PROCESS ITEM
+   START
 ========================================================= */
 
-function addProcessing(resi){
+window.addEventListener(
+    "load",
+    () => {
 
-    const item = {
+        renderAll();
 
-        id:
-            Date.now() +
-            "_" +
-            Math.random()
-                .toString(36)
-                .slice(2),
+        updateProcessCount();
 
-        resi:resi,
+        startCamera();
 
-        status:"MEMERIKSA",
-
-        waktu:getTime(),
-
-        orderId:"",
-        sku:"",
-        warna:"",
-        size:"",
-        qty:"",
-        ekspedisi:"",
-
-        retry:false
-
-    };
-
-
-    results.unshift(
-        item
-    );
-
-
-    results =
-        results.slice(
-            0,
-            100
-        );
-
-
-    saveResults();
-
-    renderResults();
-
-
-    return item;
-
-}
+    }
+);
 
 
 /* =========================================================
-   UPDATE RESULT
-========================================================= */
-
-function updateResult(
-    item,
-    data
-){
-
-    Object.assign(
-        item,
-        data
-    );
-
-
-    saveResults();
-
-    renderResults();
-
-}
-
-
-/* =========================================================
-   SERVER REQUEST
-========================================================= */
-
-async function requestServer(resi){
-
-    const url =
-        getAppUrl();
-
-
-    if(!url){
-
-        throw new Error(
-            "APP_URL tidak ditemukan"
-        );
-
-    }
-
-
-    const controller =
-        new AbortController();
-
-
-    const timeout =
-        setTimeout(
-            function(){
-
-                controller.abort();
-
-            },
-            REQUEST_TIMEOUT
-        );
-
-
-    try{
-
-        const response =
-            await fetch(
-
-                url,
-
-                {
-
-                    method:"POST",
-
-                    mode:"cors",
-
-                    headers:{
-                        "Content-Type":
-                            "text/plain;charset=utf-8"
-                    },
-
-                    body:
-                        JSON.stringify({
-
-                            source:
-                                "scanRetur",
-
-                            resi:
-                                resi
-
-                        }),
-
-                    signal:
-                        controller.signal
-
-                }
-
-            );
-
-
-        const text =
-            await response.text();
-
-
-        if(!response.ok){
-
-            throw new Error(
-                "HTTP " +
-                response.status
-            );
-
-        }
-
-
-        let json;
-
-
-        try{
-
-            json =
-                JSON.parse(
-                    text
-                );
-
-        }catch(e){
-
-            throw new Error(
-                "Response server bukan JSON"
-            );
-
-        }
-
-
-        return json;
-
-    }finally{
-
-        clearTimeout(
-            timeout
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   PROCESS ONE RESI
-========================================================= */
-
-async function processResi(
-    rawResi,
-    fromScanner=false
-){
-
-    const resi =
-        normalizeResi(
-            rawResi
-        );
-
-
-    if(!resi){
-
-        return;
-
-    }
-
-
-    /*
-     * LOCK PER RESI
-     */
-
-    if(
-        findActiveRequest(
-            resi
-        )
-    ){
-
-        showNotif(
-            resi +
-            " masih diproses",
-            "warning"
-        );
-
-        return;
-
-    }
-
-
-    activeRequests.set(
-        resi,
-        true
-    );
-
-
-    /*
-     * LOCK CAMERA
-     */
-
-    if(fromScanner){
-
-        scanLocked = true;
-
-    }
-
-
-    const item =
-        addProcessing(
-            resi
-        );
-
-
-    setStatus(
-        "blue",
-        "Memeriksa " + resi + "..."
-    );
-
-
-    try{
-
-        const result =
-            await requestServer(
-                resi
-            );
-
-
-        /*
-         * SUCCESS
-         */
-
-        if(
-            result.status ===
-            "success"
-        ){
-
-            updateResult(
-                item,
-                {
-
-                    status:
-                        "BERHASIL",
-
-                    waktu:
-                        getTime(),
-
-                    orderId:
-                        result.orderId ||
-                        "",
-
-                    sku:
-                        result.sku ||
-                        "",
-
-                    warna:
-                        result.warna ||
-                        "",
-
-                    size:
-                        result.size ||
-                        "",
-
-                    qty:
-                        result.qty ||
-                        "",
-
-                    ekspedisi:
-                        result.ekspedisi ||
-                        "",
-
-                    retry:false
-
-                }
-            );
-
-
-            beep(
-                800,
-                .08
-            );
-
-
-            setStatus(
-                "green",
-                "Barang sudah kembali"
-            );
-
-
-            showNotif(
-                "BERHASIL • " + resi,
-                "success"
-            );
-
-
-            speak(
-                "Barang sudah kembali"
-            );
-
-        }
-
-
-        /*
-         * ALREADY SCANNED
-         */
-
-        else if(
-
-            result.status ===
-            "already_scanned"
-
-        ){
-
-            updateResult(
-                item,
-                {
-
-                    status:
-                        "DOUBLE SCAN",
-
-                    waktu:
-                        getTime(),
-
-                    retry:false
-
-                }
-            );
-
-
-            beep(
-                300,
-                .15
-            );
-
-
-            setStatus(
-                "red",
-                "Resi sudah pernah diproses"
-            );
-
-
-            showNotif(
-                "DOUBLE SCAN • " + resi,
-                "warning"
-            );
-
-
-            speak(
-                "Resi sudah pernah diproses"
-            );
-
-        }
-
-
-        /*
-         * NOT FOUND
-         */
-
-        else if(
-
-            result.status ===
-            "notfound"
-
-        ){
-
-            updateResult(
-                item,
-                {
-
-                    status:
-                        "TIDAK DITEMUKAN",
-
-                    waktu:
-                        getTime(),
-
-                    retry:false
-
-                }
-            );
-
-
-            beep(
-                250,
-                .2
-            );
-
-
-            setStatus(
-                "red",
-                "Resi tidak ditemukan"
-            );
-
-
-            showNotif(
-                "TIDAK DITEMUKAN • " +
-                resi,
-                "error"
-            );
-
-
-            speak(
-                "Resi tidak ditemukan"
-            );
-
-        }
-
-
-        /*
-         * UNKNOWN SERVER RESULT
-         */
-
-        else{
-
-            updateResult(
-                item,
-                {
-
-                    status:
-                        "ERROR",
-
-                    waktu:
-                        getTime(),
-
-                    retry:true,
-
-                    error:
-                        result.message ||
-                        "Response server tidak dikenali"
-
-                }
-            );
-
-
-            setStatus(
-                "red",
-                "Terjadi kesalahan server"
-            );
-
-
-            showNotif(
-                "ERROR • " + resi,
-                "error"
-            );
-
-        }
-
-
-    }catch(error){
-
-        console.error(
-            "SCAN ERROR:",
-            error
-        );
-
-
-        /*
-         * TIMEOUT
-         */
-
-        if(
-            error.name ===
-            "AbortError"
-        ){
-
-            updateResult(
-                item,
-                {
-
-                    status:
-                        "TIMEOUT",
-
-                    waktu:
-                        getTime(),
-
-                    retry:true,
-
-                    error:
-                        "Server terlalu lama merespons"
-
-                }
-            );
-
-
-            setStatus(
-                "red",
-                "Waktu habis, coba lagi"
-            );
-
-
-            showNotif(
-                "TIMEOUT • " +
-                resi,
-                "warning"
-            );
-
-
-        }
-
-
-        /*
-         * ERROR BIASA
-         */
-
-        else{
-
-            updateResult(
-                item,
-                {
-
-                    status:
-                        "ERROR",
-
-                    waktu:
-                        getTime(),
-
-                    retry:true,
-
-                    error:
-                        error.message ||
-                        "Koneksi gagal"
-
-                }
-            );
-
-
-            setStatus(
-                "red",
-                "Koneksi gagal"
-            );
-
-
-            showNotif(
-                "ERROR • " +
-                resi,
-                "error"
-            );
-
-        }
-
-    }
-
-
-    activeRequests.delete(
-        resi
-    );
-
-
-    if(fromScanner){
-
-        /*
-         * BERIKAN JEDA SEBELUM
-         * CAMERA BOLEH MEMBACA LAGI
-         */
-
-        setTimeout(
-            function(){
-
-                scanLocked =
-                    false;
-
-                if(cameraRunning){
-
-                    setStatus(
-                        "green",
-                        "Siap scan resi berikutnya"
-                    );
-
-                }
-
-            },
-            CAMERA_RESUME_DELAY
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   CAMERA CALLBACK
-========================================================= */
-
-function onScanSuccess(
-    decodedText
-){
-
-    if(
-        scanLocked
-    ){
-
-        return;
-
-    }
-
-
-    const resi =
-        normalizeResi(
-            decodedText
-        );
-
-
-    if(!resi){
-
-        return;
-
-    }
-
-
-    /*
-     * LOCK SEBELUM REQUEST
-     * AGAR FRAME BERIKUTNYA
-     * TIDAK MASUK
-     */
-
-    scanLocked =
-        true;
-
-
-    beep(
-        600,
-        .05
-    );
-
-
-    processResi(
-        resi,
-        true
-    );
-
-}
-
-
-/* =========================================================
-   START CAMERA
-========================================================= */
-
-async function startCamera(){
-
-    if(
-        cameraRunning ||
-        cameraStarting
-    ){
-
-        return;
-
-    }
-
-
-    cameraStarting =
-        true;
-
-
-    setStatus(
-        "yellow",
-        "Menyalakan kamera..."
-    );
-
-
-    try{
-
-        if(!html5QrCode){
-
-            html5QrCode =
-                new Html5Qrcode(
-                    "reader"
-                );
-
-        }
-
-
-        await html5QrCode.start(
-
-            {
-                facingMode:
-                    "environment"
-            },
-
-            {
-
-                fps:5,
-
-                qrbox:{
-                    width:280,
-                    height:160
-                },
-
-                aspectRatio:
-                    1.777778
-
-            },
-
-            onScanSuccess,
-
-            function(errorMessage){
-
-                /*
-                 * Jangan tampilkan
-                 * error frame kamera
-                 * ke pengguna.
-                 */
-
-            }
-
-        );
-
-
-        cameraRunning =
-            true;
-
-
-        cameraStarting =
-            false;
-
-
-        const btn =
-            document.getElementById(
-                "cameraButton"
-            );
-
-
-        btn.classList.add(
-            "active"
-        );
-
-
-        btn.innerText =
-            "MATIKAN KAMERA";
-
-
-        setStatus(
-            "green",
-            "Kamera aktif, siap scan"
-        );
-
-
-    }catch(error){
-
-        console.error(
-            "CAMERA ERROR:",
-            error
-        );
-
-
-        cameraRunning =
-            false;
-
-        cameraStarting =
-            false;
-
-
-        const btn =
-            document.getElementById(
-                "cameraButton"
-            );
-
-
-        btn.classList.remove(
-            "active"
-        );
-
-
-        btn.innerText =
-            "AKTIFKAN KAMERA";
-
-
-        setStatus(
-            "red",
-            "Tidak dapat membuka kamera"
-        );
-
-
-        showNotif(
-            "IZINKAN AKSES KAMERA",
-            "error"
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   STOP CAMERA
-========================================================= */
-
-async function stopCamera(){
-
-    if(
-        !cameraRunning
-    ){
-
-        return;
-
-    }
-
-
-    cameraRunning =
-        false;
-
-    scanLocked =
-        false;
-
-
-    const btn =
-        document.getElementById(
-            "cameraButton"
-        );
-
-
-    btn.classList.remove(
-        "active"
-    );
-
-
-    btn.innerText =
-        "AKTIFKAN KAMERA";
-
-
-    try{
-
-        if(html5QrCode){
-
-            await html5QrCode.stop();
-
-        }
-
-    }catch(e){
-
-        console.error(
-            e
-        );
-
-    }
-
-
-    setStatus(
-        "yellow",
-        "Kamera mati, scanner siap"
-    );
-
-}
-
-
-/* =========================================================
-   CAMERA BUTTON
+   MANUAL MODAL ENTER
 ========================================================= */
 
 document
-    .getElementById(
-        "cameraButton"
-    )
-    .addEventListener(
-        "click",
-        function(){
-
-            if(cameraRunning){
-
-                stopCamera();
-
-            }else{
-
-                startCamera();
-
-            }
-
-        }
-    );
-
-
-/* =========================================================
-   MANUAL MODAL
-========================================================= */
-
-function openManual(){
-
-    document
-        .getElementById(
-            "manualModal"
-        )
-        .classList.add(
-            "open"
-        );
-
-
-    setTimeout(
-        function(){
-
-            document
-                .getElementById(
-                    "manualInput"
-                )
-                .focus();
-
-        },
-        100
-    );
-
-}
-
-
-function closeManual(){
-
-    document
-        .getElementById(
-            "manualModal"
-        )
-        .classList.remove(
-            "open"
-        );
-
-}
-
-
-/* =========================================================
-   PARSE MANUAL
-========================================================= */
-
-function parseManualInput(text){
-
-    return String(text || "")
-
-        .split(
-            /[\s,;]+/
-        )
-
-        .map(
-            x =>
-                normalizeResi(x)
-        )
-
-        .filter(Boolean);
-
-}
-
-
-/* =========================================================
-   MANUAL PROCESS
-========================================================= */
-
-async function processManual(){
-
-    const input =
-        document.getElementById(
-            "manualInput"
-        );
-
-
-    const text =
-        input.value.trim();
-
-
-    if(!text){
-
-        showNotif(
-            "Masukkan resi dulu",
-            "warning"
-        );
-
-        return;
-
-    }
-
-
-    /*
-     * CLEAR RAHASIA
-     */
-
-    if(
-        text.toUpperCase() ===
-        "CLEAR"
-    ){
-
-        const yakin =
-            confirm(
-                "Hapus semua riwayat scan lokal?"
-            );
-
-
-        if(yakin){
-
-            results = [];
-
-            saveResults();
-
-            renderResults();
-
-            showNotif(
-                "RIWAYAT DIBERSIHKAN",
-                "success"
-            );
-
-        }
-
-
-        input.value = "";
-
-        return;
-
-    }
-
-
-    const list =
-        parseManualInput(
-            text
-        );
-
-
-    if(!list.length){
-
-        showNotif(
-            "Tidak ada resi valid",
-            "warning"
-        );
-
-        return;
-
-    }
-
-
-    closeManual();
-
-
-    /*
-     * Manual tidak membutuhkan kamera.
-     *
-     * Diproses satu per satu agar
-     * Apps Script tidak dibanjiri
-     * request bersamaan.
-     */
-
-    for(
-        const resi of list
-    ){
-
-        await processResi(
-            resi,
-            false
-        );
-
-    }
-
-
-    openResults();
-
-}
-
-
-/* =========================================================
-   RESULT PANEL
-========================================================= */
-
-function openResults(){
-
-    document
-        .getElementById(
-            "resultPanel"
-        )
-        .classList.add(
-            "open"
-        );
-
-
-    renderResults();
-
-}
-
-
-function closeResults(){
-
-    document
-        .getElementById(
-            "resultPanel"
-        )
-        .classList.remove(
-            "open"
-        );
-
-}
-
-
-/* =========================================================
-   RESULT STATUS CLASS
-========================================================= */
-
-function getStatusClass(
-    status
-){
-
-    switch(status){
-
-        case "MEMERIKSA":
-            return "status-process";
-
-        case "BERHASIL":
-            return "status-success";
-
-        case "DOUBLE SCAN":
-            return "status-double";
-
-        case "TIDAK DITEMUKAN":
-            return "status-notfound";
-
-        case "TIMEOUT":
-            return "status-timeout";
-
-        default:
-            return "status-error";
-
-    }
-
-}
-
-
-/* =========================================================
-   RENDER RESULTS
-========================================================= */
-
-function renderResults(){
-
-    const container =
-        document.getElementById(
-            "resultList"
-        );
-
-
-    if(!container){
-
-        return;
-
-    }
-
-
-    if(
-        !results.length
-    ){
-
-        container.innerHTML = `
-
-            <div class="empty">
-
-                Belum ada hasil scan.
-
-            </div>
-
-        `;
-
-        return;
-
-    }
-
-
-    container.innerHTML =
-        results.map(
-            function(item){
-
-                return `
-
-                    <div
-                        class="result-item"
-                        data-id="${escapeHTML(item.id)}">
-
-                        <div
-                            class="result-item-top">
-
-                            <div>
-
-                                <div
-                                    class="result-resi">
-
-                                    ${escapeHTML(
-                                        item.resi
-                                    )}
-
-                                </div>
-
-                                <div
-                                    class="result-time">
-
-                                    ${escapeHTML(
-                                        item.waktu ||
-                                        "-"
-                                    )}
-
-                                </div>
-
-                            </div>
-
-                            <div
-                                class="result-status ${getStatusClass(item.status)}">
-
-                                ${escapeHTML(
-                                    item.status
-                                )}
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="result-detail">
-
-                            <div class="detail-row">
-
-                                <div class="detail-label">
-                                    Order ID
-                                </div>
-
-                                <div class="detail-value">
-                                    ${escapeHTML(
-                                        item.orderId ||
-                                        "-"
-                                    )}
-                                </div>
-
-                            </div>
-
-
-                            <div class="detail-row">
-
-                                <div class="detail-label">
-                                    SKU
-                                </div>
-
-                                <div class="detail-value">
-                                    ${escapeHTML(
-                                        item.sku ||
-                                        "-"
-                                    )}
-                                </div>
-
-                            </div>
-
-
-                            <div class="detail-row">
-
-                                <div class="detail-label">
-                                    Warna
-                                </div>
-
-                                <div class="detail-value">
-                                    ${escapeHTML(
-                                        item.warna ||
-                                        "-"
-                                    )}
-                                </div>
-
-                            </div>
-
-
-                            <div class="detail-row">
-
-                                <div class="detail-label">
-                                    Size
-                                </div>
-
-                                <div class="detail-value">
-                                    ${escapeHTML(
-                                        item.size ||
-                                        "-"
-                                    )}
-                                </div>
-
-                            </div>
-
-
-                            <div class="detail-row">
-
-                                <div class="detail-label">
-                                    Qty
-                                </div>
-
-                                <div class="detail-value">
-                                    ${escapeHTML(
-                                        item.qty ||
-                                        "-"
-                                    )}
-                                </div>
-
-                            </div>
-
-
-                            <div class="detail-row">
-
-                                <div class="detail-label">
-                                    Ekspedisi
-                                </div>
-
-                                <div class="detail-value">
-                                    ${escapeHTML(
-                                        item.ekspedisi ||
-                                        "-"
-                                    )}
-                                </div>
-
-                            </div>
-
-
-                            ${
-                                item.error
-                                ?
-                                `
-
-                                <div class="detail-row">
-
-                                    <div class="detail-label">
-                                        Keterangan
-                                    </div>
-
-                                    <div class="detail-value">
-                                        ${escapeHTML(
-                                            item.error
-                                        )}
-                                    </div>
-
-                                </div>
-
-                                `
-                                :
-                                ""
-                            }
-
-
-                            ${
-                                item.retry
-                                ?
-                                `
-
-                                <button
-                                    class="retry-btn"
-                                    onclick="retryResult('${escapeHTML(item.id)}')">
-
-                                    COBA LAGI
-
-                                </button>
-
-                                `
-                                :
-                                ""
-                            }
-
-                        </div>
-
-                    </div>
-
-                `;
-
-            }
-        )
-        .join("");
-
-
-    /*
-     * Klik kartu = buka/tutup detail.
-     * Tombol retry tidak ikut membuka detail.
-     */
-
-    container
-        .querySelectorAll(
-            ".result-item"
-        )
-        .forEach(
-            function(card){
-
-                card.addEventListener(
-                    "click",
-                    function(e){
-
-                        if(
-                            e.target.closest(
-                                ".retry-btn"
-                            )
-                        ){
-
-                            return;
-
-                        }
-
-
-                        card.classList.toggle(
-                            "detail-open"
-                        );
-
-                    }
-                );
-
-            }
-        );
-
-}
-
-
-/* =========================================================
-   RETRY
-========================================================= */
-
-async function retryResult(id){
-
-    const item =
-        results.find(
-            x =>
-                String(x.id) ===
-                String(id)
-        );
-
-
-    if(!item){
-
-        return;
-
-    }
-
-
-    if(
-        activeRequests.has(
-            item.resi
-        )
-    ){
-
-        return;
-
-    }
-
-
-    /*
-     * Hapus status retry sementara.
-     */
-
-    item.status =
-        "MEMERIKSA";
-
-    item.retry =
-        false;
-
-    item.error =
-        "";
-
-
-    saveResults();
-
-    renderResults();
-
-
-    await processResi(
-        item.resi,
-        false
-    );
-
-}
-
-
-/* =========================================================
-   CLOSE MANUAL WHEN CLICK OUTSIDE
-========================================================= */
-
-document
-    .getElementById(
-        "manualModal"
-    )
-    .addEventListener(
-        "click",
-        function(e){
-
-            if(
-                e.target ===
-                this
-            ){
-
-                closeManual();
-
-            }
-
-        }
-    );
-
-
-/* =========================================================
-   KEYBOARD MANUAL
-========================================================= */
-
-document
-    .getElementById(
-        "manualInput"
-    )
+    .getElementById("manualInput")
     .addEventListener(
         "keydown",
-        function(e){
+        function(event){
 
             /*
-             * Ctrl + Enter
-             */
+               Ctrl + Enter = proses
+            */
 
             if(
-                e.key === "Enter" &&
-                e.ctrlKey
+                event.key === "Enter" &&
+                event.ctrlKey
             ){
 
-                e.preventDefault();
+                event.preventDefault();
 
-                processManual();
+                submitManual();
 
             }
 
         }
     );
+
+
+/* =========================================================
+   BACKGROUND TAB
+========================================================= */
+
+document.addEventListener(
+    "visibilitychange",
+    () => {
+
+        /*
+           Tidak mematikan antrean ketika
+           user berpindah tab sebentar.
+        */
+
+        if(
+            !document.hidden
+        ){
+
+            renderAll();
+
+            updateProcessCount();
+
+        }
+
+    }
+);
 
 </script>
 
 </body>
 </html>
-```
