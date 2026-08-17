@@ -125,33 +125,30 @@ body{
 ========================================================= */
 
 .nav{
-    display:grid;
-
-    grid-template-columns:
-        repeat(2,1fr);
-
-    gap:7px;
-
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
     margin-bottom:12px;
+}
+
+.nav-right{
+    display:flex;
+    align-items:center;
+    gap:7px;
 }
 
 .nav-btn{
     border:0;
-
-    padding:10px 8px;
-
+    padding:9px 11px;
     border-radius:9px;
-
     color:white;
-
     font-size:10px;
     font-weight:900;
-
     text-decoration:none;
-
     text-align:center;
-
     cursor:pointer;
+    white-space:nowrap;
 }
 
 .nav-jnt{
@@ -543,7 +540,7 @@ textarea[readonly]{
 
 <div class="header">
 
-```
+ 
 <div class="header-top">
 
     <div>
@@ -567,7 +564,7 @@ textarea[readonly]{
     </div>
 
 </div>
-```
+ 
 
 </div>
 
@@ -577,12 +574,22 @@ textarea[readonly]{
 
 <div class="nav">
 
-```
+ 
 <a
     href="index.html"
     class="nav-btn nav-home">
 
-    MENU UTAMA
+    &lt; MENU
+
+</a>
+
+<div class="nav-right">
+
+<a
+    href="uploadspx.html"
+    class="nav-btn nav-spx">
+
+    UPLOAD SPX
 
 </a>
 
@@ -594,22 +601,8 @@ textarea[readonly]{
 
 </a>
 
-<a
-    href="uploadspx.html"
-    class="nav-btn nav-spx">
-
-    UPLOAD SPX
-
-</a>
-
-<a
-    href="uploadjnt.html"
-    class="nav-btn nav-jnt">
-
-    UPLOAD JNT
-
-</a>
-```
+</div>
+ 
 
 </div>
 
@@ -619,7 +612,7 @@ textarea[readonly]{
 
 <div class="card">
 
-```
+ 
 <div class="card-title">
     DATA RETUR
 </div>
@@ -672,7 +665,7 @@ textarea[readonly]{
     </span>
 
 </div>
-```
+ 
 
 </div>
 
@@ -682,7 +675,7 @@ textarea[readonly]{
 
 <div class="card">
 
-```
+ 
 <div class="card-title">
     HASIL UPLOAD
 </div>
@@ -740,7 +733,7 @@ textarea[readonly]{
     </div>
 
 </div>
-```
+ 
 
 </div>
 
@@ -750,7 +743,7 @@ textarea[readonly]{
 
 <div class="card">
 
-```
+ 
 <div class="result-header">
 
     <div class="result-title">
@@ -775,7 +768,7 @@ textarea[readonly]{
     Belum ada data.
 
 </div>
-```
+ 
 
 </div>
 
@@ -785,7 +778,7 @@ textarea[readonly]{
 
 <div class="card">
 
-```
+ 
 <div class="result-header">
 
     <div class="result-title">
@@ -810,7 +803,7 @@ textarea[readonly]{
     Belum ada data.
 
 </div>
-```
+ 
 
 </div>
 
@@ -820,7 +813,7 @@ textarea[readonly]{
 
 <div class="card">
 
-```
+ 
 <div class="result-header">
 
     <div class="result-title">
@@ -845,7 +838,7 @@ textarea[readonly]{
     Tidak ada data bermasalah.
 
 </div>
-```
+ 
 
 </div>
 
@@ -861,9 +854,9 @@ textarea[readonly]{
 
 <div class="footer">
 
-```
+ 
 SRF V3 • Upload Retur JNT
-```
+ 
 
 </div>
 
