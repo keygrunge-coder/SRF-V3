@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Koleksi Prompt Sandal Marketplace</title>
+
+<style>
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#111827;
+    color:#fff;
+    margin:30px;
+}
+h1{
+    text-align:center;
+    margin-bottom:40px;
+}
+.card{
+    background:#1f2937;
+    border-radius:12px;
+    padding:20px;
+    margin-bottom:25px;
+}
+textarea{
+    width:100%;
+    height:260px;
+    border:none;
+    resize:vertical;
+    padding:15px;
+    border-radius:8px;
+    font-size:15px;
+    line-height:1.6;
+}
+button{
+    background:#2563eb;
+    color:#fff;
+    border:none;
+    padding:12px 20px;
+    border-radius:8px;
+    cursor:pointer;
+    margin-top:10px;
+    margin-right:10px;
+}
+button:hover{
+    background:#1d4ed8;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Koleksi Prompt Marketplace Sandal</h1>
+
+<button onclick="copyAll()">Copy Semua Prompt</button>
+
+<div class="card">
+<h2>1. Model Memakai Sandal</h2>
+
+<textarea id="p1">
+Gunakan sandal dan model ini, jangan ubah bentuk, warna, tekstur, proporsi, detail desain, maupun logo asli produk. Pertahankan seluruh karakteristik sandal tetap identik dengan gambar referensi. Buat foto bergaya katalog marketplace profesional dengan latar belakang putih bersih bergradasi lembut. Posisi kaki model sedang memakai sandal dengan tumit sedikit terangkat sehingga memberikan kesan nyaman dan empuk. Ambil sudut sekitar 45 derajat dari samping. Fokus utama pada sandal. Gunakan pencahayaan studio lembut, bayangan halus, tekstur EVA tajam, ultra realistis, tanpa teks, tanpa watermark, kualitas 8K.
+</textarea>
+
+<button onclick="copyPrompt('p1')">Copy Prompt</button>
+
+</div>
+
+<div class="card">
+
+<h2>2. Anti Slip</h2>
+
+<textarea id="p2">
+Gunakan sandal ini, jangan ubah bentuk, warna, tekstur, proporsi, detail desain, maupun logo asli produk. Pertahankan produk tetap identik dengan gambar referensi. Buat visual sandal berada di atas bidang miring untuk menunjukkan fitur anti-slip. Tambahkan lingkaran zoom yang menampilkan tekstur outsole dan panah penghubung. Latar belakang interior modern blur. Pencahayaan studio lembut. Gaya katalog marketplace premium. Ultra realistis. Tanpa watermark. Resolusi 8K.
+</textarea>
+
+<button onclick="copyPrompt('p2')">Copy Prompt</button>
+
+</div>
+
+<div class="card">
+
+<h2>3. Lifestyle Pegang Sandal</h2>
+
+<textarea id="p3">
+Gunakan sandal ini, jangan ubah bentuk, warna, tekstur, proporsi, detail desain, maupun logo asli produk. Pertahankan seluruh karakteristik sandal tetap identik dengan gambar referensi. Tampilkan sebuah tangan memegang sandal dengan posisi sedikit miring ke arah kamera. Background interior modern dibuat blur. Pencahayaan natural lembut. Fokus utama pada sandal. Gaya foto katalog marketplace premium. Ultra realistis. Tanpa teks. Tanpa watermark. Resolusi 8K.
+</textarea>
+
+<button onclick="copyPrompt('p3')">Copy Prompt</button>
+
+</div>
+
+<div class="card">
+
+<h2>4. Sandal di Sofa (Super Ringan)</h2>
+
+<textarea id="p4">
+Gunakan sandal ini, jangan ubah bentuk, warna, tekstur, proporsi, detail desain, maupun logo asli produk. Tampilkan sepasang sandal di atas sofa kain abu-abu dengan posisi sedikit menyilang. Background sofa modern blur. Cahaya alami lembut. Fokus pada tekstur EVA dan ketebalan sol. Gaya katalog marketplace premium. Ultra realistis. Tanpa teks. Tanpa watermark. Resolusi 8K.
+</textarea>
+
+<button onclick="copyPrompt('p4')">Copy Prompt</button>
+
+</div>
+
+<div class="card">
+
+<h2>5. Floating Semua Warna Upload</h2>
+
+<textarea id="p5">
+Gunakan sandal yang saya upload, jangan ubah bentuk, warna, tekstur, proporsi, detail desain, maupun logo asli produk. Jangan menambahkan, mengganti, atau menghasilkan variasi warna lain selain warna yang terdapat pada gambar yang saya upload. Jika saya mengunggah satu warna maka tampilkan satu warna tersebut. Jika saya mengunggah beberapa warna maka tampilkan hanya warna-warna tersebut. Susun sandal dengan komposisi melayang (floating). Satu sandal menjadi fokus utama di tengah, sisanya mengelilingi pada berbagai sudut. Background polos hijau sage atau warna netral. Soft studio lighting. Ultra realistis. Gaya katalog marketplace premium. Tanpa teks. Tanpa watermark. Resolusi 8K.
+</textarea>
+
+<button onclick="copyPrompt('p5')">Copy Prompt</button>
+
+</div>
+
+<script>
+
+function copyPrompt(id){
+let text=document.getElementById(id);
+text.select();
+document.execCommand("copy");
+alert("Prompt berhasil dicopy");
+}
+
+function copyAll(){
+
+let all="";
+
+document.querySelectorAll("textarea").forEach(function(t){
+
+all+=t.value+"\n\n";
+
+});
+
+navigator.clipboard.writeText(all);
+
+alert("Semua prompt berhasil dicopy");
+
+}
+
+</script>
+
+</body>
+</html>
