@@ -7,7 +7,7 @@
 
 <style>
 .header-box {
-    background: #003399;
+    background: #003399; /* Warna biru */
     color: #fff;
     padding: 15px;
     border-radius: 12px;
@@ -16,7 +16,7 @@
 }
 
 .btn-nav {
-    background: #cc0000;
+    background: #cc0000; /* Warna merah */
     color: white;
     border: none;
     padding: 8px 15px;
@@ -25,17 +25,17 @@
     cursor: pointer;
     text-decoration: none;
     display: inline-block;
-    margin: 5px;
+    margin: 5px; /* Memberi jarak antar tombol */
     font-size: 13px;
 }
     
-body {
+body{
     font-family: Arial, sans-serif;
     background: #f4f4f4;
     padding: 20px;
 }
 
-.container {
+.container{
     max-width: 900px;
     margin: auto;
     background: #fff;
@@ -43,6 +43,7 @@ body {
     border-radius: 10px;
 }
 
+/* Card pembungkus kotak baru */
 .card {
     background: #fff;
     border: 1px solid #ddd;
@@ -58,7 +59,7 @@ body {
     color: #333;
 }
 
-textarea {
+textarea{
     width: 100%;
     height: 350px;
     padding: 10px;
@@ -67,11 +68,12 @@ textarea {
     border-radius: 4px;
 }
 
+/* Textarea khusus list hasil yang lebih kecil */
 .card textarea {
     height: 150px;
 }
 
-button {
+button{
     width: 100%;
     padding: 15px;
     margin-top: 10px;
@@ -87,6 +89,7 @@ button:hover {
     background: #0b5ed7;
 }
 
+/* Style tabel hasil ringkasan */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -109,8 +112,9 @@ table td:last-child {
 <div class="container">
 
 <div class="header-box">
-<h3><b>UPLOAD RETUR JNT TIKTOK TOKOPEDIA</b></h3>
-<a href="uploadspx.html" class="btn-nav">UPLOAD RETUR SPX</a>
+<h3> <B>UPLOAD RETUR TIKTOK TOKOPEDIA</B> </h3>
+<a href="retur.html" class="btn-nav"> SCAN RETUR</a>
+<a href="upload_spx.html" class="btn-nav">UPLOAD RETUR SPX</a>
 </div>
 
 <div class="card">
@@ -122,6 +126,7 @@ table td:last-child {
 Upload ke Sheet
 </button>
 
+<!-- Kotak Hasil Ringkasan -->
 <div class="card">
 <h3>Hasil Upload</h3>
 <table>
@@ -136,11 +141,13 @@ Upload ke Sheet
 </table>
 </div>
 
+<!-- Kotak Resi Berhasil -->
 <div class="card">
 <h3>Resi Berhasil</h3>
 <textarea id="listBerhasil" readonly placeholder="Daftar resi berhasil akan muncul di sini..."></textarea>
 </div>
 
+<!-- Kotak Resi Duplikat -->
 <div class="card">
 <h3>Resi Duplikat</h3>
 <textarea id="listDuplikat" readonly placeholder="Daftar resi duplikat akan muncul di sini..."></textarea>
@@ -148,10 +155,11 @@ Upload ke Sheet
 
 </div>
 
-<!-- Memanggil file config.js sebelum script utama -->
-<script src="config.js"></script>
-
 <script>
+
+const APP_URL = "https://script.google.com/macros/s/AKfycbxVYJO4e5HIzC4lnWVEhzbS1z9SNSpjgRnpxesFx1IzAYK3rS6iuum2OODj73tit926jg/exec";
+
+// Tambahan agar bisa tekan Ctrl + Enter untuk langsung upload
 document.getElementById("rawData").addEventListener("keydown", function(event) {
     if (event.key === "Enter" && event.ctrlKey) {
         event.preventDefault();
@@ -159,41 +167,48 @@ document.getElementById("rawData").addEventListener("keydown", function(event) {
     }
 });
 
-async function uploadRetur() {
+async function uploadRetur(){
+
     const text = document.getElementById("rawData").value.trim();
 
-    if (!text) {
+    if(!text){
         alert("Paste data dulu");
         return;
     }
 
+    // Menggunakan logika asli (memakai elemen teks proses sementara di card hasil/berhasil atau alert)
     document.getElementById("hasilBerhasil").innerText = "...";
     document.getElementById("hasilDuplikat").innerText = "...";
     document.getElementById("listBerhasil").value = "Sedang memproses...";
     document.getElementById("listDuplikat").value = "Sedang memproses...";
 
-    try {
-        const r = await fetch(APP_URL, {
-            method: "POST",
-            body: JSON.stringify({
-                source: "uploadRetur",
-                text: text
+    try{
+
+        const r = await fetch(APP_URL,{
+            method:"POST",
+            body:JSON.stringify({
+                source:"uploadRetur",
+                text:text
             })
         });
 
         const json = await r.json();
 
+        // Memasukkan hasil JSON sesuai kotak tampilan baru
         document.getElementById("hasilBerhasil").innerText = json.berhasil || 0;
         document.getElementById("hasilDuplikat").innerText = json.duplikat || 0;
         
         document.getElementById("listBerhasil").value = (json.listBerhasil || []).join("\n");
         document.getElementById("listDuplikat").value = (json.listDuplikat || []).join("\n");
 
-    } catch (err) {
+    }catch(err){
+
         document.getElementById("listBerhasil").value = err.toString();
         document.getElementById("listDuplikat").value = err.toString();
+
     }
 }
+
 </script>
 
 </body>
