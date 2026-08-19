@@ -1,872 +1,3372 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>SRF - Pengiriman</title>
+
 <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
-html,body{width:100%;height:100%;overflow:hidden;background:#0f172a}
-body{display:flex;flex-direction:column}
-button{font:inherit}
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif
+}
+
+html,body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:#0f172a
+}
+
+body{
+    display:flex;
+    flex-direction:column
+}
+
+button{
+    font:inherit
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
 
 .header{
-    height:52px;flex-shrink:0;background:#1e293b;color:#fff;
-    display:flex;align-items:center;justify-content:space-between;
-    padding:0 9px;z-index:100
+    height:52px;
+    flex-shrink:0;
+    background:#1e293b;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 9px;
+    z-index:100
 }
-.header-title{font-size:15px;font-weight:900}
-.header-actions{display:flex;gap:5px}
+
+.header-title{
+    font-size:15px;
+    font-weight:900
+}
+
+.header-actions{
+    display:flex;
+    gap:5px
+}
+
 .header-btn{
-    border:0;color:#fff;padding:7px 9px;border-radius:7px;
-    font-size:11px;font-weight:900;cursor:pointer;touch-action:manipulation
+    border:0;
+    color:#fff;
+    padding:7px 9px;
+    border-radius:7px;
+    font-size:11px;
+    font-weight:900;
+    cursor:pointer;
+    touch-action:manipulation
 }
-.refresh{background:#d97706}
-.camera-on{background:#16a34a}
-.camera-off{background:#dc2626}
+
+.header-btn:disabled{
+    opacity:.6;
+    cursor:not-allowed
+}
+
+.refresh{
+    background:#d97706
+}
+
+.camera-on{
+    background:#16a34a
+}
+
+.camera-off{
+    background:#dc2626
+}
+
+
+/* =========================================================
+   STATS
+========================================================= */
 
 .stats{
-    height:52px;flex-shrink:0;background:#334155;color:#fff;
-    display:flex;justify-content:space-around;align-items:center;text-align:center
+    height:52px;
+    flex-shrink:0;
+    background:#334155;
+    color:#fff;
+    display:flex;
+    justify-content:space-around;
+    align-items:center;
+    text-align:center
 }
-.stat{font-size:10px;color:#cbd5e1}
-.stat strong{display:block;color:#38bdf8;font-size:16px;margin-top:1px}
 
-.scanner{position:relative;flex:1;min-height:0;background:#000;overflow:hidden}
-#reader{position:absolute;inset:0;width:100%!important;height:100%!important;border:0!important;background:#000}
-#reader video{width:100%!important;height:100%!important;object-fit:cover!important}
-#reader img,#reader__dashboard{display:none!important}
-#reader__scan_region{width:100%!important;height:100%!important}
+.stat{
+    font-size:10px;
+    color:#cbd5e1
+}
 
-/* Saat kamera OFF, area tetap hitam */
+.stat strong{
+    display:block;
+    color:#38bdf8;
+    font-size:16px;
+    margin-top:1px
+}
+
+
+/* =========================================================
+   SCANNER
+========================================================= */
+
+.scanner{
+    position:relative;
+    flex:1;
+    min-height:0;
+    background:#000;
+    overflow:hidden
+}
+
+#reader{
+    position:absolute;
+    inset:0;
+    width:100%!important;
+    height:100%!important;
+    border:0!important;
+    background:#000
+}
+
+#reader video{
+    width:100%!important;
+    height:100%!important;
+    object-fit:cover!important
+}
+
+#reader img,
+#reader__dashboard{
+    display:none!important
+}
+
+#reader__scan_region{
+    width:100%!important;
+    height:100%!important
+}
+
+
+/* =========================================================
+   CAMERA OFF
+========================================================= */
+
 .camera-off-overlay{
-    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-    z-index:5;background:#000;color:#64748b;font-size:14px;font-weight:800;
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:5;
+    background:#000;
+    color:#64748b;
+    font-size:14px;
+    font-weight:800;
     pointer-events:none
 }
 
+
+/* =========================================================
+   STATUS
+========================================================= */
+
 .status-box{
-    position:absolute;top:12px;left:12px;right:12px;z-index:20;
-    background:rgba(15,23,42,.88);backdrop-filter:blur(8px);
-    border-radius:10px;padding:10px 12px;display:flex;align-items:center;
-    gap:9px;color:#fff;pointer-events:none
+    position:absolute;
+    top:12px;
+    left:12px;
+    right:12px;
+    z-index:20;
+    background:rgba(15,23,42,.88);
+    backdrop-filter:blur(8px);
+    border-radius:10px;
+    padding:10px 12px;
+    display:flex;
+    align-items:center;
+    gap:9px;
+    color:#fff;
+    pointer-events:none
 }
-.lamp{width:13px;height:13px;min-width:13px;border-radius:50%;background:#facc15;box-shadow:0 0 10px currentColor}
-.status-text{font-size:13px;font-weight:800;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+
+.lamp{
+    width:13px;
+    height:13px;
+    min-width:13px;
+    border-radius:50%;
+    background:#facc15;
+    box-shadow:0 0 10px currentColor
+}
+
+.status-text{
+    font-size:13px;
+    font-weight:800;
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis
+}
+
+
+/* =========================================================
+   NOTIF
+========================================================= */
 
 .notif{
-    position:absolute;top:75px;left:50%;transform:translateX(-50%);
-    z-index:80;padding:10px 18px;border-radius:25px;font-size:13px;font-weight:900;
-    display:none;white-space:nowrap;box-shadow:0 5px 15px rgba(0,0,0,.35)
+    position:absolute;
+    top:75px;
+    left:50%;
+    transform:translateX(-50%);
+    z-index:80;
+    padding:10px 18px;
+    border-radius:25px;
+    font-size:13px;
+    font-weight:900;
+    display:none;
+    white-space:nowrap;
+    box-shadow:0 5px 15px rgba(0,0,0,.35)
 }
-.notif.success{background:#16a34a;color:#fff}
-.notif.warning{background:#f59e0b;color:#fff}
-.notif.error{background:#dc2626;color:#fff}
 
-/* Tombol bawah */
+.notif.success{
+    background:#16a34a;
+    color:#fff
+}
+
+.notif.warning{
+    background:#f59e0b;
+    color:#fff
+}
+
+.notif.error{
+    background:#dc2626;
+    color:#fff
+}
+
+
+/* =========================================================
+   BOTTOM ACTIONS
+========================================================= */
+
 .bottom-actions{
-    position:absolute;left:10px;right:10px;bottom:10px;z-index:40;
-    display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px
+    position:absolute;
+    left:10px;
+    right:10px;
+    bottom:10px;
+    z-index:40;
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:7px
 }
+
 .bottom-btn{
-    height:50px;border:0;border-radius:12px;color:#fff;
-    background:rgba(30,41,59,.94);font-size:11px;font-weight:900;
-    box-shadow:0 5px 14px rgba(0,0,0,.45);cursor:pointer;
-    touch-action:manipulation
+    height:50px;
+    border:0;
+    border-radius:12px;
+    color:#fff;
+    background:rgba(30,41,59,.94);
+    font-size:11px;
+    font-weight:900;
+    box-shadow:0 5px 14px rgba(0,0,0,.45);
+    cursor:pointer;
+    touch-action:manipulation;
+    transition:.15s
 }
-.bottom-btn.sync{background:#2563eb}
-.bottom-btn.queue{background:#475569}
-.bottom-btn.history{background:#475569}
-.bottom-btn:active{transform:scale(.97)}
+
+.bottom-btn.sync{
+    background:#2563eb
+}
+
+.bottom-btn.queue{
+    background:#475569
+}
+
+.bottom-btn.history{
+    background:#475569
+}
+
+.bottom-btn:active{
+    transform:scale(.97)
+}
+
+.bottom-btn:disabled{
+    cursor:not-allowed;
+    transform:none;
+}
+
 .count{
-    display:inline-flex;min-width:20px;height:20px;padding:0 5px;
-    align-items:center;justify-content:center;border-radius:10px;
-    background:#dc2626;color:#fff;font-size:10px;margin-left:3px
+    display:inline-flex;
+    min-width:20px;
+    height:20px;
+    padding:0 5px;
+    align-items:center;
+    justify-content:center;
+    border-radius:10px;
+    background:#dc2626;
+    color:#fff;
+    font-size:10px;
+    margin-left:3px
 }
 
-/* Modal */
+
+/* =========================================================
+   MODAL
+========================================================= */
+
 .modal{
-    position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.68);
-    display:none;align-items:flex-end;justify-content:center
+    position:fixed;
+    inset:0;
+    z-index:200;
+    background:rgba(0,0,0,.68);
+    display:none;
+    align-items:flex-end;
+    justify-content:center
 }
-.modal.open{display:flex}
+
+.modal.open{
+    display:flex
+}
+
 .sheet{
-    width:100%;max-height:82vh;background:#f8fafc;border-radius:18px 18px 0 0;
-    overflow:hidden;display:flex;flex-direction:column
+    width:100%;
+    max-height:82vh;
+    background:#f8fafc;
+    border-radius:18px 18px 0 0;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column
 }
+
 .sheet-head{
-    flex-shrink:0;background:#1e293b;color:#fff;padding:13px 15px;
-    display:flex;align-items:center;justify-content:space-between
+    flex-shrink:0;
+    background:#1e293b;
+    color:#fff;
+    padding:13px 15px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between
 }
-.sheet-title{font-size:14px;font-weight:900}
+
+.sheet-title{
+    font-size:14px;
+    font-weight:900
+}
+
 .sheet-close{
-    border:0;background:#475569;color:#fff;border-radius:8px;
-    padding:6px 10px;font-weight:900
+    border:0;
+    background:#475569;
+    color:#fff;
+    border-radius:8px;
+    padding:6px 10px;
+    font-weight:900;
+    cursor:pointer
 }
-.sheet-body{padding:12px;overflow:auto;-webkit-overflow-scrolling:touch}
-.toolbar{display:flex;gap:7px;margin-bottom:10px}
+
+.sheet-body{
+    padding:12px;
+    overflow:auto;
+    -webkit-overflow-scrolling:touch
+}
+
+
+/* =========================================================
+   TOOLBAR
+========================================================= */
+
+.toolbar{
+    display:flex;
+    gap:7px;
+    margin-bottom:10px
+}
+
 .tool-btn{
-    border:0;border-radius:8px;padding:8px 10px;font-size:11px;font-weight:900;
-    background:#e2e8f0;color:#0f172a
+    border:0;
+    border-radius:8px;
+    padding:8px 10px;
+    font-size:11px;
+    font-weight:900;
+    background:#e2e8f0;
+    color:#0f172a
 }
-.tool-btn.danger{background:#dc2626;color:#fff}
+
+.tool-btn.danger{
+    background:#dc2626;
+    color:#fff
+}
+
 .search{
-    width:100%;height:40px;border:1px solid #cbd5e1;border-radius:9px;
-    padding:0 11px;margin-bottom:10px;outline:none
+    width:100%;
+    height:40px;
+    border:1px solid #cbd5e1;
+    border-radius:9px;
+    padding:0 11px;
+    margin-bottom:10px;
+    outline:none
 }
-.list{display:flex;flex-direction:column;gap:7px}
+
+
+/* =========================================================
+   LIST
+========================================================= */
+
+.list{
+    display:flex;
+    flex-direction:column;
+    gap:7px
+}
+
 .item{
-    background:#fff;border:1px solid #e2e8f0;border-radius:10px;
-    padding:10px;display:flex;align-items:center;justify-content:space-between;gap:8px
+    background:#fff;
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+    padding:10px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px
 }
-.item-main{min-width:0}
-.item-resi{font-size:13px;font-weight:900;color:#0f172a;word-break:break-all}
-.item-meta{font-size:10px;color:#64748b;margin-top:3px}
+
+.item-main{
+    min-width:0
+}
+
+.item-resi{
+    font-size:13px;
+    font-weight:900;
+    color:#0f172a;
+    word-break:break-all
+}
+
+.item-meta{
+    font-size:10px;
+    color:#64748b;
+    margin-top:3px
+}
+
 .item-delete{
-    flex-shrink:0;border:0;background:#fee2e2;color:#b91c1c;
-    border-radius:7px;padding:7px 9px;font-size:10px;font-weight:900
+    flex-shrink:0;
+    border:0;
+    background:#fee2e2;
+    color:#b91c1c;
+    border-radius:7px;
+    padding:7px 9px;
+    font-size:10px;
+    font-weight:900
 }
-.empty{text-align:center;color:#94a3b8;padding:28px 10px;font-size:12px;font-weight:700}
 
-/* Menu tersembunyi riwayat */
-.history-menu{display:none;position:relative}
-.history-menu.open{display:block}
+.empty{
+    text-align:center;
+    color:#94a3b8;
+    padding:28px 10px;
+    font-size:12px;
+    font-weight:700
+}
+
+
+/* =========================================================
+   HISTORY MENU
+========================================================= */
+
+.history-menu{
+    display:none;
+    position:relative
+}
+
+.history-menu.open{
+    display:block
+}
+
 .menu-box{
-    position:absolute;right:0;top:36px;z-index:10;width:190px;
-    background:#fff;border:1px solid #e2e8f0;border-radius:10px;
-    box-shadow:0 10px 25px rgba(0,0,0,.2);overflow:hidden
+    position:absolute;
+    right:0;
+    top:36px;
+    z-index:10;
+    width:190px;
+    background:#fff;
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+    box-shadow:0 10px 25px rgba(0,0,0,.2);
+    overflow:hidden
 }
-.menu-box button{
-    width:100%;border:0;background:#fff;text-align:left;padding:11px;
-    font-size:11px;font-weight:800
-}
-.menu-box button.danger{color:#dc2626}
 
-.form-box{display:none;margin-bottom:10px;background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:10px}
-.form-box.open{display:block}
-.form-box label{display:block;font-size:10px;font-weight:900;color:#475569;margin-bottom:5px}
-.form-row{display:flex;gap:6px}
-.form-row input{
-    flex:1;height:38px;border:1px solid #cbd5e1;border-radius:8px;
-    padding:0 9px;text-transform:uppercase;outline:none
+.menu-box button{
+    width:100%;
+    border:0;
+    background:#fff;
+    text-align:left;
+    padding:11px;
+    font-size:11px;
+    font-weight:800
 }
-.form-row button{border:0;border-radius:8px;padding:0 12px;background:#dc2626;color:#fff;font-size:11px;font-weight:900}
+
+.menu-box button.danger{
+    color:#dc2626
+}
+
+
+/* =========================================================
+   DELETE FORM
+========================================================= */
+
+.form-box{
+    display:none;
+    margin-bottom:10px;
+    background:#fff;
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+    padding:10px
+}
+
+.form-box.open{
+    display:block
+}
+
+.form-box label{
+    display:block;
+    font-size:10px;
+    font-weight:900;
+    color:#475569;
+    margin-bottom:5px
+}
+
+.form-row{
+    display:flex;
+    gap:6px
+}
+
+.form-row input{
+    flex:1;
+    height:38px;
+    border:1px solid #cbd5e1;
+    border-radius:8px;
+    padding:0 9px;
+    text-transform:uppercase;
+    outline:none
+}
+
+.form-row button{
+    border:0;
+    border-radius:8px;
+    padding:0 12px;
+    background:#dc2626;
+    color:#fff;
+    font-size:11px;
+    font-weight:900
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
 
 @media(max-width:380px){
-    .header-title{font-size:13px}
-    .header-btn{padding:6px 7px;font-size:10px}
-    .status-text{font-size:12px}
-    .bottom-actions{left:7px;right:7px;gap:5px}
-    .bottom-btn{height:47px;font-size:10px}
+
+    .header-title{
+        font-size:13px
+    }
+
+    .header-btn{
+        padding:6px 7px;
+        font-size:10px
+    }
+
+    .status-text{
+        font-size:12px
+    }
+
+    .bottom-actions{
+        left:7px;
+        right:7px;
+        gap:5px
+    }
+
+    .bottom-btn{
+        height:47px;
+        font-size:10px
+    }
 }
 </style>
 </head>
 
+
 <body>
 
+
+<!-- =======================================================
+     HEADER
+======================================================= -->
+
 <header class="header">
-    <div class="header-title">SRF • Pengiriman</div>
-    <div class="header-actions">
-        <button id="cameraToggle" class="header-btn camera-off" onclick="toggleCamera()">📷 KAMERA OFF</button>
-        <button class="header-btn refresh" onclick="refreshApp()">↻ REFRESH</button>
+
+    <div class="header-title">
+        SRF • Pengiriman
     </div>
+
+    <div class="header-actions">
+
+        <button
+            id="cameraToggle"
+            class="header-btn camera-off"
+            onclick="toggleCamera()"
+        >
+            KAMERA OFF
+        </button>
+
+        <button
+            class="header-btn refresh"
+            onclick="refreshApp()"
+        >
+            REFRESH
+        </button>
+
+    </div>
+
 </header>
 
+
+<!-- =======================================================
+     STATS
+======================================================= -->
+
 <div class="stats">
-    <div class="stat">Hari Ini<strong id="hariIni">0</strong></div>
-    <div class="stat">Kemarin<strong id="kemarin">0</strong></div>
-    <div class="stat">Minggu Ini<strong id="mingguIni">0</strong></div>
+
+    <div class="stat">
+        Hari Ini
+        <strong id="hariIni">0</strong>
+    </div>
+
+    <div class="stat">
+        Kemarin
+        <strong id="kemarin">0</strong>
+    </div>
+
+    <div class="stat">
+        Minggu Ini
+        <strong id="mingguIni">0</strong>
+    </div>
+
 </div>
+
+
+<!-- =======================================================
+     SCANNER
+======================================================= -->
 
 <div class="scanner">
+
     <div id="reader"></div>
-    <div id="cameraOverlay" class="camera-off-overlay">KAMERA OFF</div>
+
+    <div
+        id="cameraOverlay"
+        class="camera-off-overlay"
+    >
+        KAMERA OFF
+    </div>
+
+
+    <!-- STATUS -->
 
     <div class="status-box">
-        <div id="lamp" class="lamp"></div>
-        <div id="statusText" class="status-text">Kamera OFF</div>
+
+        <div
+            id="lamp"
+            class="lamp"
+        ></div>
+
+        <div
+            id="statusText"
+            class="status-text"
+        >
+            Kamera OFF
+        </div>
+
     </div>
 
-    <div id="notif" class="notif"></div>
+
+    <!-- NOTIFICATION -->
+
+    <div
+        id="notif"
+        class="notif"
+    ></div>
+
+
+    <!-- BOTTOM -->
 
     <div class="bottom-actions">
-        <button class="bottom-btn sync" onclick="syncKeServer()">☁ SYNC <span id="syncCount" class="count">0</span></button>
-        <button class="bottom-btn queue" onclick="openQueue()">☷ ANTREAN <span id="queueButtonCount" class="count">0</span></button>
-        <button class="bottom-btn history" onclick="openHistory()">≡ RIWAYAT</button>
+
+        <button
+            id="syncButton"
+            class="bottom-btn sync"
+            onclick="syncKeServer()"
+        >
+            SYNC
+            <span
+                id="syncCount"
+                class="count"
+            >
+                0
+            </span>
+        </button>
+
+
+        <button
+            class="bottom-btn queue"
+            onclick="openQueue()"
+        >
+            ANTREAN
+            <span
+                id="queueButtonCount"
+                class="count"
+            >
+                0
+            </span>
+        </button>
+
+
+        <button
+            class="bottom-btn history"
+            onclick="openHistory()"
+        >
+            RIWAYAT
+        </button>
+
     </div>
+
 </div>
 
-<!-- ANTREAN -->
-<div id="queueModal" class="modal" onclick="closeModalOutside(event,'queueModal')">
-    <div class="sheet">
-        <div class="sheet-head">
-            <div class="sheet-title">ANTREAN BELUM SINKRON (<span id="queueCount">0</span>)</div>
-            <button class="sheet-close" onclick="closeModal('queueModal')">TUTUP</button>
-        </div>
-        <div class="sheet-body">
-            <div id="queueList" class="list"></div>
-        </div>
-    </div>
-</div>
 
-<!-- RIWAYAT -->
-<div id="historyModal" class="modal" onclick="closeModalOutside(event,'historyModal')">
+<!-- =======================================================
+     ANTREAN MODAL
+======================================================= -->
+
+<div
+    id="queueModal"
+    class="modal"
+    onclick="closeModalOutside(event,'queueModal')"
+>
+
     <div class="sheet">
+
         <div class="sheet-head">
-            <div class="sheet-title">RIWAYAT RESI</div>
-            <div style="display:flex;gap:6px;position:relative">
-                <button class="sheet-close" onclick="toggleHistoryMenu(event)">⋮</button>
-                <button class="sheet-close" onclick="closeModal('historyModal')">TUTUP</button>
-                <div id="historyMenu" class="menu-box">
-                    <button onclick="showDeleteOne(event)">Hapus Berdasarkan Resi</button>
-                    <button class="danger" onclick="deleteAllHistory(event)">Hapus Semua Riwayat</button>
-                </div>
+
+            <div class="sheet-title">
+
+                ANTREAN BELUM SINKRON
+                (<span id="queueCount">0</span>)
+
             </div>
+
+            <button
+                class="sheet-close"
+                onclick="closeModal('queueModal')"
+            >
+                TUTUP
+            </button>
+
         </div>
+
+
         <div class="sheet-body">
-            <div id="deleteOneBox" class="form-box">
-                <label>HAPUS RESI TERTENTU</label>
+
+            <div
+                id="queueList"
+                class="list"
+            ></div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =======================================================
+     RIWAYAT MODAL
+======================================================= -->
+
+<div
+    id="historyModal"
+    class="modal"
+    onclick="closeModalOutside(event,'historyModal')"
+>
+
+    <div class="sheet">
+
+        <div class="sheet-head">
+
+            <div class="sheet-title">
+                RIWAYAT RESI
+            </div>
+
+
+            <div
+                style="
+                    display:flex;
+                    gap:6px;
+                    position:relative
+                "
+            >
+
+                <button
+                    class="sheet-close"
+                    onclick="toggleHistoryMenu(event)"
+                >
+                    ...
+                </button>
+
+
+                <button
+                    class="sheet-close"
+                    onclick="closeModal('historyModal')"
+                >
+                    TUTUP
+                </button>
+
+
+                <div
+                    id="historyMenu"
+                    class="menu-box"
+                >
+
+                    <button
+                        onclick="showDeleteOne(event)"
+                    >
+                        Hapus Berdasarkan Resi
+                    </button>
+
+                    <button
+                        class="danger"
+                        onclick="deleteAllHistory(event)"
+                    >
+                        Hapus Semua Riwayat
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="sheet-body">
+
+
+            <div
+                id="deleteOneBox"
+                class="form-box"
+            >
+
+                <label>
+                    HAPUS RESI TERTENTU
+                </label>
+
                 <div class="form-row">
-                    <input id="deleteResiInput" type="text" placeholder="Masukkan nomor resi">
-                    <button onclick="deleteOneHistory()">HAPUS</button>
+
+                    <input
+                        id="deleteResiInput"
+                        type="text"
+                        placeholder="Masukkan nomor resi"
+                    >
+
+                    <button
+                        onclick="deleteOneHistory()"
+                    >
+                        HAPUS
+                    </button>
+
                 </div>
+
             </div>
-            <input id="historySearch" class="search" type="search" placeholder="Cari nomor resi..." oninput="renderHistory()">
-            <div id="historyList" class="list"></div>
+
+
+            <input
+                id="historySearch"
+                class="search"
+                type="search"
+                placeholder="Cari nomor resi..."
+                oninput="renderHistory()"
+            >
+
+
+            <div
+                id="historyList"
+                class="list"
+            ></div>
+
         </div>
+
     </div>
+
 </div>
+
 
 <script src="config.js"></script>
+
 <script>
+
 /* =========================================================
-   KONFIGURASI
+   ROBOT CONFIG
 ========================================================= */
+
 const ROBOT_CONFIG = {
+
     enabled:true,
+
     bahasa:"id-ID",
+
     rate:1.15,
+
     pitch:1.0,
+
     volume:1.0,
+
     pesan:{
-        jntBerhasil:"Je en Te ",
-        spxBerhasil:"SPX ",
+
+        jntBerhasil:"Je en Te",
+
+        spxBerhasil:"SPX",
+
         siap:"Kamera mati, scanner siap",
-        kameraAktif:"Kamera aktif, siap scan",
-        kameraBerhenti:"Kamera dimatikan",
-        kameraGagal:"Tidak dapat membuka kamera",
-        resiTidakDikenal:"Resi tidak dikenal",
-        doubleQueue:"Resi sudah di scan, masih dalam antrean",
-        doubleHistory:"Resi sudah pernah di scan",
-        serverDuplicate:"Resi sudah terinput di server",
-        resiMasukAntrean:"Resi masuk antrean",
-        syncMulai:"Memulai sinkronisasi",
-        syncBerhasil:"Resi berhasil disinkronkan",
-        syncGagal:"Sinkronisasi gagal",
-        antreanKosong:"Antrean kosong",
-        antreanDibersihkan:"Antrean berhasil dibersihkan"
+
+        kameraAktif:
+            "Kamera aktif, siap scan",
+
+        kameraBerhenti:
+            "Kamera dimatikan",
+
+        kameraGagal:
+            "Tidak dapat membuka kamera",
+
+        resiTidakDikenal:
+            "Resi tidak dikenal",
+
+        doubleQueue:
+            "Resi sudah di scan, masih dalam antrean",
+
+        doubleHistory:
+            "Resi sudah pernah di scan",
+
+        serverDuplicate:
+            "Resi sudah terinput di server",
+
+        resiMasukAntrean:
+            "Resi masuk antrean",
+
+        syncMulai:
+            "Memulai sinkronisasi",
+
+        syncBerhasil:
+            "Resi berhasil disinkronkan",
+
+        syncGagal:
+            "Sinkronisasi gagal",
+
+        antreanKosong:
+            "Antrean kosong",
+
+        antreanDibersihkan:
+            "Antrean berhasil dibersihkan"
+
     }
+
 };
+
+
+/* =========================================================
+   SCAN CONFIG
+========================================================= */
 
 const SCAN_CONFIG = {
+
     processingDelay:1200,
+
     beepSuccess:true,
+
     beepError:true,
+
     beepDouble:true
+
 };
 
-const STORAGE_DATA = "srf_pengiriman_queue_v3";
-const STORAGE_HISTORY = "srf_pengiriman_history_v3";
 
-let localData = loadJSON(STORAGE_DATA, []);
-let scanHistory = loadJSON(STORAGE_HISTORY, []);
-let html5QrCode = null;
-let cameraRunning = false;
-let processing = false;
+/* =========================================================
+   STORAGE
+========================================================= */
 
-function loadJSON(key, fallback){
+const STORAGE_DATA =
+    "srf_pengiriman_queue_v3";
+
+const STORAGE_HISTORY =
+    "srf_pengiriman_history_v3";
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let localData =
+    loadJSON(
+        STORAGE_DATA,
+        []
+    );
+
+
+let scanHistory =
+    loadJSON(
+        STORAGE_HISTORY,
+        []
+    );
+
+
+let html5QrCode =
+    null;
+
+
+let cameraRunning =
+    false;
+
+
+let processing =
+    false;
+
+
+/*
+ * ANTI DOUBLE SYNC
+ */
+
+let syncSedangBerjalan =
+    false;
+
+
+/* =========================================================
+   LOAD JSON
+========================================================= */
+
+function loadJSON(
+    key,
+    fallback
+){
+
     try{
-        const x = JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback));
-        return Array.isArray(x) ? x : fallback;
-    }catch(e){ return fallback; }
+
+        const x =
+            JSON.parse(
+                localStorage.getItem(
+                    key
+                ) ||
+                JSON.stringify(
+                    fallback
+                )
+            );
+
+
+        return Array.isArray(x)
+            ? x
+            : fallback;
+
+    }
+    catch(e){
+
+        return fallback;
+
+    }
+
 }
+
+
+/* =========================================================
+   SAVE DATA
+========================================================= */
+
 function saveData(){
-    localStorage.setItem(STORAGE_DATA, JSON.stringify(localData));
-    localStorage.setItem(STORAGE_HISTORY, JSON.stringify(scanHistory));
+
+    localStorage.setItem(
+        STORAGE_DATA,
+        JSON.stringify(
+            localData
+        )
+    );
+
+
+    localStorage.setItem(
+        STORAGE_HISTORY,
+        JSON.stringify(
+            scanHistory
+        )
+    );
+
 }
+
 
 /* =========================================================
    CONFIG
 ========================================================= */
+
 function getTargetUrl(){
+
     try{
-        if(typeof APP_URL !== "undefined" && APP_URL) return String(APP_URL).trim();
-        if(typeof CONFIG !== "undefined" && CONFIG && CONFIG.APP_URL) return String(CONFIG.APP_URL).trim();
-    }catch(e){}
+
+        if(
+            typeof APP_URL !== "undefined" &&
+            APP_URL
+        ){
+
+            return String(
+                APP_URL
+            ).trim();
+
+        }
+
+
+        if(
+            typeof CONFIG !== "undefined" &&
+            CONFIG &&
+            CONFIG.APP_URL
+        ){
+
+            return String(
+                CONFIG.APP_URL
+            ).trim();
+
+        }
+
+    }
+    catch(e){}
+
+
     return "";
+
 }
 
+
 /* =========================================================
-   UI
+   LOAD
 ========================================================= */
-window.addEventListener("load",()=>{
-    updateUI();
-    renderQueue();
-    renderHistory();
-    loadDashboard();
-    setStatus("yellow",ROBOT_CONFIG.pesan.siap);
-});
+
+window.addEventListener(
+    "load",
+    ()=>{
+
+        updateUI();
+
+        renderQueue();
+
+        renderHistory();
+
+        loadDashboard();
+
+        setStatus(
+            "yellow",
+            ROBOT_CONFIG.pesan.siap
+        );
+
+    }
+);
+
+
+/* =========================================================
+   UPDATE UI
+========================================================= */
 
 function updateUI(){
-    const n=localData.length;
-    document.getElementById("syncCount").innerText=n;
-    document.getElementById("queueCount").innerText=n;
-    document.getElementById("queueButtonCount").innerText=n;
+
+    const n =
+        localData.length;
+
+
+    document.getElementById(
+        "syncCount"
+    ).innerText =
+        n;
+
+
+    document.getElementById(
+        "queueCount"
+    ).innerText =
+        n;
+
+
+    document.getElementById(
+        "queueButtonCount"
+    ).innerText =
+        n;
+
 }
 
-function setStatus(type,text){
-    const lamp=document.getElementById("lamp");
-    const status=document.getElementById("statusText");
-    status.innerText=text;
-    const color=type==="green"?"#22c55e":type==="red"?"#ef4444":"#facc15";
-    lamp.style.background=color;
-    lamp.style.color=color;
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+function setStatus(
+    type,
+    text
+){
+
+    const lamp =
+        document.getElementById(
+            "lamp"
+        );
+
+
+    const status =
+        document.getElementById(
+            "statusText"
+        );
+
+
+    status.innerText =
+        text;
+
+
+    const color =
+        type==="green"
+            ? "#22c55e"
+            : type==="red"
+                ? "#ef4444"
+                : "#facc15";
+
+
+    lamp.style.background =
+        color;
+
+
+    lamp.style.color =
+        color;
+
 }
 
-function showNotif(text,type="success"){
-    const el=document.getElementById("notif");
-    el.innerText=text;
-    el.className="notif "+type;
-    el.style.display="block";
-    clearTimeout(window.notifTimer);
-    window.notifTimer=setTimeout(()=>el.style.display="none",2500);
+
+/* =========================================================
+   NOTIF
+========================================================= */
+
+function showNotif(
+    text,
+    type="success"
+){
+
+    const el =
+        document.getElementById(
+            "notif"
+        );
+
+
+    el.innerText =
+        text;
+
+
+    el.className =
+        "notif " +
+        type;
+
+
+    el.style.display =
+        "block";
+
+
+    clearTimeout(
+        window.notifTimer
+    );
+
+
+    window.notifTimer =
+        setTimeout(
+            ()=>{
+                el.style.display =
+                    "none";
+            },
+            2500
+        );
+
 }
 
-function beep(freq=600,duration=.08){
+
+/* =========================================================
+   BEEP
+========================================================= */
+
+function beep(
+    freq=600,
+    duration=.08
+){
+
     try{
-        const C=window.AudioContext||window.webkitAudioContext;
-        const ctx=new C(),osc=ctx.createOscillator();
-        osc.frequency.value=freq;osc.connect(ctx.destination);osc.start();
-        osc.stop(ctx.currentTime+duration);
-    }catch(e){}
+
+        const C =
+            window.AudioContext ||
+            window.webkitAudioContext;
+
+
+        const ctx =
+            new C();
+
+
+        const osc =
+            ctx.createOscillator();
+
+
+        osc.frequency.value =
+            freq;
+
+
+        osc.connect(
+            ctx.destination
+        );
+
+
+        osc.start();
+
+
+        osc.stop(
+            ctx.currentTime +
+            duration
+        );
+
+    }
+    catch(e){}
+
 }
 
-function speak(text){
-    if(!ROBOT_CONFIG.enabled || !("speechSynthesis" in window)) return;
-    try{
-        speechSynthesis.cancel();
-        const v=new SpeechSynthesisUtterance(text);
-        v.lang=ROBOT_CONFIG.bahasa;
-        v.rate=ROBOT_CONFIG.rate;
-        v.pitch=ROBOT_CONFIG.pitch;
-        v.volume=ROBOT_CONFIG.volume;
-        speechSynthesis.speak(v);
-    }catch(e){}
-}
 
 /* =========================================================
-   RESI / EKSPEDISI
+   SPEAK
 ========================================================= */
-function normalizeResi(resi){
-    return String(resi||"").trim().toUpperCase();
-}
 
-function getEkspedisi(resi){
-    const r=normalizeResi(resi);
-    if(r.startsWith("SPX")) return "SPX";
-    if(r.startsWith("JX")||r.startsWith("JY")||r.startsWith("JZ")) return "J&T";
-    return null;
-}
+function speak(
+    text
+){
 
-/* =========================================================
-   WAKTU RIWAYAT
-========================================================= */
-function formatDateTime(iso){
-    const d=new Date(iso);
-    if(Number.isNaN(d.getTime())) return "-";
-    return d.toLocaleString("id-ID",{
-        day:"2-digit",month:"2-digit",year:"numeric",
-        hour:"2-digit",minute:"2-digit"
-    });
-}
+    if(
+        !ROBOT_CONFIG.enabled ||
+        !("speechSynthesis" in window)
+    ){
 
-function spokenDateTime(iso){
-    const d=new Date(iso);
-    if(Number.isNaN(d.getTime())) return "";
-    const now=new Date();
-    const day=d.toLocaleDateString("id-ID",{day:"numeric",month:"long",year:"numeric"});
-    const time=d.toLocaleTimeString("id-ID",{hour:"2-digit",minute:"2-digit"});
-    const today=d.toDateString()===now.toDateString();
-    const yesterday=new Date(now);
-    yesterday.setDate(now.getDate()-1);
-    const isYesterday=d.toDateString()===yesterday.toDateString();
+        return;
 
-    if(today) return `hari ini pukul ${time}`;
-    if(isYesterday) return `kemarin pukul ${time}`;
-    return `tanggal ${day} pukul ${time}`;
-}
-
-/* =========================================================
-   CEK ANTREAN + RIWAYAT
-========================================================= */
-function findQueue(resi){
-    return localData.some(x=>normalizeResi(x)===normalizeResi(resi));
-}
-
-function findHistory(resi){
-    return scanHistory.find(x=>normalizeResi(x.resi)===normalizeResi(resi));
-}
-
-function doubleAlert(message,robotText){
-    if(SCAN_CONFIG.beepDouble) beep(300,.35);
-    setStatus("red",message);
-    showNotif("🔴 "+message,"error");
-    speak(robotText);
-}
-
-function simpanLokal(resi){
-    resi=normalizeResi(resi);
-    if(!resi) return false;
-
-    const ekspedisi=getEkspedisi(resi);
-    if(!ekspedisi){
-        if(SCAN_CONFIG.beepError) beep(250,.25);
-        setStatus("red",ROBOT_CONFIG.pesan.resiTidakDikenal);
-        showNotif("RESI TIDAK DIKENAL","error");
-        speak(ROBOT_CONFIG.pesan.resiTidakDikenal);
-        return false;
     }
 
-    /* Lapis 1: antrean */
-    if(findQueue(resi)){
+
+    try{
+
+        speechSynthesis.cancel();
+
+
+        const v =
+            new SpeechSynthesisUtterance(
+                text
+            );
+
+
+        v.lang =
+            ROBOT_CONFIG.bahasa;
+
+
+        v.rate =
+            ROBOT_CONFIG.rate;
+
+
+        v.pitch =
+            ROBOT_CONFIG.pitch;
+
+
+        v.volume =
+            ROBOT_CONFIG.volume;
+
+
+        speechSynthesis.speak(v);
+
+    }
+    catch(e){}
+
+}
+
+
+/* =========================================================
+   RESI
+========================================================= */
+
+function normalizeResi(
+    resi
+){
+
+    return String(
+        resi || ""
+    )
+    .trim()
+    .toUpperCase();
+
+}
+
+
+/* =========================================================
+   EKSPEDISI
+========================================================= */
+
+function getEkspedisi(
+    resi
+){
+
+    const r =
+        normalizeResi(
+            resi
+        );
+
+
+    if(
+        r.startsWith("SPX")
+    ){
+
+        return "SPX";
+
+    }
+
+
+    if(
+        r.startsWith("JX") ||
+        r.startsWith("JY") ||
+        r.startsWith("JZ")
+    ){
+
+        return "J&T";
+
+    }
+
+
+    return null;
+
+}
+
+
+/* =========================================================
+   FORMAT DATE
+========================================================= */
+
+function formatDateTime(
+    iso
+){
+
+    const d =
+        new Date(
+            iso
+        );
+
+
+    if(
+        Number.isNaN(
+            d.getTime()
+        )
+    ){
+
+        return "-";
+
+    }
+
+
+    return d.toLocaleString(
+        "id-ID",
+        {
+            day:"2-digit",
+            month:"2-digit",
+            year:"numeric",
+            hour:"2-digit",
+            minute:"2-digit"
+        }
+    );
+
+}
+
+
+/* =========================================================
+   SPOKEN DATE
+========================================================= */
+
+function spokenDateTime(
+    iso
+){
+
+    const d =
+        new Date(
+            iso
+        );
+
+
+    if(
+        Number.isNaN(
+            d.getTime()
+        )
+    ){
+
+        return "";
+
+    }
+
+
+    const now =
+        new Date();
+
+
+    const day =
+        d.toLocaleDateString(
+            "id-ID",
+            {
+                day:"numeric",
+                month:"long",
+                year:"numeric"
+            }
+        );
+
+
+    const time =
+        d.toLocaleTimeString(
+            "id-ID",
+            {
+                hour:"2-digit",
+                minute:"2-digit"
+            }
+        );
+
+
+    const today =
+        d.toDateString() ===
+        now.toDateString();
+
+
+    const yesterday =
+        new Date(
+            now
+        );
+
+
+    yesterday.setDate(
+        now.getDate()-1
+    );
+
+
+    const isYesterday =
+        d.toDateString() ===
+        yesterday.toDateString();
+
+
+    if(today){
+
+        return `hari ini pukul ${time}`;
+
+    }
+
+
+    if(isYesterday){
+
+        return `kemarin pukul ${time}`;
+
+    }
+
+
+    return `tanggal ${day} pukul ${time}`;
+
+}
+
+
+/* =========================================================
+   FIND QUEUE
+========================================================= */
+
+function findQueue(
+    resi
+){
+
+    return localData.some(
+        x =>
+            normalizeResi(x) ===
+            normalizeResi(resi)
+    );
+
+}
+
+
+/* =========================================================
+   FIND HISTORY
+========================================================= */
+
+function findHistory(
+    resi
+){
+
+    return scanHistory.find(
+        x =>
+            normalizeResi(
+                x.resi
+            ) ===
+            normalizeResi(
+                resi
+            )
+    );
+
+}
+
+
+/* =========================================================
+   DOUBLE ALERT
+========================================================= */
+
+function doubleAlert(
+    message,
+    robotText
+){
+
+    if(
+        SCAN_CONFIG.beepDouble
+    ){
+
+        beep(
+            300,
+            .35
+        );
+
+    }
+
+
+    setStatus(
+        "red",
+        message
+    );
+
+
+    showNotif(
+        message,
+        "error"
+    );
+
+
+    speak(
+        robotText
+    );
+
+}
+
+
+/* =========================================================
+   SIMPAN LOKAL
+========================================================= */
+
+function simpanLokal(
+    resi
+){
+
+    resi =
+        normalizeResi(
+            resi
+        );
+
+
+    if(!resi){
+
+        return false;
+
+    }
+
+
+    const ekspedisi =
+        getEkspedisi(
+            resi
+        );
+
+
+    if(!ekspedisi){
+
+        if(
+            SCAN_CONFIG.beepError
+        ){
+
+            beep(
+                250,
+                .25
+            );
+
+        }
+
+
+        setStatus(
+            "red",
+            ROBOT_CONFIG.pesan.resiTidakDikenal
+        );
+
+
+        showNotif(
+            "RESI TIDAK DIKENAL",
+            "error"
+        );
+
+
+        speak(
+            ROBOT_CONFIG.pesan.resiTidakDikenal
+        );
+
+
+        return false;
+
+    }
+
+
+    /* =========================================
+       CEK ANTREAN
+    ========================================= */
+
+    if(
+        findQueue(resi)
+    ){
+
         doubleAlert(
             "RESI MASIH DI ANTREAN",
             ROBOT_CONFIG.pesan.doubleQueue
         );
+
         return false;
+
     }
 
-    /* Lapis 2: riwayat */
-    const old=findHistory(resi);
+
+    /* =========================================
+       CEK RIWAYAT
+    ========================================= */
+
+    const old =
+        findHistory(
+            resi
+        );
+
+
     if(old){
-        const when=spokenDateTime(old.waktu);
+
+        const when =
+            spokenDateTime(
+                old.waktu
+            );
+
+
         doubleAlert(
             "RESI SUDAH PERNAH DI-SCAN",
             `${ROBOT_CONFIG.pesan.doubleHistory} ${when}`
         );
+
+
         return false;
+
     }
 
-    /* Resi baru */
-    const waktu=new Date().toISOString();
 
-    localData.push(resi);
+    /* =========================================
+       RESI BARU
+    ========================================= */
+
+    const waktu =
+        new Date().toISOString();
+
+
+    localData.push(
+        resi
+    );
+
+
     scanHistory.unshift({
-        resi:resi,
-        ekspedisi:ekspedisi,
-        waktu:waktu,
-        status:"ANTREAN"
+
+        resi:
+            resi,
+
+        ekspedisi:
+            ekspedisi,
+
+        waktu:
+            waktu,
+
+        status:
+            "ANTREAN"
+
     });
 
-    scanHistory=scanHistory.slice(0,5000);
+
+    scanHistory =
+        scanHistory.slice(
+            0,
+            5000
+        );
+
+
     saveData();
+
     updateUI();
+
     renderQueue();
+
     renderHistory();
 
-    if(SCAN_CONFIG.beepSuccess) beep(750,.08);
-    setStatus("green",`${ekspedisi} • berhasil • masuk antrean`);
-    showNotif("✓ RESI MASUK ANTREAN","success");
+
+    if(
+        SCAN_CONFIG.beepSuccess
+    ){
+
+        beep(
+            750,
+            .08
+        );
+
+    }
+
+
+    setStatus(
+        "green",
+        `${ekspedisi} • berhasil • masuk antrean`
+    );
+
+
+    showNotif(
+        "RESI MASUK ANTREAN",
+        "success"
+    );
+
+
     speak(
         ekspedisi==="SPX"
-        ? "S P X, berhasil"
-        : "J EN T, berhasil"
+            ? "S P X, berhasil"
+            : "J EN T, berhasil"
     );
+
+
     return true;
+
 }
+
 
 /* =========================================================
-   KAMERA ON / OFF
+   CAMERA
 ========================================================= */
+
 async function toggleCamera(){
-    if(cameraRunning) await stopCamera();
-    else await startCamera();
+
+    if(cameraRunning){
+
+        await stopCamera();
+
+    }
+    else{
+
+        await startCamera();
+
+    }
+
 }
 
+
+/* =========================================================
+   START CAMERA
+========================================================= */
+
 async function startCamera(){
-    if(cameraRunning) return;
 
-    const btn=document.getElementById("cameraToggle");
-    const overlay=document.getElementById("cameraOverlay");
+    if(cameraRunning){
 
-    setStatus("yellow","Menyalakan kamera...");
-    btn.disabled=true;
+        return;
+
+    }
+
+
+    const btn =
+        document.getElementById(
+            "cameraToggle"
+        );
+
+
+    const overlay =
+        document.getElementById(
+            "cameraOverlay"
+        );
+
+
+    setStatus(
+        "yellow",
+        "Menyalakan kamera..."
+    );
+
+
+    btn.disabled =
+        true;
+
 
     try{
-        if(!html5QrCode) html5QrCode=new Html5Qrcode("reader");
+
+        if(!html5QrCode){
+
+            html5QrCode =
+                new Html5Qrcode(
+                    "reader"
+                );
+
+        }
+
 
         await html5QrCode.start(
-            {facingMode:"environment"},
+
+            {
+                facingMode:
+                    "environment"
+            },
+
             {
                 fps:15,
-                qrbox:{width:280,height:180},
-                aspectRatio:1.777778
+
+                qrbox:{
+                    width:280,
+                    height:180
+                },
+
+                aspectRatio:
+                    1.777778
+
             },
+
             decodedText=>{
-                if(processing) return;
-                processing=true;
-                simpanLokal(decodedText);
-                setTimeout(()=>processing=false,SCAN_CONFIG.processingDelay);
+
+                if(processing){
+
+                    return;
+
+                }
+
+
+                processing =
+                    true;
+
+
+                simpanLokal(
+                    decodedText
+                );
+
+
+                setTimeout(
+                    ()=>{
+                        processing =
+                            false;
+                    },
+                    SCAN_CONFIG.processingDelay
+                );
+
+            }
+
+        );
+
+
+        cameraRunning =
+            true;
+
+
+        btn.disabled =
+            false;
+
+
+        btn.className =
+            "header-btn camera-on";
+
+
+        btn.innerText =
+            "KAMERA ON";
+
+
+        overlay.style.display =
+            "none";
+
+
+        setStatus(
+            "green",
+            ROBOT_CONFIG.pesan.kameraAktif
+        );
+
+
+        speak(
+            ROBOT_CONFIG.pesan.kameraAktif
+        );
+
+    }
+    catch(error){
+
+        console.error(
+            "CAMERA ERROR",
+            error
+        );
+
+
+        cameraRunning =
+            false;
+
+
+        btn.disabled =
+            false;
+
+
+        btn.className =
+            "header-btn camera-off";
+
+
+        btn.innerText =
+            "KAMERA OFF";
+
+
+        overlay.style.display =
+            "flex";
+
+
+        setStatus(
+            "red",
+            ROBOT_CONFIG.pesan.kameraGagal
+        );
+
+
+        showNotif(
+            "IZINKAN AKSES KAMERA",
+            "error"
+        );
+
+
+        speak(
+            ROBOT_CONFIG.pesan.kameraGagal
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   STOP CAMERA
+========================================================= */
+
+async function stopCamera(){
+
+    if(!cameraRunning){
+
+        return;
+
+    }
+
+
+    cameraRunning =
+        false;
+
+
+    const btn =
+        document.getElementById(
+            "cameraToggle"
+        );
+
+
+    const overlay =
+        document.getElementById(
+            "cameraOverlay"
+        );
+
+
+    try{
+
+        if(html5QrCode){
+
+            await html5QrCode.stop();
+
+        }
+
+    }
+    catch(e){}
+
+
+    btn.className =
+        "header-btn camera-off";
+
+
+    btn.innerText =
+        "KAMERA OFF";
+
+
+    overlay.style.display =
+        "flex";
+
+
+    setStatus(
+        "yellow",
+        ROBOT_CONFIG.pesan.kameraBerhenti
+    );
+
+}
+
+
+/* =========================================================
+   QUEUE
+========================================================= */
+
+function openQueue(){
+
+    renderQueue();
+
+    document.getElementById(
+        "queueModal"
+    ).classList.add(
+        "open"
+    );
+
+}
+
+
+function renderQueue(){
+
+    const list =
+        document.getElementById(
+            "queueList"
+        );
+
+
+    list.innerHTML =
+        "";
+
+
+    if(
+        localData.length===0
+    ){
+
+        list.innerHTML =
+            '<div class="empty">Antrean kosong</div>';
+
+        return;
+
+    }
+
+
+    localData.forEach(
+        (resi,i)=>{
+
+            const e =
+                getEkspedisi(
+                    resi
+                ) ||
+                "-";
+
+
+            const div =
+                document.createElement(
+                    "div"
+                );
+
+
+            div.className =
+                "item";
+
+
+            div.innerHTML = `
+
+                <div class="item-main">
+
+                    <div class="item-resi">
+                        ${escapeHTML(resi)}
+                    </div>
+
+                    <div class="item-meta">
+                        ${escapeHTML(e)}
+                        • antrean #${i+1}
+                    </div>
+
+                </div>
+
+            `;
+
+
+            list.appendChild(
+                div
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   HISTORY
+========================================================= */
+
+function openHistory(){
+
+    document.getElementById(
+        "historyModal"
+    ).classList.add(
+        "open"
+    );
+
+
+    document.getElementById(
+        "historyMenu"
+    ).style.display =
+        "none";
+
+
+    renderHistory();
+
+}
+
+
+function renderHistory(){
+
+    const list =
+        document.getElementById(
+            "historyList"
+        );
+
+
+    const search =
+        normalizeResi(
+            document.getElementById(
+                "historySearch"
+            )?.value || ""
+        );
+
+
+    list.innerHTML =
+        "";
+
+
+    let data =
+        scanHistory;
+
+
+    if(search){
+
+        data =
+            data.filter(
+                x =>
+                    normalizeResi(
+                        x.resi
+                    ).includes(
+                        search
+                    )
+            );
+
+    }
+
+
+    if(
+        data.length===0
+    ){
+
+        list.innerHTML =
+            '<div class="empty">Riwayat kosong</div>';
+
+        return;
+
+    }
+
+
+    data.forEach(
+        item=>{
+
+            const div =
+                document.createElement(
+                    "div"
+                );
+
+
+            div.className =
+                "item";
+
+
+            const status =
+                item.status
+                    ? ` • ${item.status}`
+                    : "";
+
+
+            div.innerHTML = `
+
+                <div class="item-main">
+
+                    <div class="item-resi">
+                        ${escapeHTML(item.resi)}
+                    </div>
+
+                    <div class="item-meta">
+
+                        ${escapeHTML(item.ekspedisi || "-")}
+                        •
+                        ${escapeHTML(formatDateTime(item.waktu))}
+                        ${escapeHTML(status)}
+
+                    </div>
+
+                </div>
+
+                <button
+                    class="item-delete"
+                    onclick="deleteOneHistoryDirect('${escapeJS(item.resi)}')"
+                >
+                    HAPUS
+                </button>
+
+            `;
+
+
+            list.appendChild(
+                div
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   HISTORY MENU
+========================================================= */
+
+function toggleHistoryMenu(e){
+
+    e.stopPropagation();
+
+
+    const m =
+        document.getElementById(
+            "historyMenu"
+        );
+
+
+    m.style.display =
+        m.style.display==="block"
+            ? "none"
+            : "block";
+
+}
+
+
+function showDeleteOne(e){
+
+    e.stopPropagation();
+
+
+    document.getElementById(
+        "historyMenu"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "deleteOneBox"
+    ).classList.add(
+        "open"
+    );
+
+
+    document.getElementById(
+        "deleteResiInput"
+    ).focus();
+
+}
+
+
+/* =========================================================
+   DELETE HISTORY ONE
+========================================================= */
+
+function deleteOneHistory(){
+
+    const resi =
+        normalizeResi(
+            document.getElementById(
+                "deleteResiInput"
+            ).value
+        );
+
+
+    if(!resi){
+
+        alert(
+            "Masukkan nomor resi."
+        );
+
+        return;
+
+    }
+
+
+    const before =
+        scanHistory.length;
+
+
+    scanHistory =
+        scanHistory.filter(
+            x =>
+                normalizeResi(
+                    x.resi
+                ) !== resi
+        );
+
+
+    if(
+        scanHistory.length===before
+    ){
+
+        showNotif(
+            "RESI TIDAK ADA DI RIWAYAT",
+            "warning"
+        );
+
+        return;
+
+    }
+
+
+    saveData();
+
+
+    document.getElementById(
+        "deleteResiInput"
+    ).value =
+        "";
+
+
+    document.getElementById(
+        "deleteOneBox"
+    ).classList.remove(
+        "open"
+    );
+
+
+    renderHistory();
+
+
+    showNotif(
+        "RIWAYAT RESI DIHAPUS",
+        "success"
+    );
+
+}
+
+
+/* =========================================================
+   DELETE DIRECT
+========================================================= */
+
+function deleteOneHistoryDirect(
+    resi
+){
+
+    if(
+        !confirm(
+            `Hapus riwayat ${resi}?`
+        )
+    ){
+
+        return;
+
+    }
+
+
+    scanHistory =
+        scanHistory.filter(
+            x =>
+                normalizeResi(
+                    x.resi
+                ) !==
+                normalizeResi(
+                    resi
+                )
+        );
+
+
+    saveData();
+
+    renderHistory();
+
+
+    showNotif(
+        "RIWAYAT DIHAPUS",
+        "success"
+    );
+
+}
+
+
+/* =========================================================
+   DELETE ALL
+========================================================= */
+
+function deleteAllHistory(e){
+
+    e.stopPropagation();
+
+
+    document.getElementById(
+        "historyMenu"
+    ).style.display =
+        "none";
+
+
+    if(
+        scanHistory.length===0
+    ){
+
+        showNotif(
+            "RIWAYAT SUDAH KOSONG",
+            "warning"
+        );
+
+        return;
+
+    }
+
+
+    const ok =
+        confirm(
+            "Hapus SEMUA riwayat scan di HP?\n\n" +
+            "Data di Google Sheet TIDAK akan dihapus."
+        );
+
+
+    if(!ok){
+
+        return;
+
+    }
+
+
+    scanHistory =
+        [];
+
+
+    saveData();
+
+    renderHistory();
+
+
+    showNotif(
+        "SEMUA RIWAYAT DIHAPUS",
+        "success"
+    );
+
+}
+
+
+/* =========================================================
+   SYNC BATCH
+   ========================================================= */
+
+async function syncKeServer(){
+
+    /* =========================================
+       ANTI DOUBLE KLIK
+    ========================================= */
+
+    if(syncSedangBerjalan){
+
+        showNotif(
+            "SYNC SEDANG BERJALAN",
+            "warning"
+        );
+
+        return;
+
+    }
+
+
+    /* =========================================
+       CEK ANTREAN
+    ========================================= */
+
+    if(
+        localData.length===0
+    ){
+
+        setStatus(
+            "yellow",
+            ROBOT_CONFIG.pesan.antreanKosong
+        );
+
+
+        showNotif(
+            "ANTREAN KOSONG",
+            "warning"
+        );
+
+
+        speak(
+            ROBOT_CONFIG.pesan.antreanKosong
+        );
+
+
+        return;
+
+    }
+
+
+    /* =========================================
+       URL
+    ========================================= */
+
+    const url =
+        getTargetUrl();
+
+
+    if(!url){
+
+        setStatus(
+            "red",
+            "URL Apps Script tidak ditemukan"
+        );
+
+
+        showNotif(
+            "APP_URL TIDAK DITEMUKAN",
+            "error"
+        );
+
+
+        alert(
+            "APP_URL tidak ditemukan dari config.js"
+        );
+
+
+        return;
+
+    }
+
+
+    /* =========================================
+       LOCK
+    ========================================= */
+
+    syncSedangBerjalan =
+        true;
+
+
+    const btnSync =
+        document.getElementById(
+            "syncButton"
+        );
+
+
+    const oldText =
+        btnSync.innerHTML;
+
+
+    btnSync.disabled =
+        true;
+
+
+    btnSync.style.opacity =
+        "0.6";
+
+
+    btnSync.style.pointerEvents =
+        "none";
+
+
+    /* =========================================
+       SALIN ANTREAN
+    ========================================= */
+
+    const daftar =
+        [
+            ...localData
+        ];
+
+
+    const total =
+        daftar.length;
+
+
+    setStatus(
+        "yellow",
+        `Sync 0/${total}`
+    );
+
+
+    speak(
+        ROBOT_CONFIG.pesan.syncMulai
+    );
+
+
+    try{
+
+        /* =====================================
+           SATU REQUEST
+        ===================================== */
+
+        const response =
+            await fetch(
+                url,
+                {
+
+                    method:
+                        "POST",
+
+                    mode:
+                        "cors",
+
+                    headers:{
+                        "Content-Type":
+                            "text/plain;charset=utf-8"
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            source:
+                                "pengiriman",
+
+                            resi:
+                                daftar
+
+                        })
+
+                }
+            );
+
+
+        /* =====================================
+           HTTP CHECK
+        ===================================== */
+
+        if(
+            !response.ok
+        ){
+
+            throw new Error(
+                "HTTP " +
+                response.status
+            );
+
+        }
+
+
+        const text =
+            await response.text();
+
+
+        let result;
+
+
+        try{
+
+            result =
+                JSON.parse(
+                    text
+                );
+
+        }
+        catch(e){
+
+            console.error(
+                "Response server:",
+                text
+            );
+
+
+            throw new Error(
+                "Response server tidak valid"
+            );
+
+        }
+
+
+        /* =====================================
+           SERVER ERROR
+        ===================================== */
+
+        if(
+            result.status==="error"
+        ){
+
+            throw new Error(
+                result.message ||
+                "Server error"
+            );
+
+        }
+
+
+        /* =====================================
+           RESULT
+        ===================================== */
+
+        const berhasil =
+            Number(
+                result.berhasil || 0
+            );
+
+
+        const duplicate =
+            Number(
+                result.duplicate || 0
+            );
+
+
+        const invalid =
+            Number(
+                result.invalid || 0
+            );
+
+
+        const gagal =
+            Number(
+                result.gagal || 0
+            );
+
+
+        const results =
+            Array.isArray(
+                result.results
+            )
+            ? result.results
+            : [];
+
+
+        /* =====================================
+           UPDATE HISTORY
+        ===================================== */
+
+        results.forEach(
+            item=>{
+
+                if(
+                    !item ||
+                    !item.resi
+                ){
+
+                    return;
+
+                }
+
+
+                if(
+                    item.status==="success"
+                ){
+
+                    markHistorySynced(
+                        item.resi,
+                        "TERKIRIM",
+                        item
+                    );
+
+                }
+
+
+                else if(
+                    item.status==="duplicate"
+                ){
+
+                    markHistorySynced(
+                        item.resi,
+                        "DOUBLE",
+                        item
+                    );
+
+                }
+
             }
         );
 
-        cameraRunning=true;
-        btn.disabled=false;
-        btn.className="header-btn camera-on";
-        btn.innerText="📷 KAMERA ON";
-        overlay.style.display="none";
-        setStatus("green",ROBOT_CONFIG.pesan.kameraAktif);
-        speak(ROBOT_CONFIG.pesan.kameraAktif);
-    }catch(error){
-        console.error("CAMERA ERROR",error);
-        cameraRunning=false;
-        btn.disabled=false;
-        btn.className="header-btn camera-off";
-        btn.innerText="📷 KAMERA OFF";
-        overlay.style.display="flex";
-        setStatus("red",ROBOT_CONFIG.pesan.kameraGagal);
-        showNotif("IZINKAN AKSES KAMERA","error");
-        speak(ROBOT_CONFIG.pesan.kameraGagal);
-    }
-}
 
-async function stopCamera(){
-    if(!cameraRunning) return;
+        /* =====================================
+           RESI YANG GAGAL
+        ===================================== */
 
-    cameraRunning=false;
-    const btn=document.getElementById("cameraToggle");
-    const overlay=document.getElementById("cameraOverlay");
+        const gagalSet =
+            new Set();
 
-    try{
-        if(html5QrCode) await html5QrCode.stop();
-    }catch(e){}
 
-    btn.className="header-btn camera-off";
-    btn.innerText="📷 KAMERA OFF";
-    overlay.style.display="flex";
-    setStatus("yellow",ROBOT_CONFIG.pesan.kameraBerhenti);
-}
+        results.forEach(
+            item=>{
 
-/* =========================================================
-   ANTREAN
-========================================================= */
-function openQueue(){
-    renderQueue();
-    document.getElementById("queueModal").classList.add("open");
-}
+                if(
+                    item &&
+                    (
+                        item.status==="error" ||
+                        item.status==="failed"
+                    )
+                ){
 
-function renderQueue(){
-    const list=document.getElementById("queueList");
-    list.innerHTML="";
+                    gagalSet.add(
+                        normalizeResi(
+                            item.resi
+                        )
+                    );
 
-    if(localData.length===0){
-        list.innerHTML='<div class="empty">Antrean kosong</div>';
-        return;
-    }
+                }
 
-    localData.forEach((resi,i)=>{
-        const e=getEkspedisi(resi)||"-";
-        const div=document.createElement("div");
-        div.className="item";
-        div.innerHTML=`
-            <div class="item-main">
-                <div class="item-resi">${escapeHTML(resi)}</div>
-                <div class="item-meta">${escapeHTML(e)} • antrean #${i+1}</div>
-            </div>
-        `;
-        list.appendChild(div);
-    });
-}
-
-/* =========================================================
-   RIWAYAT
-========================================================= */
-function openHistory(){
-    document.getElementById("historyModal").classList.add("open");
-    document.getElementById("historyMenu").style.display="none";
-    renderHistory();
-}
-
-function renderHistory(){
-    const list=document.getElementById("historyList");
-    const search=normalizeResi(document.getElementById("historySearch")?.value||"");
-    list.innerHTML="";
-
-    let data=scanHistory;
-    if(search) data=data.filter(x=>normalizeResi(x.resi).includes(search));
-
-    if(data.length===0){
-        list.innerHTML='<div class="empty">Riwayat kosong</div>';
-        return;
-    }
-
-    data.forEach(item=>{
-        const div=document.createElement("div");
-        div.className="item";
-        div.innerHTML=`
-            <div class="item-main">
-                <div class="item-resi">${escapeHTML(item.resi)}</div>
-                <div class="item-meta">
-                    ${escapeHTML(item.ekspedisi||"-")} • ${escapeHTML(formatDateTime(item.waktu))}
-                </div>
-            </div>
-            <button class="item-delete" onclick="deleteOneHistoryDirect('${escapeJS(item.resi)}')">HAPUS</button>
-        `;
-        list.appendChild(div);
-    });
-}
-
-function toggleHistoryMenu(e){
-    e.stopPropagation();
-    const m=document.getElementById("historyMenu");
-    m.style.display=m.style.display==="block"?"none":"block";
-}
-
-function showDeleteOne(e){
-    e.stopPropagation();
-    document.getElementById("historyMenu").style.display="none";
-    document.getElementById("deleteOneBox").classList.add("open");
-    document.getElementById("deleteResiInput").focus();
-}
-
-function deleteOneHistory(){
-    const resi=normalizeResi(document.getElementById("deleteResiInput").value);
-    if(!resi) return alert("Masukkan nomor resi.");
-
-    const before=scanHistory.length;
-    scanHistory=scanHistory.filter(x=>normalizeResi(x.resi)!==resi);
-
-    if(scanHistory.length===before){
-        showNotif("RESI TIDAK ADA DI RIWAYAT","warning");
-        return;
-    }
-
-    saveData();
-    document.getElementById("deleteResiInput").value="";
-    document.getElementById("deleteOneBox").classList.remove("open");
-    renderHistory();
-    showNotif("RIWAYAT RESI DIHAPUS","success");
-}
-
-function deleteOneHistoryDirect(resi){
-    if(!confirm(`Hapus riwayat ${resi}?`)) return;
-    scanHistory=scanHistory.filter(x=>normalizeResi(x.resi)!==normalizeResi(resi));
-    saveData();
-    renderHistory();
-    showNotif("RIWAYAT DIHAPUS","success");
-}
-
-function deleteAllHistory(e){
-    e.stopPropagation();
-    document.getElementById("historyMenu").style.display="none";
-
-    if(scanHistory.length===0){
-        showNotif("RIWAYAT SUDAH KOSONG","warning");
-        return;
-    }
-
-    const ok=confirm(
-        "Hapus SEMUA riwayat scan di HP?\n\nData di Google Sheet TIDAK akan dihapus."
-    );
-    if(!ok) return;
-
-    scanHistory=[];
-    saveData();
-    renderHistory();
-    showNotif("SEMUA RIWAYAT DIHAPUS","success");
-}
-
-/* =========================================================
-   SYNC
-========================================================= */
-async function syncKeServer(){
-    if(localData.length===0){
-        setStatus("yellow",ROBOT_CONFIG.pesan.antreanKosong);
-        showNotif("ANTREAN KOSONG","warning");
-        speak(ROBOT_CONFIG.pesan.antreanKosong);
-        return;
-    }
-
-    const url=getTargetUrl();
-    if(!url){
-        setStatus("red","URL Apps Script tidak ditemukan");
-        showNotif("APP_URL TIDAK DITEMUKAN","error");
-        alert("APP_URL tidak ditemukan dari config.js");
-        return;
-    }
-
-    const daftar=[...localData];
-    const total=daftar.length;
-    let sisa=[];
-    let berhasil=0;
-    let duplicate=0;
-    let gagal=0;
-
-    setStatus("yellow",`Sync 0/${total}`);
-    speak(ROBOT_CONFIG.pesan.syncMulai);
-
-    for(let i=0;i<daftar.length;i++){
-        const resi=daftar[i];
-        setStatus("yellow",`Sync ${i+1}/${total} • ${resi}`);
-
-        try{
-            const response=await fetch(url,{
-                method:"POST",
-                mode:"cors",
-                headers:{"Content-Type":"text/plain;charset=utf-8"},
-                body:JSON.stringify({
-                    source:"pengiriman",
-                    resi:resi
-                })
-            });
-
-            const text=await response.text();
-            let result;
-
-            try{ result=JSON.parse(text); }
-            catch(e){
-                sisa.push(resi);
-                gagal++;
-                continue;
             }
+        );
 
-            if(result.status==="success"){
-                berhasil++;
-                markHistorySynced(resi,"TERKIRIM");
-            }
-            else if(result.status==="duplicate"){
-                /*
-                 * DOUBLE dari server:
-                 * jangan dianggap sukses biasa.
-                 * Tetap beri tanda merah dan simpan status DOUBLE di riwayat.
-                 */
-                duplicate++;
-                markHistorySynced(resi,"DOUBLE",result);
-            }
-            else{
-                sisa.push(resi);
-                gagal++;
-            }
 
-        }catch(error){
-            console.error("SYNC ERROR",resi,error);
-            sisa.push(resi);
-            gagal++;
+        /* =====================================
+           ANTREAN BARU
+        ===================================== */
+
+        localData =
+            daftar.filter(
+                resi =>
+                    gagalSet.has(
+                        normalizeResi(
+                            resi
+                        )
+                    )
+            );
+
+
+        saveData();
+
+        updateUI();
+
+        renderQueue();
+
+        renderHistory();
+
+
+        /* =====================================
+           STATUS HASIL
+        ===================================== */
+
+        if(
+            gagal>0 &&
+            berhasil===0 &&
+            duplicate===0
+        ){
+
+            setStatus(
+                "red",
+                `Sync gagal • ${gagal} resi`
+            );
+
+
+            showNotif(
+                `SYNC GAGAL • ${gagal} RESI`,
+                "error"
+            );
+
+
+            speak(
+                ROBOT_CONFIG.pesan.syncGagal
+            );
+
         }
 
-        await new Promise(r=>setTimeout(r,250));
+
+        else if(
+            duplicate>0 &&
+            berhasil>0
+        ){
+
+            setStatus(
+                "yellow",
+                `Sync selesai • ${berhasil} berhasil • ${duplicate} double`
+            );
+
+
+            showNotif(
+                `✓ ${berhasil} BERHASIL • ${duplicate} DOUBLE`,
+                "warning"
+            );
+
+
+            speak(
+                `${berhasil} resi berhasil disinkronkan, ${duplicate} resi double`
+            );
+
+        }
+
+
+        else if(
+            duplicate>0 &&
+            berhasil===0
+        ){
+
+            setStatus(
+                "red",
+                `${duplicate} RESI DOUBLE DARI SERVER`
+            );
+
+
+            showNotif(
+                `${duplicate} RESI DOUBLE`,
+                "error"
+            );
+
+
+            speak(
+                `${duplicate} resi terdeteksi double oleh server`
+            );
+
+        }
+
+
+        else if(
+            berhasil>0
+        ){
+
+            setStatus(
+                "green",
+                `Sync selesai • ${berhasil} berhasil`
+            );
+
+
+            showNotif(
+                `✓ ${berhasil} RESI TERSINKRON`,
+                "success"
+            );
+
+
+            speak(
+                `${berhasil} ${ROBOT_CONFIG.pesan.syncBerhasil}`
+            );
+
+        }
+
+
+        else if(
+            invalid>0
+        ){
+
+            setStatus(
+                "red",
+                `${invalid} RESI TIDAK VALID`
+            );
+
+
+            showNotif(
+                `${invalid} RESI TIDAK VALID`,
+                "error"
+            );
+
+        }
+
+
+        /* =====================================
+           DASHBOARD
+        ===================================== */
+
+        loadDashboard();
+
+    }
+    catch(error){
+
+        console.error(
+            "BATCH SYNC ERROR:",
+            error
+        );
+
+
+        setStatus(
+            "red",
+            "Sinkronisasi gagal"
+        );
+
+
+        showNotif(
+            "SYNC GAGAL: " +
+            error.message,
+            "error"
+        );
+
+
+        speak(
+            ROBOT_CONFIG.pesan.syncGagal
+        );
+
+    }
+    finally{
+
+        syncSedangBerjalan =
+            false;
+
+
+        btnSync.disabled =
+            false;
+
+
+        btnSync.style.opacity =
+            "";
+
+
+        btnSync.style.pointerEvents =
+            "";
+
+
+        btnSync.innerHTML =
+            oldText;
+
     }
 
-    localData=sisa;
-    saveData();
-    updateUI();
-    renderQueue();
-    renderHistory();
-
-    if(duplicate>0){
-        setStatus("red",`${duplicate} RESI DOUBLE DARI SERVER`);
-        showNotif(`🔴 ${duplicate} RESI DOUBLE`,"error");
-        speak(`${duplicate} resi terdeteksi double oleh server`);
-    }else if(berhasil>0){
-        setStatus("green",`Sync selesai • ${berhasil} berhasil`);
-        showNotif(`✓ ${berhasil} RESI TERSINKRON`,"success");
-        speak(`${berhasil} ${ROBOT_CONFIG.pesan.syncBerhasil}`);
-    }else{
-        setStatus("red","Tidak ada resi yang berhasil disinkronkan");
-        showNotif("SYNC GAGAL","error");
-        speak(ROBOT_CONFIG.pesan.syncGagal);
-    }
-
-    if(gagal>0){
-        console.warn("Sync gagal:",gagal);
-    }
 }
 
-function markHistorySynced(resi,status,serverResult=null){
-    const item=findHistory(resi);
-    if(!item) return;
 
-    item.status=status;
+/* =========================================================
+   MARK HISTORY SYNCED
+========================================================= */
+
+function markHistorySynced(
+    resi,
+    status,
+    serverResult=null
+){
+
+    const item =
+        findHistory(
+            resi
+        );
+
+
+    if(!item){
+
+        return;
+
+    }
+
+
+    item.status =
+        status;
+
 
     if(serverResult){
-        item.serverMessage=
+
+        item.serverMessage =
             serverResult.message ||
             serverResult.keterangan ||
             "DOUBLE SCAN";
-        item.serverTime=
+
+
+        item.serverTime =
             serverResult.tglScan ||
             serverResult.scanTime ||
             null;
+
     }
 
-    item.syncTime=new Date().toISOString();
+
+    item.syncTime =
+        new Date().toISOString();
+
 }
+
 
 /* =========================================================
    DASHBOARD
 ========================================================= */
+
 async function loadDashboard(){
-    const url=getTargetUrl();
-    if(!url) return;
+
+    const url =
+        getTargetUrl();
+
+
+    if(!url){
+
+        return;
+
+    }
+
 
     try{
-        const response=await fetch(url+"?action=getDashboard");
-        const data=await response.json();
 
-        if(data.status==="success"){
-            document.getElementById("hariIni").innerText=data.hariIni||0;
-            document.getElementById("kemarin").innerText=data.kemarin||0;
-            document.getElementById("mingguIni").innerText=data.mingguIni||0;
+        const response =
+            await fetch(
+                url +
+                "?action=getDashboard"
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if(
+            data.status==="success"
+        ){
+
+            document.getElementById(
+                "hariIni"
+            ).innerText =
+                data.hariIni || 0;
+
+
+            document.getElementById(
+                "kemarin"
+            ).innerText =
+                data.kemarin || 0;
+
+
+            document.getElementById(
+                "mingguIni"
+            ).innerText =
+                data.mingguIni || 0;
+
         }
-    }catch(e){
-        console.log("Dashboard tidak tersedia",e);
+
     }
+    catch(e){
+
+        console.log(
+            "Dashboard tidak tersedia",
+            e
+        );
+
+    }
+
 }
+
 
 /* =========================================================
-   MODAL / UTIL
+   MODAL
 ========================================================= */
-function closeModal(id){
-    document.getElementById(id).classList.remove("open");
-    if(id==="historyModal"){
-        document.getElementById("historyMenu").style.display="none";
-        document.getElementById("deleteOneBox").classList.remove("open");
+
+function closeModal(
+    id
+){
+
+    document.getElementById(
+        id
+    ).classList.remove(
+        "open"
+    );
+
+
+    if(
+        id==="historyModal"
+    ){
+
+        document.getElementById(
+            "historyMenu"
+        ).style.display =
+            "none";
+
+
+        document.getElementById(
+            "deleteOneBox"
+        ).classList.remove(
+            "open"
+        );
+
     }
-}
-function closeModalOutside(e,id){
-    if(e.target.id===id) closeModal(id);
-}
-function refreshApp(){ location.reload(); }
 
-function escapeHTML(text){
-    return String(text)
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
-}
-function escapeJS(text){
-    return String(text).replace(/\\/g,"\\\\").replace(/'/g,"\\'");
 }
 
-/* Jangan biarkan halaman ikut scroll */
-document.addEventListener("touchmove",e=>{
-    if(!e.target.closest(".sheet-body")) e.preventDefault();
-},{passive:false});
+
+function closeModalOutside(
+    e,
+    id
+){
+
+    if(
+        e.target.id===id
+    ){
+
+        closeModal(
+            id
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   REFRESH
+========================================================= */
+
+function refreshApp(){
+
+    location.reload();
+
+}
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHTML(
+    text
+){
+
+    return String(
+        text
+    )
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+    .replace(
+        /</g,
+        "&lt;"
+    )
+    .replace(
+        />/g,
+        "&gt;"
+    )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+    .replace(
+        /'/g,
+        "&#039;"
+    );
+
+}
+
+
+/* =========================================================
+   ESCAPE JS
+========================================================= */
+
+function escapeJS(
+    text
+){
+
+    return String(
+        text
+    )
+    .replace(
+        /\\/g,
+        "\\\\"
+    )
+    .replace(
+        /'/g,
+        "\\'"
+    );
+
+}
+
+
+/* =========================================================
+   PREVENT PAGE SCROLL
+========================================================= */
+
+document.addEventListener(
+    "touchmove",
+    e=>{
+
+        if(
+            !e.target.closest(
+                ".sheet-body"
+            )
+        ){
+
+            e.preventDefault();
+
+        }
+
+    },
+    {
+        passive:false
+    }
+);
+
 </script>
+
 </body>
 </html>
