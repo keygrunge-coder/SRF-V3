@@ -1,1585 +1,200 @@
 <!DOCTYPE html>
-
 <html lang="id">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta name="viewport"
-   content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-<title>SRF V3 • Upload Retur JNT</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Upload Retur JNT</title>
 
 <style>
-
-/* =========================================================
-   RESET
-========================================================= */
-
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-
-    font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Roboto,
-        Arial,
-        sans-serif;
+.header-box {
+    background: #003399;
+    color: #fff;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    text-align: center;
 }
 
-html,
-body{
-    width:100%;
-    min-height:100%;
-    background:#f1f5f9;
-    color:#0f172a;
+.btn-nav {
+    background: #cc0000;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    margin: 5px;
+    font-size: 13px;
+}
+    
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    padding: 20px;
 }
 
-body{
-    padding:12px;
+.container {
+    max-width: 900px;
+    margin: auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
 }
 
-
-/* =========================================================
-   CONTAINER
-========================================================= */
-
-.container{
-    width:100%;
-    max-width:900px;
-    margin:auto;
+.card {
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-
-/* =========================================================
-   HEADER
-========================================================= */
-
-.header{
-    background:#1e293b;
-    color:white;
-
-    border-radius:14px;
-
-    padding:16px;
-
-    margin-bottom:12px;
-
-    box-shadow:
-        0 5px 15px rgba(15,23,42,.12);
+.card h3 {
+    margin-top: 0;
+    font-size: 15px;
+    color: #333;
 }
 
-.header-top{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-
-    gap:10px;
+textarea {
+    width: 100%;
+    height: 350px;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
-.header-title{
-    font-size:17px;
-    font-weight:900;
+.card textarea {
+    height: 150px;
 }
 
-.header-subtitle{
-    color:#cbd5e1;
-
-    font-size:10px;
-
-    margin-top:4px;
+button {
+    width: 100%;
+    padding: 15px;
+    margin-top: 10px;
+    background: #0d6efd;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
 }
 
-.status-pill{
-    flex-shrink:0;
-
-    background:#334155;
-
-    color:#cbd5e1;
-
-    padding:6px 9px;
-
-    border-radius:20px;
-
-    font-size:9px;
-    font-weight:900;
+button:hover {
+    background: #0b5ed7;
 }
 
-.status-pill.online{
-    background:#166534;
-    color:#dcfce7;
+table {
+    width: 100%;
+    border-collapse: collapse;
 }
 
-.status-pill.error{
-    background:#991b1b;
-    color:#fee2e2;
+table td {
+    padding: 8px;
+    border-bottom: 1px solid #eee;
 }
 
-
-/* =========================================================
-   NAVIGATION
-========================================================= */
-
-.nav{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:8px;
-    margin-bottom:12px;
+table td:last-child {
+    text-align: right;
+    font-weight: bold;
 }
-
-.nav-right{
-    display:flex;
-    align-items:center;
-    gap:7px;
-}
-
-.nav-btn{
-    border:0;
-    padding:9px 11px;
-    border-radius:9px;
-    color:white;
-    font-size:10px;
-    font-weight:900;
-    text-decoration:none;
-    text-align:center;
-    cursor:pointer;
-    white-space:nowrap;
-}
-
-.nav-jnt{
-    background:#2563eb;
-}
-
-.nav-spx{
-    background:#7c3aed;
-}
-
-.nav-scan{
-    background:#0f766e;
-}
-
-.nav-home{
-    background:#475569;
-}
-
-
-/* =========================================================
-   CARD
-========================================================= */
-
-.card{
-    background:white;
-
-    border-radius:14px;
-
-    padding:14px;
-
-    margin-bottom:12px;
-
-    box-shadow:
-        0 4px 14px rgba(15,23,42,.07);
-}
-
-.card-title{
-    font-size:13px;
-    font-weight:900;
-
-    margin-bottom:5px;
-}
-
-.card-subtitle{
-    color:#64748b;
-
-    font-size:10px;
-
-    line-height:1.5;
-
-    margin-bottom:10px;
-}
-
-
-/* =========================================================
-   TEXTAREA
-========================================================= */
-
-textarea{
-    width:100%;
-
-    min-height:280px;
-
-    resize:vertical;
-
-    border:1px solid #cbd5e1;
-
-    border-radius:10px;
-
-    padding:11px;
-
-    background:#f8fafc;
-
-    color:#0f172a;
-
-    font-size:12px;
-
-    line-height:1.5;
-
-    outline:none;
-}
-
-textarea:focus{
-    border-color:#2563eb;
-
-    box-shadow:
-        0 0 0 3px rgba(37,99,235,.10);
-}
-
-textarea[readonly]{
-    min-height:150px;
-}
-
-
-/* =========================================================
-   ACTION
-========================================================= */
-
-.actions{
-    display:grid;
-
-    grid-template-columns:
-        1fr 1fr;
-
-    gap:8px;
-
-    margin-top:10px;
-}
-
-.btn{
-    border:0;
-
-    border-radius:10px;
-
-    padding:13px 10px;
-
-    color:white;
-
-    font-size:12px;
-    font-weight:900;
-
-    cursor:pointer;
-}
-
-.btn-upload{
-    background:#2563eb;
-}
-
-.btn-upload:disabled{
-    background:#94a3b8;
-
-    cursor:not-allowed;
-}
-
-.btn-clear{
-    background:#64748b;
-}
-
-
-/* =========================================================
-   LOADING
-========================================================= */
-
-.loading{
-    display:none;
-
-    align-items:center;
-    gap:8px;
-
-    margin-top:10px;
-
-    padding:10px;
-
-    border-radius:9px;
-
-    background:#eff6ff;
-
-    color:#1d4ed8;
-
-    font-size:10px;
-    font-weight:900;
-}
-
-.loading.show{
-    display:flex;
-}
-
-.spinner{
-    width:15px;
-    height:15px;
-
-    border:2px solid #bfdbfe;
-
-    border-top-color:#2563eb;
-
-    border-radius:50%;
-
-    animation:
-        spin .8s linear infinite;
-}
-
-@keyframes spin{
-
-    to{
-        transform:rotate(360deg);
-    }
-
-}
-
-
-/* =========================================================
-   RESULT SUMMARY
-========================================================= */
-
-.summary{
-    display:grid;
-
-    grid-template-columns:
-        repeat(3,1fr);
-
-    gap:7px;
-}
-
-.summary-box{
-    background:#f8fafc;
-
-    border-radius:10px;
-
-    padding:11px 7px;
-
-    text-align:center;
-}
-
-.summary-label{
-    color:#64748b;
-
-    font-size:9px;
-    font-weight:800;
-}
-
-.summary-value{
-    margin-top:3px;
-
-    font-size:19px;
-    font-weight:900;
-}
-
-.summary-success{
-    color:#16a34a;
-}
-
-.summary-warning{
-    color:#d97706;
-}
-
-.summary-error{
-    color:#dc2626;
-}
-
-
-/* =========================================================
-   RESULT HEADER
-========================================================= */
-
-.result-header{
-    display:flex;
-
-    align-items:center;
-    justify-content:space-between;
-
-    margin-bottom:8px;
-}
-
-.result-title{
-    font-size:13px;
-    font-weight:900;
-}
-
-.result-count{
-    color:#64748b;
-
-    font-size:9px;
-    font-weight:800;
-}
-
-
-/* =========================================================
-   LIST
-========================================================= */
-
-.list-box{
-    width:100%;
-
-    min-height:80px;
-
-    border-radius:9px;
-
-    padding:9px;
-
-    background:#f8fafc;
-
-    border:1px solid #e2e8f0;
-
-    font-size:11px;
-
-    line-height:1.6;
-
-    white-space:pre-wrap;
-
-    word-break:break-word;
-}
-
-.list-success{
-    border-left:
-        4px solid #16a34a;
-}
-
-.list-warning{
-    border-left:
-        4px solid #f59e0b;
-}
-
-.list-error{
-    border-left:
-        4px solid #dc2626;
-}
-
-
-/* =========================================================
-   ERROR BOX
-========================================================= */
-
-.error-box{
-    display:none;
-
-    background:#fef2f2;
-
-    color:#991b1b;
-
-    border:
-        1px solid #fecaca;
-
-    border-radius:10px;
-
-    padding:11px;
-
-    font-size:10px;
-
-    line-height:1.5;
-
-    word-break:break-word;
-}
-
-.error-box.show{
-    display:block;
-}
-
-
-/* =========================================================
-   FOOTER
-========================================================= */
-
-.footer{
-    text-align:center;
-
-    color:#94a3b8;
-
-    font-size:9px;
-
-    padding:6px 0 15px;
-}
-
-
-/* =========================================================
-   MOBILE
-========================================================= */
-
-@media(max-width:380px){
-
-    body{
-        padding:8px;
-    }
-
-    .header-title{
-        font-size:15px;
-    }
-
-    .summary-value{
-        font-size:17px;
-    }
-
-    textarea{
-        min-height:240px;
-    }
-
-}
-
 </style>
 
 </head>
-
 <body>
 
 <div class="container">
 
-<!-- =========================================================
-     HEADER
-========================================================= -->
-
-<div class="header">
-
- 
-<div class="header-top">
-
-    <div>
-
-        <div class="header-title">
-            SRF V3 • Upload Retur JNT
-        </div>
-
-        <div class="header-subtitle">
-            Upload data pengiriman gagal ke RETUR_JNT
-        </div>
-
-    </div>
-
-    <div
-        id="connectionStatus"
-        class="status-pill">
-
-        CHECKING
-
-    </div>
-
+<div class="header-box">
+<h3><b>UPLOAD RETUR JNT TIKTOK TOKOPEDIA</b></h3>
+<a href="uploadspx.html" class="btn-nav">UPLOAD RETUR SPX</a>
 </div>
- 
-
-</div>
-
-<!-- =========================================================
-     NAVIGATION
-========================================================= -->
-
-<div class="nav">
-
- 
-<a
-    href="index.html"
-    class="nav-btn nav-home">
-
-    &lt; MENU
-
-</a>
-
-<div class="nav-right">
-
-<a
-    href="uploadspx.html"
-    class="nav-btn nav-spx">
-
-    UPLOAD SPX
-
-</a>
-
-<a
-    href="scanretur.html"
-    class="nav-btn nav-scan">
-
-    SCAN RETUR
-
-</a>
-
-</div>
- 
-
-</div>
-
-<!-- =========================================================
-     INPUT
-========================================================= -->
 
 <div class="card">
-
- 
-<div class="card-title">
-    DATA RETUR
+<h3>Tempel Data Retur</h3>
+<textarea id="rawData" placeholder="Paste data TikTok / Shopee di sini"></textarea>
 </div>
 
-<div class="card-subtitle">
-
-    Tempel seluruh data mentah dari TikTok / Shopee.
-    Data yang tidak lengkap akan dilewati jika resinya
-    tidak berhasil dibaca.
-
-</div>
-
-
-<textarea
-    id="rawData"
-    placeholder="Paste data retur di sini..."></textarea>
-
-
-<div class="actions">
-
-    <button
-        id="uploadButton"
-        class="btn btn-upload"
-        onclick="uploadRetur()">
-
-        UPLOAD KE SHEET
-
-    </button>
-
-
-    <button
-        class="btn btn-clear"
-        onclick="clearData()">
-
-        HAPUS
-
-    </button>
-
-</div>
-
-
-<div
-    id="loading"
-    class="loading">
-
-    <div class="spinner"></div>
-
-    <span>
-        Memproses data retur...
-    </span>
-
-</div>
- 
-
-</div>
-
-<!-- =========================================================
-     RINGKASAN
-========================================================= -->
+<button onclick="uploadRetur()">
+Upload ke Sheet
+</button>
 
 <div class="card">
-
- 
-<div class="card-title">
-    HASIL UPLOAD
+<h3>Hasil Upload</h3>
+<table>
+<tr>
+<td>Berhasil</td>
+<td id="hasilBerhasil">0</td>
+</tr>
+<tr>
+<td>Duplikat</td>
+<td id="hasilDuplikat">0</td>
+</tr>
+</table>
 </div>
-
-<div class="summary">
-
-    <div class="summary-box">
-
-        <div class="summary-label">
-            BERHASIL
-        </div>
-
-        <div
-            id="hasilBerhasil"
-            class="summary-value summary-success">
-
-            0
-
-        </div>
-
-    </div>
-
-
-    <div class="summary-box">
-
-        <div class="summary-label">
-            DUPLIKAT
-        </div>
-
-        <div
-            id="hasilDuplikat"
-            class="summary-value summary-warning">
-
-            0
-
-        </div>
-
-    </div>
-
-
-    <div class="summary-box">
-
-        <div class="summary-label">
-            TIDAK TERBACA
-        </div>
-
-        <div
-            id="hasilError"
-            class="summary-value summary-error">
-
-            0
-
-        </div>
-
-    </div>
-
-</div>
- 
-
-</div>
-
-<!-- =========================================================
-     BERHASIL
-========================================================= -->
 
 <div class="card">
-
- 
-<div class="result-header">
-
-    <div class="result-title">
-        RESI BERHASIL
-    </div>
-
-    <div
-        id="jumlahBerhasil"
-        class="result-count">
-
-        0 RESI
-
-    </div>
-
+<h3>Resi Berhasil</h3>
+<textarea id="listBerhasil" readonly placeholder="Daftar resi berhasil akan muncul di sini..."></textarea>
 </div>
-
-
-<div
-    id="listBerhasil"
-    class="list-box list-success">
-
-    Belum ada data.
-
-</div>
- 
-
-</div>
-
-<!-- =========================================================
-     DUPLIKAT
-========================================================= -->
 
 <div class="card">
-
- 
-<div class="result-header">
-
-    <div class="result-title">
-        RESI DUPLIKAT
-    </div>
-
-    <div
-        id="jumlahDuplikat"
-        class="result-count">
-
-        0 RESI
-
-    </div>
-
-</div>
-
-
-<div
-    id="listDuplikat"
-    class="list-box list-warning">
-
-    Belum ada data.
-
-</div>
- 
-
-</div>
-
-<!-- =========================================================
-     DATA TIDAK TERBACA
-========================================================= -->
-
-<div class="card">
-
- 
-<div class="result-header">
-
-    <div class="result-title">
-        DATA TIDAK TERBACA
-    </div>
-
-    <div
-        id="jumlahError"
-        class="result-count">
-
-        0 DATA
-
-    </div>
-
-</div>
-
-
-<div
-    id="listError"
-    class="list-box list-error">
-
-    Tidak ada data bermasalah.
-
-</div>
- 
-
-</div>
-
-<!-- =========================================================
-     ERROR SERVER
-========================================================= -->
-
-<div
-    id="errorBox"
-    class="error-box">
-
-</div>
-
-<div class="footer">
-
- 
-SRF V3 • Upload Retur JNT
- 
-
+<h3>Resi Duplikat</h3>
+<textarea id="listDuplikat" readonly placeholder="Daftar resi duplikat akan muncul di sini..."></textarea>
 </div>
 
 </div>
 
-<!-- =========================================================
-     CONFIG GLOBAL
-========================================================= -->
-
+<!-- Memanggil file config.js sebelum script utama -->
 <script src="config.js"></script>
 
 <script>
-
-/* =========================================================
-   CEK CONFIG
-========================================================= */
-
-function getAppUrl(){
-
-    try{
-
-        if(
-            typeof APP_URL !== "undefined" &&
-            APP_URL
-        ){
-
-            return String(
-                APP_URL
-            ).trim();
-
-        }
-
-    }catch(e){
-
-        console.error(e);
-
+document.getElementById("rawData").addEventListener("keydown", function(event) {
+    if (event.key === "Enter" && event.ctrlKey) {
+        event.preventDefault();
+        uploadRetur();
     }
+});
 
-    return "";
+async function uploadRetur() {
+    const text = document.getElementById("rawData").value.trim();
 
-}
-
-
-/* =========================================================
-   ELEMENT
-========================================================= */
-
-const rawData =
-    document.getElementById(
-        "rawData"
-    );
-
-const uploadButton =
-    document.getElementById(
-        "uploadButton"
-    );
-
-const loading =
-    document.getElementById(
-        "loading"
-    );
-
-const connectionStatus =
-    document.getElementById(
-        "connectionStatus"
-    );
-
-
-/* =========================================================
-   INIT
-========================================================= */
-
-window.addEventListener(
-    "load",
-    function(){
-
-        const url =
-            getAppUrl();
-
-        if(url){
-
-            connectionStatus.innerText =
-                "READY";
-
-            connectionStatus.classList.add(
-                "online"
-            );
-
-        }else{
-
-            connectionStatus.innerText =
-                "NO CONFIG";
-
-            connectionStatus.classList.add(
-                "error"
-            );
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   RESET HASIL
-========================================================= */
-
-function resetResult(){
-
-    document.getElementById(
-        "hasilBerhasil"
-    ).innerText = "0";
-
-
-    document.getElementById(
-        "hasilDuplikat"
-    ).innerText = "0";
-
-
-    document.getElementById(
-        "hasilError"
-    ).innerText = "0";
-
-
-    document.getElementById(
-        "jumlahBerhasil"
-    ).innerText =
-        "0 RESI";
-
-
-    document.getElementById(
-        "jumlahDuplikat"
-    ).innerText =
-        "0 RESI";
-
-
-    document.getElementById(
-        "jumlahError"
-    ).innerText =
-        "0 DATA";
-
-
-    document.getElementById(
-        "listBerhasil"
-    ).innerText =
-        "Belum ada data.";
-
-
-    document.getElementById(
-        "listDuplikat"
-    ).innerText =
-        "Belum ada data.";
-
-
-    document.getElementById(
-        "listError"
-    ).innerText =
-        "Tidak ada data bermasalah.";
-
-
-    hideError();
-
-}
-
-
-/* =========================================================
-   ERROR
-========================================================= */
-
-function showError(message){
-
-    const box =
-        document.getElementById(
-            "errorBox"
-        );
-
-    box.innerText =
-        message || "Terjadi kesalahan.";
-
-    box.classList.add(
-        "show"
-    );
-
-}
-
-
-function hideError(){
-
-    document.getElementById(
-        "errorBox"
-    ).classList.remove(
-        "show"
-    );
-
-}
-
-
-/* =========================================================
-   CLEAR
-========================================================= */
-
-function clearData(){
-
-    rawData.value = "";
-
-    resetResult();
-
-    rawData.focus();
-
-}
-
-
-/* =========================================================
-   SAFE JSON
-========================================================= */
-
-async function readServerResponse(response){
-
-    const text =
-        await response.text();
-
-
-    if(!text){
-
-        throw new Error(
-            "Server mengembalikan response kosong."
-        );
-
-    }
-
-
-    try{
-
-        return JSON.parse(
-            text
-        );
-
-    }catch(e){
-
-        console.error(
-            "RAW SERVER RESPONSE:",
-            text
-        );
-
-        throw new Error(
-            "Response server bukan JSON."
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   ANALISIS DATA MENTAH
-=========================================================
-
-   Tujuannya bukan menggantikan parser Google Apps Script.
-
-   Hanya mendeteksi kemungkinan blok kosong /
-   data yang tidak memiliki resi.
-
-========================================================= */
-
-function cekDataMentah(text){
-
-    const lines =
-        text
-            .split(/\r?\n/)
-            .map(
-                line =>
-                    line.trim()
-            )
-            .filter(Boolean);
-
-
-    if(lines.length === 0){
-
-        return {
-            valid:false,
-            message:"Data kosong."
-        };
-
-    }
-
-
-    return {
-        valid:true,
-        lines:lines
-    };
-
-}
-
-
-/* =========================================================
-   UPLOAD
-========================================================= */
-
-async function uploadRetur(){
-
-    hideError();
-
-
-    const text =
-        rawData.value.trim();
-
-
-    /* -----------------------------------------
-       DATA KOSONG
-    ----------------------------------------- */
-
-    if(!text){
-
-        showError(
-            "Data retur masih kosong. Paste data terlebih dahulu."
-        );
-
-        rawData.focus();
-
+    if (!text) {
+        alert("Paste data dulu");
         return;
-
     }
 
+    document.getElementById("hasilBerhasil").innerText = "...";
+    document.getElementById("hasilDuplikat").innerText = "...";
+    document.getElementById("listBerhasil").value = "Sedang memproses...";
+    document.getElementById("listDuplikat").value = "Sedang memproses...";
 
-    /* -----------------------------------------
-       VALIDASI DATA
-    ----------------------------------------- */
+    try {
+        const r = await fetch(APP_URL, {
+            method: "POST",
+            body: JSON.stringify({
+                source: "uploadRetur",
+                text: text
+            })
+        });
 
-    const check =
-        cekDataMentah(
-            text
-        );
+        const json = await r.json();
 
+        document.getElementById("hasilBerhasil").innerText = json.berhasil || 0;
+        document.getElementById("hasilDuplikat").innerText = json.duplikat || 0;
+        
+        document.getElementById("listBerhasil").value = (json.listBerhasil || []).join("\n");
+        document.getElementById("listDuplikat").value = (json.listDuplikat || []).join("\n");
 
-    if(!check.valid){
-
-        showError(
-            check.message
-        );
-
-        return;
-
+    } catch (err) {
+        document.getElementById("listBerhasil").value = err.toString();
+        document.getElementById("listDuplikat").value = err.toString();
     }
-
-
-    const url =
-        getAppUrl();
-
-
-    /* -----------------------------------------
-       CONFIG TIDAK ADA
-    ----------------------------------------- */
-
-    if(!url){
-
-        connectionStatus.innerText =
-            "NO CONFIG";
-
-        connectionStatus.classList.add(
-            "error"
-        );
-
-        showError(
-            "APP_URL tidak ditemukan. Pastikan config.js berada satu folder dengan uploadjnt.html."
-        );
-
-        return;
-
-    }
-
-
-    /* -----------------------------------------
-       UI LOADING
-    ----------------------------------------- */
-
-    uploadButton.disabled =
-        true;
-
-    loading.classList.add(
-        "show"
-    );
-
-
-    connectionStatus.innerText =
-        "UPLOADING";
-
-
-    connectionStatus.classList.remove(
-        "online"
-    );
-
-
-    /* -----------------------------------------
-       RESET HASIL
-    ----------------------------------------- */
-
-    resetResult();
-
-
-    document.getElementById(
-        "listBerhasil"
-    ).innerText =
-        "Sedang memproses...";
-
-
-    document.getElementById(
-        "listDuplikat"
-    ).innerText =
-        "Sedang memproses...";
-
-
-    document.getElementById(
-        "listError"
-    ).innerText =
-        "Sedang memproses...";
-
-
-    try{
-
-
-        /* -------------------------------------
-           REQUEST
-        ------------------------------------- */
-
-        const response =
-            await fetch(
-
-                url,
-
-                {
-
-                    method:"POST",
-
-                    headers:{
-
-                        "Content-Type":
-                            "text/plain;charset=utf-8"
-
-                    },
-
-                    body:
-                        JSON.stringify({
-
-                            source:
-                                "uploadRetur",
-
-                            text:
-                                text
-
-                        })
-
-                }
-
-            );
-
-
-        /* -------------------------------------
-           HTTP ERROR
-        ------------------------------------- */
-
-        if(
-            !response.ok
-        ){
-
-            throw new Error(
-                "HTTP Error " +
-                response.status
-            );
-
-        }
-
-
-        /* -------------------------------------
-           RESPONSE
-        ------------------------------------- */
-
-        const json =
-            await readServerResponse(
-                response
-            );
-
-
-        console.log(
-            "UPLOAD RETUR RESPONSE:",
-            json
-        );
-
-
-        /* -------------------------------------
-           AMBIL HASIL SECARA AMAN
-        ------------------------------------- */
-
-        const berhasil =
-            Array.isArray(
-                json.listBerhasil
-            )
-            ? json.listBerhasil
-            : [];
-
-
-        const duplikat =
-            Array.isArray(
-                json.listDuplikat
-            )
-            ? json.listDuplikat
-            : [];
-
-
-        /*
-         * Backend lama belum mengembalikan
-         * list error.
-         *
-         * Jadi jangan dianggap error
-         * kalau field tersebut belum ada.
-         */
-
-        const errorList =
-            Array.isArray(
-                json.listError
-            )
-            ? json.listError
-            : [];
-
-
-        /* -------------------------------------
-           TAMPILKAN RINGKASAN
-        ------------------------------------- */
-
-        document.getElementById(
-            "hasilBerhasil"
-        ).innerText =
-            berhasil.length;
-
-
-        document.getElementById(
-            "hasilDuplikat"
-        ).innerText =
-            duplikat.length;
-
-
-        document.getElementById(
-            "hasilError"
-        ).innerText =
-            errorList.length;
-
-
-        document.getElementById(
-            "jumlahBerhasil"
-        ).innerText =
-            berhasil.length +
-            " RESI";
-
-
-        document.getElementById(
-            "jumlahDuplikat"
-        ).innerText =
-            duplikat.length +
-            " RESI";
-
-
-        document.getElementById(
-            "jumlahError"
-        ).innerText =
-            errorList.length +
-            " DATA";
-
-
-        /* -------------------------------------
-           LIST BERHASIL
-        ------------------------------------- */
-
-        document.getElementById(
-            "listBerhasil"
-        ).innerText =
-
-            berhasil.length
-
-            ? berhasil.join("\n")
-
-            : "Tidak ada resi berhasil.";
-
-
-        /* -------------------------------------
-           LIST DUPLIKAT
-        ------------------------------------- */
-
-        document.getElementById(
-            "listDuplikat"
-        ).innerText =
-
-            duplikat.length
-
-            ? duplikat.join("\n")
-
-            : "Tidak ada resi duplikat.";
-
-
-        /* -------------------------------------
-           LIST ERROR
-        ------------------------------------- */
-
-        document.getElementById(
-            "listError"
-        ).innerText =
-
-            errorList.length
-
-            ? errorList.join("\n")
-
-            : "Tidak ada data bermasalah.";
-
-
-        /* -------------------------------------
-           SUCCESS
-        ------------------------------------- */
-
-        connectionStatus.innerText =
-            "ONLINE";
-
-        connectionStatus.classList.add(
-            "online"
-        );
-
-
-    }catch(error){
-
-
-        console.error(
-            "UPLOAD RETUR ERROR:",
-            error
-        );
-
-
-        connectionStatus.innerText =
-            "ERROR";
-
-        connectionStatus.classList.remove(
-            "online"
-        );
-
-        connectionStatus.classList.add(
-            "error"
-        );
-
-
-        showError(
-            "Gagal memproses upload: " +
-            error.message
-        );
-
-
-        document.getElementById(
-            "listBerhasil"
-        ).innerText =
-            "Upload gagal.";
-
-
-        document.getElementById(
-            "listDuplikat"
-        ).innerText =
-            "Upload gagal.";
-
-
-        document.getElementById(
-            "listError"
-        ).innerText =
-            "Upload gagal.";
-
-
-    }finally{
-
-
-        uploadButton.disabled =
-            false;
-
-
-        loading.classList.remove(
-            "show"
-        );
-
-    }
-
 }
-
-
-/* =========================================================
-   CTRL + ENTER
-========================================================= */
-
-rawData.addEventListener(
-    "keydown",
-    function(event){
-
-        if(
-            event.ctrlKey &&
-            event.key === "Enter"
-        ){
-
-            event.preventDefault();
-
-            uploadRetur();
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   AUTO FOCUS
-========================================================= */
-
-window.addEventListener(
-    "load",
-    function(){
-
-        rawData.focus();
-
-    }
-);
-
 </script>
 
 </body>
-
 </html>
