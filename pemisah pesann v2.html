@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rekap Pesanan Tokopedia - Nota PNG</title>
+
+<!-- Load html2canvas secara langsung -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<style>
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#eef1f4;
+    color:#111827;
+}
+
+.wrap{
+    max-width:900px;
+    margin:auto;
+    padding:20px;
+}
+
+.card{
+    background:white;
+    border:1px solid #e1e5e9;
+    border-radius:16px;
+    padding:18px;
+    margin-bottom:16px;
+    box-shadow:0 3px 12px rgba(0,0,0,.05);
+}
+
+h1{
+    margin:0 0 6px;
+    font-size:24px;
+}
+
+.muted{
+    color:#6b7280;
+    font-size:14px;
+}
+
+textarea{
+    width:100%;
+    min-height:200px;
+    margin-top:14px;
+    padding:14px;
+    border:1px solid #cbd5e1;
+    border-radius:12px;
+    resize:vertical;
+    font-family:monospace;
+    font-size:14px;
+}
+
+/* Form Manual Input */
+.manual-form {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr auto;
+    gap: 8px;
+    margin-top: 14px;
+}
+
+.manual-form input {
+    padding: 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 9px;
+    font-size: 13px;
+}
+
+button{
+    border:0;
+    border-radius:9px;
+    padding:11px 16px;
+    cursor:pointer;
+    font-weight:700;
+}
+
+.btn-main{
+    background:#111827;
+    color:white;
+}
+
+.btn-green{
+    background:#10b981;
+    color:white;
+}
+
+.btn-blue{
+    background:#2563eb;
+    color:white;
+}
+
+.btn-gray{
+    background:#e5e7eb;
+    color:#111827;
+}
+
+.btn-purple{
+    background:#7c3aed;
+    color:white;
+}
+
+.actions{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:12px;
+}
+
+/* NOTA */
+.nota-wrapper{
+    margin-top:20px;
+}
+
+.nota{
+    width:380px;
+    max-width:100%;
+    margin:0 auto 12px;
+    background:#fff;
+    color:#111;
+    padding:20px;
+    border:1px solid #ddd;
+    box-shadow:0 4px 15px rgba(0,0,0,.08);
+}
+
+.nota-title{
+    text-align:center;
+    font-size:21px;
+    font-weight:800;
+    margin-bottom:5px;
+}
+
+.nota-sub{
+    text-align:center;
+    font-size:12px;
+    color:#555;
+    margin-bottom:15px;
+}
+
+.nota-line{
+    border-top:1px dashed #999;
+    margin:10px 0;
+}
+
+.sku-block{
+    margin-bottom:13px;
+}
+
+.sku-name{
+    font-weight:800;
+    font-size:14px;
+    margin-bottom:4px;
+    text-transform: uppercase;
+}
+
+.color-row{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    padding:4px 0;
+    font-size:13px;
+    align-items: center;
+}
+
+.color-name{
+    flex:1;
+    text-transform: capitalize;
+}
+
+.color-qty{
+    font-weight:800;
+    cursor: pointer;
+    background: #f3f4f6;
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px dashed #cbd5e1;
+}
+
+.color-qty:hover {
+    background: #e5e7eb;
+}
+
+.total{
+    display:flex;
+    justify-content:space-between;
+    font-size:16px;
+    font-weight:800;
+    margin-top:10px;
+}
+
+.nota-footer{
+    text-align:center;
+    margin-top:16px;
+    font-size:11px;
+    color:#777;
+}
+
+.nota-actions{
+    width:380px;
+    max-width:100%;
+    margin:0 auto 28px;
+    display:flex;
+    gap:7px;
+}
+
+.nota-actions button{
+    flex:1;
+    font-size:12px;
+}
+
+.empty{
+    text-align:center;
+    color:#6b7280;
+    padding:20px;
+}
+
+@media(max-width:700px){
+    .manual-form {
+        grid-template-columns: 1fr 1fr;
+    }
+    .manual-form button {
+        grid-column: span 2;
+    }
+}
+
+@media(max-width:500px){
+    .wrap{
+        padding:10px;
+    }
+    .nota{
+        width:100%;
+    }
+    .nota-actions{
+        width:100%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+    <div class="card">
+        <h1>Rekap Pesanan Tokopedia → Satu Nota PNG</h1>
+        <div class="muted">
+            Paste seluruh teks dari halaman "Menunggu pengiriman" Tokopedia. SKU dengan beda huruf kapital akan otomatis disatukan.
+        </div>
+        <textarea id="input" placeholder="Paste data Tokopedia di sini..."></textarea>
+        
+        <!-- Fitur Tambah Manual -->
+        <div style="margin-top:14px; font-weight:bold; font-size:14px;">Tambah Manual Produk:</div>
+        <div class="manual-form">
+            <input type="text" id="manualSku" placeholder="SKU / Nama Produk">
+            <input type="text" id="manualWarna" placeholder="Warna">
+            <input type="text" id="manualSize" placeholder="Size">
+            <input type="number" id="manualQty" placeholder="Qty" value="1">
+            <button class="btn-purple" onclick="tambahManual()">TAMBAH</button>
+        </div>
+
+        <div class="actions" style="margin-top:14px;">
+            <button class="btn-main" onclick="proses()">BUAT SATU NOTA REKAP</button>
+            <button class="btn-gray" onclick="resetData()">RESET</button>
+        </div>
+    </div>
+    <div id="hasil"></div>
+</div>
+
+<script>
+// Menyimpan data global agar bisa diedit dan diproses fleksibel
+let globalItems = [];
+
+function proses(){
+    const raw = document.getElementById("input").value.trim();
+    
+    // Jika textarea kosong tapi ada data manual atau globalItems sudah ada, gunakan yang ada
+    if(!raw && globalItems.length === 0){
+        alert("Paste data pesanan dulu bro atau tambahkan manual.");
+        return;
+    }
+
+    if(raw){
+        const parsedItems = parseAllTokopediaItems(raw);
+        // Gabungkan dengan data global yang mungkin sudah ada (misal input manual tambahan)
+        parsedItems.forEach(pItem => {
+            const cleanSku = pItem.sku.toLowerCase();
+            const cleanWarna = pItem.warna.toLowerCase();
+            const cleanSize = pItem.size.toLowerCase();
+            
+            const existing = globalItems.find(g => 
+                g.sku.toLowerCase() === cleanSku && 
+                g.warna.toLowerCase() === cleanWarna && 
+                g.size.toLowerCase() === cleanSize
+            );
+
+            if(!existing){
+                globalItems.push(pItem);
+            }
+        });
+    }
+
+    if(!globalItems.length){
+        document.getElementById("hasil").innerHTML = `
+            <div class="card empty">
+                <b>Data belum berhasil dibaca.</b>
+                <p>Pastikan kamu mem-paste teks langsung dari halaman daftar pesanan Tokopedia.</p>
+            </div>
+        `;
+        return;
+    }
+
+    renderSingleNota(globalItems);
+}
+
+function tambahManual(){
+    const sku = document.getElementById("manualSku").value.trim();
+    const warna = document.getElementById("manualWarna").value.trim() || "-";
+    const size = document.getElementById("manualSize").value.trim();
+    const qty = parseInt(document.getElementById("manualQty").value);
+
+    if(!sku || isNaN(qty) || qty <= 0){
+        alert("Mohon isi SKU dan Qty dengan benar.");
+        return;
+    }
+
+    // Cek apakah item dengan SKU, warna, size yang sama sudah ada
+    const cleanSku = sku.toLowerCase();
+    const cleanWarna = warna.toLowerCase();
+    const cleanSize = size.toLowerCase();
+
+    let existing = globalItems.find(item => 
+        item.sku.toLowerCase() === cleanSku && 
+        item.warna.toLowerCase() === cleanWarna && 
+        item.size.toLowerCase() === cleanSize
+    );
+
+    if(existing){
+        existing.qty += qty;
+    } else {
+        globalItems.push({
+            sku: sku,
+            warna: warna,
+            size: size,
+            qty: qty
+        });
+    }
+
+    // Reset input manual
+    document.getElementById("manualSku").value = "";
+    document.getElementById("manualWarna").value = "";
+    document.getElementById("manualSize").value = "";
+    document.getElementById("manualQty").value = "1";
+
+    // Refresh render nota otomatis jika nota sudah pernah dibuat
+    if(globalItems.length > 0){
+        renderSingleNota(globalItems);
+    }
+}
+
+function parseAllTokopediaItems(raw){
+    const lines = raw.split(/\r?\n/).map(x => x.trim());
+    let items = [];
+
+    let i = 0;
+    while(i < lines.length){
+        let line = lines[i];
+
+        let qtyMatch = line.match(/^×\s*(\d+)$/);
+        if(qtyMatch) {
+            let qty = parseInt(qtyMatch[1]);
+            
+            let variantLine = "";
+            let skuPenjualLine = "";
+            let productName = "";
+
+            for(let j = i - 1; j >= 0; j--) {
+                if(lines[j].toLowerCase().startsWith("id pesanan")) break;
+                if(lines[j].toLowerCase().startsWith("sku penjual:")) {
+                    skuPenjualLine = lines[j].replace(/^sku penjual:\s*/i, "").trim();
+                } else if(!variantLine && lines[j].includes(",")) {
+                    variantLine = lines[j];
+                } else if(!productName && lines[j].length > 10 && !lines[j].toLowerCase().startsWith("kreator")) {
+                    productName = lines[j];
+                }
+            }
+
+            let warna = "-";
+            let size = "";
+            if(variantLine) {
+                let parts = variantLine.split(",");
+                warna = parts[0].trim().toLowerCase();
+                if(parts[1]) size = parts[1].trim();
+            }
+
+            let finalSku = (skuPenjualLine || productName || "PRODUK").trim();
+
+            items.push({
+                sku: finalSku,
+                warna: warna,
+                size: size,
+                qty: qty
+            });
+        }
+
+        i++;
+    }
+
+    const grouped = {};
+    items.forEach(item => {
+        const cleanSku = item.sku.toLowerCase();
+        const cleanWarna = item.warna.toLowerCase();
+        const cleanSize = item.size.toLowerCase();
+
+        const key = [cleanSku, cleanWarna, cleanSize].join("|");
+
+        if(!grouped[key]){
+            grouped[key] = {
+                sku: item.sku,
+                warna: item.warna,
+                size: item.size,
+                qty: 0
+            };
+        }
+        grouped[key].qty += Number(item.qty) || 0;
+    });
+
+    return Object.values(grouped);
+}
+
+function renderSingleNota(items){
+    globalItems = items; // Sinkronkan data
+    let totalQty = 0;
+    const skuGroups = {};
+
+    items.forEach((item, index) => {
+        const displaySku = item.sku.toUpperCase();
+
+        if(!skuGroups[displaySku]){
+            skuGroups[displaySku] = [];
+        }
+        // Simpan referensi index asli di globalItems agar mudah diedit
+        skuGroups[displaySku].push({ ...item, globalIndex: index });
+        totalQty += Number(item.qty) || 0;
+    });
+
+    let html = `
+    <div class="card">
+        <b>1</b> nota rekap berhasil dibuat. (Klik pada angka Qty di nota untuk mengeditnya).
+    </div>
+    <div class="nota-wrapper">
+        <div class="nota" id="nota-rekap">
+            <div class="nota-title">REKAP PESANAN</div>
+            <div class="nota-sub">Gabungan Semua Pesanan</div>
+            <div class="nota-line"></div>
+    `;
+
+    Object.keys(skuGroups).forEach(sku => {
+        html += `
+        <div class="sku-block">
+            <div class="sku-name">${escapeHtml(sku)}</div>
+        `;
+
+        skuGroups[sku].forEach(item => {
+            html += `
+            <div class="color-row">
+                <div class="color-name">
+                    ${escapeHtml(item.warna)}
+                    ${item.size ? " / " + escapeHtml(item.size) : ""}
+                </div>
+                <div class="color-qty" onclick="editQty(${item.globalIndex})" title="Klik untuk edit Qty">${item.qty}</div>
+            </div>
+            `;
+        });
+
+        html += `</div>`;
+    });
+
+    html += `
+            <div class="nota-line"></div>
+            <div class="total">
+                <span>TOTAL KESELURUHAN</span>
+                <span>${totalQty}</span>
+            </div>
+            <div class="nota-footer">REKAP GUDANG</div>
+        </div>
+
+        <div class="nota-actions">
+            <button class="btn-blue" onclick="downloadPNG()">DOWNLOAD PNG</button>
+            <button class="btn-green" onclick="copyNota()">SALIN TEKS</button>
+        </div>
+    </div>
+    `;
+
+    document.getElementById("hasil").innerHTML = html;
+}
+
+// Fungsi sederhana untuk edit Qty langsung
+function editQty(index){
+    if(index < 0 || index >= globalItems.length) return;
+    
+    const currentItem = globalItems[index];
+    let newQtyStr = prompt(`Ubah jumlah (Qty) untuk ${currentItem.sku.toUpperCase()} (${currentItem.warna}):`, currentItem.qty);
+    
+    if(newQtyStr === null) return; // Batal
+    
+    let newQty = parseInt(newQtyStr);
+    if(isNaN(newQty) || newQty < 0){
+        alert("Masukkan angka yang valid.");
+        return;
+    }
+
+    if(newQty === 0){
+        // Jika 0, hapus item dari list
+        globalItems.splice(index, 1);
+    } else {
+        globalItems[index].qty = newQty;
+    }
+
+    renderSingleNota(globalItems);
+}
+
+function copyNota(){
+    const nota = document.getElementById("nota-rekap");
+    navigator.clipboard.writeText(nota.innerText).then(() => {
+        alert("Nota rekap berhasil disalin.");
+    });
+}
+
+async function downloadPNG(){
+    const nota = document.getElementById("nota-rekap");
+
+    if(typeof html2canvas === "undefined"){
+        alert("Library html2canvas belum termuat.");
+        return;
+    }
+
+    const canvas = await html2canvas(nota, {
+        scale: 2,
+        backgroundColor: "#ffffff"
+    });
+
+    const link = document.createElement("a");
+    link.download = "rekap-pesanan.png";
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+}
+
+function resetData(){
+    document.getElementById("input").value = "";
+    document.getElementById("manualSku").value = "";
+    document.getElementById("manualWarna").value = "";
+    document.getElementById("manualSize").value = "";
+    document.getElementById("manualQty").value = "1";
+    document.getElementById("hasil").innerHTML = "";
+    globalItems = [];
+}
+
+function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, m => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+    }[m]));
+}
+</script>
+
+</body>
+</html>
