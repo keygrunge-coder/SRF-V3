@@ -1683,505 +1683,402 @@ function deleteAllHistory(e){
 
 async function syncKeServer(){
 
- /*
-   CEGAH DOUBLE CLICK
- */
+  // =====================================================
+  // CEGAH DOUBLE KLIK
+  // =====================================================
 
- if(syncRunning)
-  return;
+  if(syncRunning)return;
 
 
- /*
-   ANTREAN KOSONG
- */
+  // =====================================================
+  // CEK ANTREAN
+  // =====================================================
 
- if(localData.length===0){
+  if(localData.length===0){
+
+    setStatus(
+      "yellow",
+      ROBOT_CONFIG.pesan.antreanKosong
+    );
+
+    showNotif(
+      "ANTREAN KOSONG",
+      "warning"
+    );
+
+    speak(
+      ROBOT_CONFIG.pesan.antreanKosong
+    );
+
+    return;
+  }
+
+
+  // =====================================================
+  // CEK URL
+  // =====================================================
+
+  const url=getTargetUrl();
+
+  if(!url){
+
+    beepError();
+
+    setStatus(
+      "red",
+      "URL Apps Script tidak ditemukan"
+    );
+
+    showNotif(
+      "APP_URL TIDAK DITEMUKAN",
+      "error"
+    );
+
+    return;
+  }
+
+
+  // =====================================================
+  // KUNCI SYNC
+  // =====================================================
+
+  syncRunning=true;
+
+  const syncBtn=
+    document.getElementById("syncButton");
+
+  syncBtn.disabled=true;
+
+  syncBtn.innerHTML="☁ SYNCING...";
+
+
+  // =====================================================
+  // SNAPSHOT ANTREAN
+  //
+  // Penting:
+  // Scan baru tetap boleh masuk selama sync.
+  // Yang dikirim hanya antrean yang ada
+  // saat tombol SYNC ditekan.
+  // =====================================================
+
+  const daftar=[
+    ...localData
+  ];
+
+  const total=
+    daftar.length;
+
+
+  let berhasil=[];
+  let duplicate=[];
+  let gagal=[];
+
 
   setStatus(
-   "yellow",
-   ROBOT_CONFIG.pesan.antreanKosong
-  );
-
-  showNotif(
-   "ANTREAN KOSONG",
-   "warning"
+    "yellow",
+    `Sync 0/${total}`
   );
 
   speak(
-   ROBOT_CONFIG.pesan.antreanKosong
+    ROBOT_CONFIG.pesan.syncMulai
   );
-
-  return;
- }
-
-
- /*
-   CEK URL
- */
-
- const url=getTargetUrl();
-
-
- if(!url){
-
-  beepError();
-
-  setStatus(
-   "red",
-   "URL Apps Script tidak ditemukan"
-  );
-
-  showNotif(
-   "APP_URL TIDAK DITEMUKAN",
-   "error"
-  );
-
-  return;
- }
-
-
- /*
-   KUNCI SYNC
- */
-
- syncRunning=true;
-
-
- const syncBtn=
-  document.getElementById("syncButton");
-
-
- syncBtn.disabled=true;
-
- syncBtn.innerHTML=
-  "☁ MENGIRIM...";
-
-
- /*
-   SNAPSHOT
-
-   Hanya resi yang ada ketika tombol
-   SYNC ditekan yang dikirim.
-
-   Kalau sambil sync ada scan baru,
-   resi baru itu tetap aman di antrean.
- */
-
- const daftar=
-  [...localData];
-
-
- const total=
-  daftar.length;
-
-
- setStatus(
-  "yellow",
-  `Mengirim ${total} resi...`
- );
-
-
- speak(
-  ROBOT_CONFIG.pesan.syncMulai
- );
-
-
- try{
-
-  /*
-    SATU REQUEST SAJA
-  */
-
-  const response=
-   await fetch(
-    url,
-    {
-     method:"POST",
-
-     mode:"cors",
-
-     headers:{
-      "Content-Type":
-       "text/plain;charset=utf-8"
-     },
-
-     body:JSON.stringify({
-
-      source:"pengiriman",
-
-      resi:daftar
-
-     })
-
-    }
-   );
-
-
-  const text=
-   await response.text();
-
-
-  let result;
 
 
   try{
 
-   result=
-    JSON.parse(text);
+    // ===================================================
+    // SATU REQUEST UNTUK SEMUA RESI
+    // ===================================================
 
-  }catch(e){
-
-   console.error(
-    "RESPON SERVER BUKAN JSON:",
-    text
-   );
-
-   throw new Error(
-    "Respons server tidak valid"
-   );
-
-  }
-
-
-  console.log(
-   "HASIL SYNC:",
-   result
-  );
-
-
-  /*
-    SERVER HARUS MENGEMBALIKAN:
-
-    {
-      status:"success",
-
-      hasil:[
+    const response=
+      await fetch(
+        url,
         {
-          resi:"SPX123",
-          status:"success"
-        },
+          method:"POST",
 
-        {
-          resi:"JX456",
-          status:"duplicate"
-        },
+          mode:"cors",
 
-        {
-          resi:"SPX789",
-          status:"error"
+          headers:{
+            "Content-Type":
+              "text/plain;charset=utf-8"
+          },
+
+          body:JSON.stringify({
+
+            source:"pengiriman",
+
+            resi:daftar
+
+          })
         }
-      ]
+      );
+
+
+    // ===================================================
+    // BACA RESPONSE
+    // ===================================================
+
+    const text=
+      await response.text();
+
+
+    console.log(
+      "SYNC RESPONSE:",
+      text
+    );
+
+
+    let result;
+
+
+    try{
+
+      result=
+        JSON.parse(text);
+
+    }catch(parseError){
+
+      console.error(
+        "JSON ERROR:",
+        parseError,
+        text
+      );
+
+      throw new Error(
+        "Response server bukan JSON"
+      );
+
     }
-  */
 
 
-  if(!Array.isArray(result.hasil)){
+    // ===================================================
+    // VALIDASI RESPONSE
+    // ===================================================
 
-   throw new Error(
-    "Format hasil sync tidak valid"
-   );
+    if(
+      !result ||
+      !Array.isArray(result.hasil)
+    ){
 
-  }
+      throw new Error(
+        result?.message ||
+        "Response server tidak valid"
+      );
 
-
-  let berhasil=0;
-  let duplicate=0;
-  let gagal=0;
-
-
-  /*
-    RESI YANG BOLEH DIHAPUS DARI ANTREAN
-  */
-
-  const selesaiSet=
-   new Set();
+    }
 
 
-  /*
-    PROSES HASIL SERVER
-  */
+    // ===================================================
+    // PROSES HASIL SATU PER SATU
+    // ===================================================
 
-  result.hasil.forEach(item=>{
+    result.hasil.forEach(item=>{
 
-   const resi=
-    normalizeResi(item.resi);
+      const resi=
+        normalizeResi(
+          item.resi
+        );
 
 
-   if(!resi)return;
+      if(
+        item.status==="success"
+      ){
+
+        berhasil.push(resi);
+
+        markHistorySynced(
+          resi,
+          "TERKIRIM",
+          item
+        );
+
+      }
+
+      else if(
+        item.status==="duplicate"
+      ){
+
+        duplicate.push(resi);
+
+        markHistorySynced(
+          resi,
+          "DOUBLE SCAN",
+          item
+        );
+
+      }
+
+      else{
+
+        gagal.push(resi);
+
+      }
+
+    });
 
 
-   /*
-     SUCCESS
+    // ===================================================
+    // BUANG DARI ANTREAN
+    //
+    // Yang berhasil maupun DOUBLE sama-sama selesai
+    // diproses server.
+    //
+    // Yang gagal saja yang tetap berada di antrean.
+    // ===================================================
 
-     ANTREAN:
-     HAPUS
+    const selesai=
+      new Set([
+        ...berhasil,
+        ...duplicate
+      ]);
 
-     RIWAYAT:
-     ANTREAN -> TERKIRIM
-   */
 
-   if(item.status==="success"){
+    localData=
+      localData.filter(
+        resi =>
+          !selesai.has(
+            normalizeResi(resi)
+          )
+      );
 
-    berhasil++;
 
-    selesaiSet.add(resi);
+    saveData();
 
-    markHistorySynced(
-     resi,
-     "TERKIRIM",
-     item
+    updateUI();
+
+    renderQueue();
+
+    renderHistory();
+
+
+    // ===================================================
+    // HASIL SYNC
+    // ===================================================
+
+    if(
+      berhasil.length>0 ||
+      duplicate.length>0
+    ){
+
+      if(duplicate.length>0){
+
+        beepDouble();
+
+        setStatus(
+          "red",
+          `Sync selesai • ${berhasil.length} berhasil • ${duplicate.length} double`
+        );
+
+        showNotif(
+          `SYNC SELESAI • ${berhasil.length} OK • ${duplicate.length} DOUBLE`,
+          "warning"
+        );
+
+        speak(
+          `${berhasil.length} resi berhasil disinkronkan. ${duplicate.length} resi double scan.`
+        );
+
+      }else{
+
+        beepSuccess();
+
+        setStatus(
+          "green",
+          `Sync selesai • ${berhasil.length} berhasil`
+        );
+
+        showNotif(
+          `TRING • ${berhasil.length} RESI TERSINKRON`,
+          "success"
+        );
+
+        speak(
+          `${berhasil.length} ${ROBOT_CONFIG.pesan.syncBerhasil}`
+        );
+
+      }
+
+    }
+
+
+    // ===================================================
+    // SEMUA GAGAL
+    // ===================================================
+
+    else{
+
+      beepError();
+
+      setStatus(
+        "red",
+        "Tidak ada resi yang berhasil diproses"
+      );
+
+      showNotif(
+        "SYNC GAGAL",
+        "error"
+      );
+
+      speak(
+        ROBOT_CONFIG.pesan.syncGagal
+      );
+
+    }
+
+
+  }catch(error){
+
+    // ===================================================
+    // REQUEST BENAR-BENAR GAGAL
+    //
+    // JANGAN HAPUS ANTREAN
+    // ===================================================
+
+    console.error(
+      "SYNC ERROR:",
+      error
     );
 
-   }
 
+    beepError();
 
-   /*
-     DUPLICATE
-
-     ANTREAN:
-     HAPUS
-
-     RIWAYAT:
-     TETAP CATATAN ASLI,
-     STATUS DIUBAH DOUBLE
-   */
-
-   else if(item.status==="duplicate"){
-
-    duplicate++;
-
-    selesaiSet.add(resi);
-
-    markHistorySynced(
-     resi,
-     "DOUBLE",
-     item
+    setStatus(
+      "red",
+      "Koneksi sync gagal"
     );
 
-   }
+    showNotif(
+      "SYNC GAGAL • RESI TETAP DI ANTREAN",
+      "error"
+    );
 
-
-   /*
-     GAGAL
-
-     ANTREAN:
-     TETAP
-
-     RIWAYAT:
-     TETAP ANTREAN
-   */
-
-   else{
-
-    gagal++;
-
-   }
-
-  });
-
-
-  /*
-    HANYA HAPUS RESI YANG SUDAH SELESAI.
-
-    INI PENTING UNTUK SCAN SAMBIL SYNC.
-
-    Misalnya:
-
-    awal:
-    A
-    B
-    C
-
-    SYNC dimulai.
-
-    Saat SYNC berjalan scan D.
-
-    localData:
-    A
-    B
-    C
-    D
-
-    Kalau A/B/C sukses:
-
-    hasil akhir:
-    D
-
-    D TIDAK TERHAPUS.
-  */
-
-  localData=
-   localData.filter(
-    resi=>
-     !selesaiSet.has(
-      normalizeResi(resi)
-     )
-   );
-
-
-  /*
-    SIMPAN
-  */
-
-  saveData();
-
-  updateUI();
-
-  renderQueue();
-
-  renderHistory();
-
-
-  /*
-    HASIL AKHIR
-  */
-
-  if(
-   gagal===0 &&
-   berhasil>0 &&
-   duplicate===0
-  ){
-
-   beepSuccess();
-
-   setStatus(
-    "green",
-    `Sync selesai • ${berhasil} berhasil`
-   );
-
-   showNotif(
-    `TRING • ${berhasil} RESI TERSINKRON`,
-    "success"
-   );
-
-   speak(
-    `${berhasil} ${ROBOT_CONFIG.pesan.syncBerhasil}`
-   );
-
-  }
-
-  else if(
-   gagal===0 &&
-   berhasil===0 &&
-   duplicate>0
-  ){
-
-   beepDouble();
-
-   setStatus(
-    "red",
-    `${duplicate} RESI DOUBLE`
-   );
-
-   showNotif(
-    `TETOT • ${duplicate} RESI DOUBLE`,
-    "error"
-   );
-
-   speak(
-    `${duplicate} resi terdeteksi double oleh server`
-   );
-
-  }
-
-  else if(
-   berhasil>0 ||
-   duplicate>0
-  ){
-
-   beepSuccess();
-
-   setStatus(
-    "green",
-    `Selesai • ${berhasil} berhasil • ${duplicate} double • ${gagal} gagal`
-   );
-
-   showNotif(
-    `${berhasil} berhasil • ${duplicate} double • ${gagal} gagal`,
-    gagal>0
-     ?"warning"
-     :"success"
-   );
-
-  }
-
-  else{
-
-   beepError();
-
-   setStatus(
-    "red",
-    "Tidak ada resi yang berhasil"
-   );
-
-   showNotif(
-    "SYNC GAGAL",
-    "error"
-   );
-
-   speak(
-    ROBOT_CONFIG.pesan.syncGagal
-   );
+    speak(
+      ROBOT_CONFIG.pesan.syncGagal
+    );
 
   }
 
 
- }catch(error){
+  // =====================================================
+  // BUKA KEMBALI TOMBOL SYNC
+  // =====================================================
 
-  console.error(
-   "SYNC ERROR:",
-   error
-  );
+  finally{
 
+    syncRunning=false;
 
-  /*
-    REQUEST GAGAL TOTAL.
+    syncBtn.disabled=false;
 
-    JANGAN HAPUS APAPUN.
+    syncBtn.innerHTML=
+      '☁ SYNC <span id="syncCount" class="count">'+
+      localData.length+
+      '</span>';
 
-    SEMUA ANTREAN TETAP AMAN.
-  */
+    updateUI();
 
-  setStatus(
-   "red",
-   "Sync gagal • antrean tetap aman"
-  );
-
-  showNotif(
-   "SYNC GAGAL • ANTREAN TIDAK DIHAPUS",
-   "error"
-  );
-
-  beepError();
-
-  speak(
-   ROBOT_CONFIG.pesan.syncGagal
-  );
-
-
- }finally{
-
-  /*
-    BUKA KEMBALI TOMBOL SYNC
-
-    HANYA SETELAH REQUEST SELESAI.
-  */
-
-  syncRunning=false;
-
-  syncBtn.disabled=false;
-
-  syncBtn.innerHTML=
-   '☁ SYNC <span id="syncCount" class="count">'+
-   localData.length+
-   '</span>';
-
-  updateUI();
-
- }
+  }
 
 }
-
 
 /* =========================================================
    UBAH STATUS RIWAYAT
