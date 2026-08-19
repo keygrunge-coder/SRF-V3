@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="id">
 
 <head>
@@ -7,7 +6,7 @@
 <meta charset="UTF-8">
 
 <meta name="viewport"
-   content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <title>SRF V3 • Upload Retur JNT</title>
 
@@ -17,10 +16,10 @@
    RESET
 ========================================================= */
 
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 
     font-family:
         -apple-system,
@@ -32,15 +31,16 @@
 }
 
 html,
-body{
-    width:100%;
-    min-height:100%;
-    background:#f1f5f9;
-    color:#0f172a;
+body {
+    width: 100%;
+    min-height: 100%;
+
+    background: #f1f5f9;
+    color: #0f172a;
 }
 
-body{
-    padding:12px;
+body {
+    padding: 12px;
 }
 
 
@@ -48,10 +48,10 @@ body{
    CONTAINER
 ========================================================= */
 
-.container{
-    width:100%;
-    max-width:900px;
-    margin:auto;
+.container {
+    width: 100%;
+    max-width: 900px;
+    margin: auto;
 }
 
 
@@ -59,64 +59,62 @@ body{
    HEADER
 ========================================================= */
 
-.header{
-    background:#1e293b;
-    color:white;
+.header {
+    background: #1e293b;
+    color: white;
 
-    border-radius:14px;
+    border-radius: 14px;
 
-    padding:16px;
-
-    margin-bottom:12px;
+    padding: 16px;
+    margin-bottom: 12px;
 
     box-shadow:
-        0 5px 15px rgba(15,23,42,.12);
+        0 5px 15px rgba(15, 23, 42, .12);
 }
 
-.header-top{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
+.header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-    gap:10px;
+    gap: 10px;
 }
 
-.header-title{
-    font-size:17px;
-    font-weight:900;
+.header-title {
+    font-size: 17px;
+    font-weight: 900;
 }
 
-.header-subtitle{
-    color:#cbd5e1;
+.header-subtitle {
+    color: #cbd5e1;
 
-    font-size:10px;
+    font-size: 10px;
 
-    margin-top:4px;
+    margin-top: 4px;
 }
 
-.status-pill{
-    flex-shrink:0;
+.status-pill {
+    flex-shrink: 0;
 
-    background:#334155;
+    background: #334155;
+    color: #cbd5e1;
 
-    color:#cbd5e1;
+    padding: 6px 9px;
 
-    padding:6px 9px;
+    border-radius: 20px;
 
-    border-radius:20px;
-
-    font-size:9px;
-    font-weight:900;
+    font-size: 9px;
+    font-weight: 900;
 }
 
-.status-pill.online{
-    background:#166534;
-    color:#dcfce7;
+.status-pill.online {
+    background: #166534;
+    color: #dcfce7;
 }
 
-.status-pill.error{
-    background:#991b1b;
-    color:#fee2e2;
+.status-pill.error {
+    background: #991b1b;
+    color: #fee2e2;
 }
 
 
@@ -124,50 +122,49 @@ body{
    NAVIGATION
 ========================================================= */
 
-.nav{
-    display:grid;
+.nav {
+    display: grid;
 
     grid-template-columns:
-        repeat(2,1fr);
+        repeat(2, 1fr);
 
-    gap:7px;
+    gap: 7px;
 
-    margin-bottom:12px;
+    margin-bottom: 12px;
 }
 
-.nav-btn{
-    border:0;
+.nav-btn {
+    border: 0;
 
-    padding:10px 8px;
+    padding: 10px 8px;
 
-    border-radius:9px;
+    border-radius: 9px;
 
-    color:white;
+    color: white;
 
-    font-size:10px;
-    font-weight:900;
+    font-size: 10px;
+    font-weight: 900;
 
-    text-decoration:none;
+    text-decoration: none;
+    text-align: center;
 
-    text-align:center;
-
-    cursor:pointer;
+    cursor: pointer;
 }
 
-.nav-jnt{
-    background:#2563eb;
+.nav-jnt {
+    background: #2563eb;
 }
 
-.nav-spx{
-    background:#7c3aed;
+.nav-spx {
+    background: #7c3aed;
 }
 
-.nav-scan{
-    background:#0f766e;
+.nav-scan {
+    background: #0f766e;
 }
 
-.nav-home{
-    background:#475569;
+.nav-home {
+    background: #475569;
 }
 
 
@@ -175,34 +172,33 @@ body{
    CARD
 ========================================================= */
 
-.card{
-    background:white;
+.card {
+    background: white;
 
-    border-radius:14px;
+    border-radius: 14px;
 
-    padding:14px;
+    padding: 14px;
 
-    margin-bottom:12px;
+    margin-bottom: 12px;
 
     box-shadow:
-        0 4px 14px rgba(15,23,42,.07);
+        0 4px 14px rgba(15, 23, 42, .07);
 }
 
-.card-title{
-    font-size:13px;
-    font-weight:900;
+.card-title {
+    font-size: 13px;
+    font-weight: 900;
 
-    margin-bottom:5px;
+    margin-bottom: 5px;
 }
 
-.card-subtitle{
-    color:#64748b;
+.card-subtitle {
+    color: #64748b;
 
-    font-size:10px;
+    font-size: 10px;
+    line-height: 1.5;
 
-    line-height:1.5;
-
-    margin-bottom:10px;
+    margin-bottom: 10px;
 }
 
 
@@ -210,39 +206,37 @@ body{
    TEXTAREA
 ========================================================= */
 
-textarea{
-    width:100%;
+textarea {
+    width: 100%;
 
-    min-height:280px;
+    min-height: 280px;
 
-    resize:vertical;
+    resize: vertical;
 
-    border:1px solid #cbd5e1;
+    border: 1px solid #cbd5e1;
 
-    border-radius:10px;
+    border-radius: 10px;
 
-    padding:11px;
+    padding: 11px;
 
-    background:#f8fafc;
+    background: #f8fafc;
+    color: #0f172a;
 
-    color:#0f172a;
+    font-size: 12px;
+    line-height: 1.5;
 
-    font-size:12px;
-
-    line-height:1.5;
-
-    outline:none;
+    outline: none;
 }
 
-textarea:focus{
-    border-color:#2563eb;
+textarea:focus {
+    border-color: #2563eb;
 
     box-shadow:
-        0 0 0 3px rgba(37,99,235,.10);
+        0 0 0 3px rgba(37, 99, 235, .10);
 }
 
-textarea[readonly]{
-    min-height:150px;
+textarea[readonly] {
+    min-height: 150px;
 }
 
 
@@ -250,44 +244,44 @@ textarea[readonly]{
    ACTION
 ========================================================= */
 
-.actions{
-    display:grid;
+.actions {
+    display: grid;
 
     grid-template-columns:
         1fr 1fr;
 
-    gap:8px;
+    gap: 8px;
 
-    margin-top:10px;
+    margin-top: 10px;
 }
 
-.btn{
-    border:0;
+.btn {
+    border: 0;
 
-    border-radius:10px;
+    border-radius: 10px;
 
-    padding:13px 10px;
+    padding: 13px 10px;
 
-    color:white;
+    color: white;
 
-    font-size:12px;
-    font-weight:900;
+    font-size: 12px;
+    font-weight: 900;
 
-    cursor:pointer;
+    cursor: pointer;
 }
 
-.btn-upload{
-    background:#2563eb;
+.btn-upload {
+    background: #2563eb;
 }
 
-.btn-upload:disabled{
-    background:#94a3b8;
+.btn-upload:disabled {
+    background: #94a3b8;
 
-    cursor:not-allowed;
+    cursor: not-allowed;
 }
 
-.btn-clear{
-    background:#64748b;
+.btn-clear {
+    background: #64748b;
 }
 
 
@@ -295,48 +289,47 @@ textarea[readonly]{
    LOADING
 ========================================================= */
 
-.loading{
-    display:none;
+.loading {
+    display: none;
 
-    align-items:center;
-    gap:8px;
+    align-items: center;
 
-    margin-top:10px;
+    gap: 8px;
 
-    padding:10px;
+    margin-top: 10px;
 
-    border-radius:9px;
+    padding: 10px;
 
-    background:#eff6ff;
+    border-radius: 9px;
 
-    color:#1d4ed8;
+    background: #eff6ff;
+    color: #1d4ed8;
 
-    font-size:10px;
-    font-weight:900;
+    font-size: 10px;
+    font-weight: 900;
 }
 
-.loading.show{
-    display:flex;
+.loading.show {
+    display: flex;
 }
 
-.spinner{
-    width:15px;
-    height:15px;
+.spinner {
+    width: 15px;
+    height: 15px;
 
-    border:2px solid #bfdbfe;
+    border: 2px solid #bfdbfe;
+    border-top-color: #2563eb;
 
-    border-top-color:#2563eb;
-
-    border-radius:50%;
+    border-radius: 50%;
 
     animation:
         spin .8s linear infinite;
 }
 
-@keyframes spin{
+@keyframes spin {
 
-    to{
-        transform:rotate(360deg);
+    to {
+        transform: rotate(360deg);
     }
 
 }
@@ -346,49 +339,49 @@ textarea[readonly]{
    RESULT SUMMARY
 ========================================================= */
 
-.summary{
-    display:grid;
+.summary {
+    display: grid;
 
     grid-template-columns:
-        repeat(3,1fr);
+        repeat(3, 1fr);
 
-    gap:7px;
+    gap: 7px;
 }
 
-.summary-box{
-    background:#f8fafc;
+.summary-box {
+    background: #f8fafc;
 
-    border-radius:10px;
+    border-radius: 10px;
 
-    padding:11px 7px;
+    padding: 11px 7px;
 
-    text-align:center;
+    text-align: center;
 }
 
-.summary-label{
-    color:#64748b;
+.summary-label {
+    color: #64748b;
 
-    font-size:9px;
-    font-weight:800;
+    font-size: 9px;
+    font-weight: 800;
 }
 
-.summary-value{
-    margin-top:3px;
+.summary-value {
+    margin-top: 3px;
 
-    font-size:19px;
-    font-weight:900;
+    font-size: 19px;
+    font-weight: 900;
 }
 
-.summary-success{
-    color:#16a34a;
+.summary-success {
+    color: #16a34a;
 }
 
-.summary-warning{
-    color:#d97706;
+.summary-warning {
+    color: #d97706;
 }
 
-.summary-error{
-    color:#dc2626;
+.summary-error {
+    color: #dc2626;
 }
 
 
@@ -396,25 +389,25 @@ textarea[readonly]{
    RESULT HEADER
 ========================================================= */
 
-.result-header{
-    display:flex;
+.result-header {
+    display: flex;
 
-    align-items:center;
-    justify-content:space-between;
+    align-items: center;
+    justify-content: space-between;
 
-    margin-bottom:8px;
+    margin-bottom: 8px;
 }
 
-.result-title{
-    font-size:13px;
-    font-weight:900;
+.result-title {
+    font-size: 13px;
+    font-weight: 900;
 }
 
-.result-count{
-    color:#64748b;
+.result-count {
+    color: #64748b;
 
-    font-size:9px;
-    font-weight:800;
+    font-size: 9px;
+    font-weight: 800;
 }
 
 
@@ -422,39 +415,37 @@ textarea[readonly]{
    LIST
 ========================================================= */
 
-.list-box{
-    width:100%;
+.list-box {
+    width: 100%;
 
-    min-height:80px;
+    min-height: 80px;
 
-    border-radius:9px;
+    border-radius: 9px;
 
-    padding:9px;
+    padding: 9px;
 
-    background:#f8fafc;
+    background: #f8fafc;
 
-    border:1px solid #e2e8f0;
+    border: 1px solid #e2e8f0;
 
-    font-size:11px;
+    font-size: 11px;
+    line-height: 1.6;
 
-    line-height:1.6;
-
-    white-space:pre-wrap;
-
-    word-break:break-word;
+    white-space: pre-wrap;
+    word-break: break-word;
 }
 
-.list-success{
+.list-success {
     border-left:
         4px solid #16a34a;
 }
 
-.list-warning{
+.list-warning {
     border-left:
         4px solid #f59e0b;
 }
 
-.list-error{
+.list-error {
     border-left:
         4px solid #dc2626;
 }
@@ -464,29 +455,27 @@ textarea[readonly]{
    ERROR BOX
 ========================================================= */
 
-.error-box{
-    display:none;
+.error-box {
+    display: none;
 
-    background:#fef2f2;
-
-    color:#991b1b;
+    background: #fef2f2;
+    color: #991b1b;
 
     border:
         1px solid #fecaca;
 
-    border-radius:10px;
+    border-radius: 10px;
 
-    padding:11px;
+    padding: 11px;
 
-    font-size:10px;
+    font-size: 10px;
+    line-height: 1.5;
 
-    line-height:1.5;
-
-    word-break:break-word;
+    word-break: break-word;
 }
 
-.error-box.show{
-    display:block;
+.error-box.show {
+    display: block;
 }
 
 
@@ -494,14 +483,14 @@ textarea[readonly]{
    FOOTER
 ========================================================= */
 
-.footer{
-    text-align:center;
+.footer {
+    text-align: center;
 
-    color:#94a3b8;
+    color: #94a3b8;
 
-    font-size:9px;
+    font-size: 9px;
 
-    padding:6px 0 15px;
+    padding: 6px 0 15px;
 }
 
 
@@ -509,22 +498,22 @@ textarea[readonly]{
    MOBILE
 ========================================================= */
 
-@media(max-width:380px){
+@media (max-width: 380px) {
 
-    body{
-        padding:8px;
+    body {
+        padding: 8px;
     }
 
-    .header-title{
-        font-size:15px;
+    .header-title {
+        font-size: 15px;
     }
 
-    .summary-value{
-        font-size:17px;
+    .summary-value {
+        font-size: 17px;
     }
 
-    textarea{
-        min-height:240px;
+    textarea {
+        min-height: 240px;
     }
 
 }
@@ -533,9 +522,11 @@ textarea[readonly]{
 
 </head>
 
+
 <body>
 
 <div class="container">
+
 
 <!-- =========================================================
      HEADER
@@ -543,33 +534,32 @@ textarea[readonly]{
 
 <div class="header">
 
-```
-<div class="header-top">
+    <div class="header-top">
 
-    <div>
+        <div>
 
-        <div class="header-title">
-            SRF V3 • Upload Retur JNT
+            <div class="header-title">
+                SRF V3 • Upload Retur JNT
+            </div>
+
+            <div class="header-subtitle">
+                Upload data pengiriman gagal ke RETUR_JNT
+            </div>
+
         </div>
 
-        <div class="header-subtitle">
-            Upload data pengiriman gagal ke RETUR_JNT
+        <div
+            id="connectionStatus"
+            class="status-pill">
+
+            CHECKING
+
         </div>
 
     </div>
 
-    <div
-        id="connectionStatus"
-        class="status-pill">
-
-        CHECKING
-
-    </div>
-
 </div>
-```
 
-</div>
 
 <!-- =========================================================
      NAVIGATION
@@ -577,41 +567,40 @@ textarea[readonly]{
 
 <div class="nav">
 
-```
-<a
-    href="index.html"
-    class="nav-btn nav-home">
+    <a
+        href="index.html"
+        class="nav-btn nav-home">
 
-    MENU UTAMA
+        MENU UTAMA
 
-</a>
+    </a>
 
-<a
-    href="scanretur.html"
-    class="nav-btn nav-scan">
+    <a
+        href="scanretur.html"
+        class="nav-btn nav-scan">
 
-    SCAN RETUR
+        SCAN RETUR
 
-</a>
+    </a>
 
-<a
-    href="uploadspx.html"
-    class="nav-btn nav-spx">
+    <a
+        href="uploadspx.html"
+        class="nav-btn nav-spx">
 
-    UPLOAD SPX
+        UPLOAD SPX
 
-</a>
+    </a>
 
-<a
-    href="uploadjnt.html"
-    class="nav-btn nav-jnt">
+    <a
+        href="uploadjnt.html"
+        class="nav-btn nav-jnt">
 
-    UPLOAD JNT
+        UPLOAD JNT
 
-</a>
-```
+    </a>
 
 </div>
+
 
 <!-- =========================================================
      INPUT
@@ -619,62 +608,60 @@ textarea[readonly]{
 
 <div class="card">
 
-```
-<div class="card-title">
-    DATA RETUR
-</div>
+    <div class="card-title">
+        DATA RETUR
+    </div>
 
-<div class="card-subtitle">
+    <div class="card-subtitle">
 
-    Tempel seluruh data mentah dari TikTok / Shopee.
-    Data yang tidak lengkap akan dilewati jika resinya
-    tidak berhasil dibaca.
+        Tempel seluruh data mentah dari TikTok / Shopee.
+        Data yang tidak lengkap akan dilewati jika resinya
+        tidak berhasil dibaca.
 
-</div>
+    </div>
 
-
-<textarea
-    id="rawData"
-    placeholder="Paste data retur di sini..."></textarea>
+    <textarea
+        id="rawData"
+        placeholder="Paste data retur di sini..."></textarea>
 
 
-<div class="actions">
+    <div class="actions">
 
-    <button
-        id="uploadButton"
-        class="btn btn-upload"
-        onclick="uploadRetur()">
+        <button
+            id="uploadButton"
+            class="btn btn-upload"
+            onclick="uploadRetur()">
 
-        UPLOAD KE SHEET
+            UPLOAD KE SHEET
 
-    </button>
-
-
-    <button
-        class="btn btn-clear"
-        onclick="clearData()">
-
-        HAPUS
-
-    </button>
-
-</div>
+        </button>
 
 
-<div
-    id="loading"
-    class="loading">
+        <button
+            class="btn btn-clear"
+            onclick="clearData()">
 
-    <div class="spinner"></div>
+            HAPUS
 
-    <span>
-        Memproses data retur...
-    </span>
+        </button>
 
-</div>
-```
+    </div>
+
+
+    <div
+        id="loading"
+        class="loading">
+
+        <div class="spinner"></div>
+
+        <span>
+            Memproses data retur...
+        </span>
+
+    </div>
 
 </div>
+
 
 <!-- =========================================================
      RINGKASAN
@@ -682,67 +669,67 @@ textarea[readonly]{
 
 <div class="card">
 
-```
-<div class="card-title">
-    HASIL UPLOAD
-</div>
+    <div class="card-title">
+        HASIL UPLOAD
+    </div>
 
-<div class="summary">
 
-    <div class="summary-box">
+    <div class="summary">
 
-        <div class="summary-label">
-            BERHASIL
+        <div class="summary-box">
+
+            <div class="summary-label">
+                BERHASIL
+            </div>
+
+            <div
+                id="hasilBerhasil"
+                class="summary-value summary-success">
+
+                0
+
+            </div>
+
         </div>
 
-        <div
-            id="hasilBerhasil"
-            class="summary-value summary-success">
 
-            0
+        <div class="summary-box">
+
+            <div class="summary-label">
+                DUPLIKAT
+            </div>
+
+            <div
+                id="hasilDuplikat"
+                class="summary-value summary-warning">
+
+                0
+
+            </div>
+
+        </div>
+
+
+        <div class="summary-box">
+
+            <div class="summary-label">
+                TIDAK TERBACA
+            </div>
+
+            <div
+                id="hasilError"
+                class="summary-value summary-error">
+
+                0
+
+            </div>
 
         </div>
 
     </div>
 
-
-    <div class="summary-box">
-
-        <div class="summary-label">
-            DUPLIKAT
-        </div>
-
-        <div
-            id="hasilDuplikat"
-            class="summary-value summary-warning">
-
-            0
-
-        </div>
-
-    </div>
-
-
-    <div class="summary-box">
-
-        <div class="summary-label">
-            TIDAK TERBACA
-        </div>
-
-        <div
-            id="hasilError"
-            class="summary-value summary-error">
-
-            0
-
-        </div>
-
-    </div>
-
 </div>
-```
 
-</div>
 
 <!-- =========================================================
      BERHASIL
@@ -750,34 +737,33 @@ textarea[readonly]{
 
 <div class="card">
 
-```
-<div class="result-header">
+    <div class="result-header">
 
-    <div class="result-title">
-        RESI BERHASIL
+        <div class="result-title">
+            RESI BERHASIL
+        </div>
+
+        <div
+            id="jumlahBerhasil"
+            class="result-count">
+
+            0 RESI
+
+        </div>
+
     </div>
+
 
     <div
-        id="jumlahBerhasil"
-        class="result-count">
+        id="listBerhasil"
+        class="list-box list-success">
 
-        0 RESI
+        Belum ada data.
 
     </div>
 
 </div>
 
-
-<div
-    id="listBerhasil"
-    class="list-box list-success">
-
-    Belum ada data.
-
-</div>
-```
-
-</div>
 
 <!-- =========================================================
      DUPLIKAT
@@ -785,34 +771,33 @@ textarea[readonly]{
 
 <div class="card">
 
-```
-<div class="result-header">
+    <div class="result-header">
 
-    <div class="result-title">
-        RESI DUPLIKAT
+        <div class="result-title">
+            RESI DUPLIKAT
+        </div>
+
+        <div
+            id="jumlahDuplikat"
+            class="result-count">
+
+            0 RESI
+
+        </div>
+
     </div>
+
 
     <div
-        id="jumlahDuplikat"
-        class="result-count">
+        id="listDuplikat"
+        class="list-box list-warning">
 
-        0 RESI
+        Belum ada data.
 
     </div>
 
 </div>
 
-
-<div
-    id="listDuplikat"
-    class="list-box list-warning">
-
-    Belum ada data.
-
-</div>
-```
-
-</div>
 
 <!-- =========================================================
      DATA TIDAK TERBACA
@@ -820,34 +805,33 @@ textarea[readonly]{
 
 <div class="card">
 
-```
-<div class="result-header">
+    <div class="result-header">
 
-    <div class="result-title">
-        DATA TIDAK TERBACA
+        <div class="result-title">
+            DATA TIDAK TERBACA
+        </div>
+
+        <div
+            id="jumlahError"
+            class="result-count">
+
+            0 DATA
+
+        </div>
+
     </div>
+
 
     <div
-        id="jumlahError"
-        class="result-count">
+        id="listError"
+        class="list-box list-error">
 
-        0 DATA
+        Tidak ada data bermasalah.
 
     </div>
 
 </div>
 
-
-<div
-    id="listError"
-    class="list-box list-error">
-
-    Tidak ada data bermasalah.
-
-</div>
-```
-
-</div>
 
 <!-- =========================================================
      ERROR SERVER
@@ -856,18 +840,22 @@ textarea[readonly]{
 <div
     id="errorBox"
     class="error-box">
-
 </div>
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
 
 <div class="footer">
 
-```
-SRF V3 • Upload Retur JNT
-```
+    SRF V3 • Upload Retur JNT
 
 </div>
 
+
 </div>
+
 
 <!-- =========================================================
      CONFIG GLOBAL
@@ -877,18 +865,19 @@ SRF V3 • Upload Retur JNT
 
 <script>
 
+
 /* =========================================================
-   CEK CONFIG
+   GET APP URL
 ========================================================= */
 
-function getAppUrl(){
+function getAppUrl() {
 
-    try{
+    try {
 
-        if(
+        if (
             typeof APP_URL !== "undefined" &&
             APP_URL
-        ){
+        ) {
 
             return String(
                 APP_URL
@@ -896,7 +885,7 @@ function getAppUrl(){
 
         }
 
-    }catch(e){
+    } catch (e) {
 
         console.error(e);
 
@@ -938,12 +927,12 @@ const connectionStatus =
 
 window.addEventListener(
     "load",
-    function(){
+    function () {
 
         const url =
             getAppUrl();
 
-        if(url){
+        if (url) {
 
             connectionStatus.innerText =
                 "READY";
@@ -952,7 +941,7 @@ window.addEventListener(
                 "online"
             );
 
-        }else{
+        } else {
 
             connectionStatus.innerText =
                 "NO CONFIG";
@@ -971,7 +960,7 @@ window.addEventListener(
    RESET HASIL
 ========================================================= */
 
-function resetResult(){
+function resetResult() {
 
     document.getElementById(
         "hasilBerhasil"
@@ -1033,7 +1022,7 @@ function resetResult(){
    ERROR
 ========================================================= */
 
-function showError(message){
+function showError(message) {
 
     const box =
         document.getElementById(
@@ -1041,7 +1030,8 @@ function showError(message){
         );
 
     box.innerText =
-        message || "Terjadi kesalahan.";
+        message ||
+        "Terjadi kesalahan.";
 
     box.classList.add(
         "show"
@@ -1050,7 +1040,7 @@ function showError(message){
 }
 
 
-function hideError(){
+function hideError() {
 
     document.getElementById(
         "errorBox"
@@ -1065,7 +1055,7 @@ function hideError(){
    CLEAR
 ========================================================= */
 
-function clearData(){
+function clearData() {
 
     rawData.value = "";
 
@@ -1080,13 +1070,13 @@ function clearData(){
    SAFE JSON
 ========================================================= */
 
-async function readServerResponse(response){
+async function readServerResponse(response) {
 
     const text =
         await response.text();
 
 
-    if(!text){
+    if (!text) {
 
         throw new Error(
             "Server mengembalikan response kosong."
@@ -1095,13 +1085,13 @@ async function readServerResponse(response){
     }
 
 
-    try{
+    try {
 
         return JSON.parse(
             text
         );
 
-    }catch(e){
+    } catch (e) {
 
         console.error(
             "RAW SERVER RESPONSE:",
@@ -1119,16 +1109,9 @@ async function readServerResponse(response){
 
 /* =========================================================
    ANALISIS DATA MENTAH
-=========================================================
-
-   Tujuannya bukan menggantikan parser Google Apps Script.
-
-   Hanya mendeteksi kemungkinan blok kosong /
-   data yang tidak memiliki resi.
-
 ========================================================= */
 
-function cekDataMentah(text){
+function cekDataMentah(text) {
 
     const lines =
         text
@@ -1140,29 +1123,35 @@ function cekDataMentah(text){
             .filter(Boolean);
 
 
-    if(lines.length === 0){
+    if (lines.length === 0) {
 
         return {
-            valid:false,
-            message:"Data kosong."
+
+            valid: false,
+
+            message: "Data kosong."
+
         };
 
     }
 
 
     return {
-        valid:true,
-        lines:lines
+
+        valid: true,
+
+        lines: lines
+
     };
 
 }
 
 
 /* =========================================================
-   UPLOAD
+   UPLOAD RETUR JNT
 ========================================================= */
 
-async function uploadRetur(){
+async function uploadRetur() {
 
     hideError();
 
@@ -1171,11 +1160,11 @@ async function uploadRetur(){
         rawData.value.trim();
 
 
-    /* -----------------------------------------
+    /* =========================================
        DATA KOSONG
-    ----------------------------------------- */
+    ========================================= */
 
-    if(!text){
+    if (!text) {
 
         showError(
             "Data retur masih kosong. Paste data terlebih dahulu."
@@ -1188,17 +1177,15 @@ async function uploadRetur(){
     }
 
 
-    /* -----------------------------------------
+    /* =========================================
        VALIDASI DATA
-    ----------------------------------------- */
+    ========================================= */
 
     const check =
-        cekDataMentah(
-            text
-        );
+        cekDataMentah(text);
 
 
-    if(!check.valid){
+    if (!check.valid) {
 
         showError(
             check.message
@@ -1209,15 +1196,15 @@ async function uploadRetur(){
     }
 
 
+    /* =========================================
+       CONFIG
+    ========================================= */
+
     const url =
         getAppUrl();
 
 
-    /* -----------------------------------------
-       CONFIG TIDAK ADA
-    ----------------------------------------- */
-
-    if(!url){
+    if (!url) {
 
         connectionStatus.innerText =
             "NO CONFIG";
@@ -1235,9 +1222,9 @@ async function uploadRetur(){
     }
 
 
-    /* -----------------------------------------
-       UI LOADING
-    ----------------------------------------- */
+    /* =========================================
+       LOADING
+    ========================================= */
 
     uploadButton.disabled =
         true;
@@ -1246,19 +1233,17 @@ async function uploadRetur(){
         "show"
     );
 
-
     connectionStatus.innerText =
         "UPLOADING";
-
 
     connectionStatus.classList.remove(
         "online"
     );
 
 
-    /* -----------------------------------------
+    /* =========================================
        RESET HASIL
-    ----------------------------------------- */
+    ========================================= */
 
     resetResult();
 
@@ -1281,12 +1266,11 @@ async function uploadRetur(){
         "Sedang memproses...";
 
 
-    try{
+    try {
 
-
-        /* -------------------------------------
-           REQUEST
-        ------------------------------------- */
+        /* =====================================
+           REQUEST KE GS PUSAT
+        ===================================== */
 
         const response =
             await fetch(
@@ -1295,9 +1279,9 @@ async function uploadRetur(){
 
                 {
 
-                    method:"POST",
+                    method: "POST",
 
-                    headers:{
+                    headers: {
 
                         "Content-Type":
                             "text/plain;charset=utf-8"
@@ -1306,6 +1290,11 @@ async function uploadRetur(){
 
                     body:
                         JSON.stringify({
+
+                            /*
+                             * INI YANG DIPANGGIL
+                             * OLEH doPost() PUSAT
+                             */
 
                             source:
                                 "uploadRetur",
@@ -1320,13 +1309,11 @@ async function uploadRetur(){
             );
 
 
-        /* -------------------------------------
+        /* =====================================
            HTTP ERROR
-        ------------------------------------- */
+        ===================================== */
 
-        if(
-            !response.ok
-        ){
+        if (!response.ok) {
 
             throw new Error(
                 "HTTP Error " +
@@ -1336,9 +1323,9 @@ async function uploadRetur(){
         }
 
 
-        /* -------------------------------------
+        /* =====================================
            RESPONSE
-        ------------------------------------- */
+        ===================================== */
 
         const json =
             await readServerResponse(
@@ -1352,45 +1339,37 @@ async function uploadRetur(){
         );
 
 
-        /* -------------------------------------
-           AMBIL HASIL SECARA AMAN
-        ------------------------------------- */
+        /* =====================================
+           HASIL
+        ===================================== */
 
         const berhasil =
             Array.isArray(
                 json.listBerhasil
             )
-            ? json.listBerhasil
-            : [];
+                ? json.listBerhasil
+                : [];
 
 
         const duplikat =
             Array.isArray(
                 json.listDuplikat
             )
-            ? json.listDuplikat
-            : [];
+                ? json.listDuplikat
+                : [];
 
-
-        /*
-         * Backend lama belum mengembalikan
-         * list error.
-         *
-         * Jadi jangan dianggap error
-         * kalau field tersebut belum ada.
-         */
 
         const errorList =
             Array.isArray(
                 json.listError
             )
-            ? json.listError
-            : [];
+                ? json.listError
+                : [];
 
 
-        /* -------------------------------------
-           TAMPILKAN RINGKASAN
-        ------------------------------------- */
+        /* =====================================
+           SUMMARY
+        ===================================== */
 
         document.getElementById(
             "hasilBerhasil"
@@ -1431,9 +1410,9 @@ async function uploadRetur(){
             " DATA";
 
 
-        /* -------------------------------------
+        /* =====================================
            LIST BERHASIL
-        ------------------------------------- */
+        ===================================== */
 
         document.getElementById(
             "listBerhasil"
@@ -1441,14 +1420,14 @@ async function uploadRetur(){
 
             berhasil.length
 
-            ? berhasil.join("\n")
+                ? berhasil.join("\n")
 
-            : "Tidak ada resi berhasil.";
+                : "Tidak ada resi berhasil.";
 
 
-        /* -------------------------------------
+        /* =====================================
            LIST DUPLIKAT
-        ------------------------------------- */
+        ===================================== */
 
         document.getElementById(
             "listDuplikat"
@@ -1456,14 +1435,14 @@ async function uploadRetur(){
 
             duplikat.length
 
-            ? duplikat.join("\n")
+                ? duplikat.join("\n")
 
-            : "Tidak ada resi duplikat.";
+                : "Tidak ada resi duplikat.";
 
 
-        /* -------------------------------------
+        /* =====================================
            LIST ERROR
-        ------------------------------------- */
+        ===================================== */
 
         document.getElementById(
             "listError"
@@ -1471,14 +1450,14 @@ async function uploadRetur(){
 
             errorList.length
 
-            ? errorList.join("\n")
+                ? errorList.join("\n")
 
-            : "Tidak ada data bermasalah.";
+                : "Tidak ada data bermasalah.";
 
 
-        /* -------------------------------------
+        /* =====================================
            SUCCESS
-        ------------------------------------- */
+        ===================================== */
 
         connectionStatus.innerText =
             "ONLINE";
@@ -1487,9 +1466,9 @@ async function uploadRetur(){
             "online"
         );
 
+    }
 
-    }catch(error){
-
+    catch (error) {
 
         console.error(
             "UPLOAD RETUR ERROR:",
@@ -1532,13 +1511,12 @@ async function uploadRetur(){
         ).innerText =
             "Upload gagal.";
 
+    }
 
-    }finally{
-
+    finally {
 
         uploadButton.disabled =
             false;
-
 
         loading.classList.remove(
             "show"
@@ -1555,12 +1533,12 @@ async function uploadRetur(){
 
 rawData.addEventListener(
     "keydown",
-    function(event){
+    function (event) {
 
-        if(
+        if (
             event.ctrlKey &&
             event.key === "Enter"
-        ){
+        ) {
 
             event.preventDefault();
 
@@ -1578,7 +1556,7 @@ rawData.addEventListener(
 
 window.addEventListener(
     "load",
-    function(){
+    function () {
 
         rawData.focus();
 
@@ -1588,5 +1566,4 @@ window.addEventListener(
 </script>
 
 </body>
-
 </html>
