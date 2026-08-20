@@ -1,382 +1,777 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
-<title>Photo Editor</title>
+<meta name="viewport"
+      content="width=device-width,
+      initial-scale=1.0,
+      maximum-scale=1.0,
+      user-scalable=no">
 
-<meta name="theme-color" content="#111111">
-<meta name="description" content="Editor foto produk sederhana">
+<meta name="theme-color" content="#0f172a">
+
+<title>Photo Editor - SRF V3</title>
 
 <link rel="manifest" href="manifest.json">
 
 <style>
-* {
-    box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
+
+*{
+    box-sizing:border-box;
+
+    -webkit-tap-highlight-color:transparent;
+
+    font-family:Arial,sans-serif;
 }
 
-body {
-    margin: 0;
-    background: #f3f4f6;
-    color: #111827;
-    font-family: Arial, sans-serif;
+html,
+body{
+    margin:0;
+    width:100%;
+    min-height:100%;
+
+    background:#f1f5f9;
+
+    color:#111827;
 }
 
-header {
-    background: #111111;
-    color: white;
-    padding: 18px 16px;
-    position: sticky;
-    top: 0;
-    z-index: 10;
+body{
+    padding-bottom:20px;
 }
 
-header h1 {
-    margin: 0;
-    font-size: 20px;
+
+/* =========================
+   HEADER
+========================= */
+
+.header{
+
+    background:#0f172a;
+
+    color:white;
+
+    padding:
+        18px
+        16px
+        20px;
+
+    border-radius:
+        0
+        0
+        20px
+        20px;
 }
 
-header p {
-    margin: 5px 0 0;
-    font-size: 12px;
-    color: #bdbdbd;
+.header-top{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
 }
 
-.container {
-    max-width: 1100px;
-    margin: auto;
-    padding: 14px;
+.back{
+
+    width:38px;
+    height:38px;
+
+    border:0;
+
+    border-radius:11px;
+
+    background:
+        rgba(255,255,255,.09);
+
+    color:white;
+
+    font-size:20px;
+
+    cursor:pointer;
 }
 
-.editor {
-    display: grid;
-    grid-template-columns: 330px 1fr;
-    gap: 15px;
+.header-title{
+
+    font-size:20px;
+
+    font-weight:900;
 }
 
-.panel {
-    background: white;
-    padding: 16px;
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0,0,0,.06);
+.header-subtitle{
+
+    font-size:11px;
+
+    color:#94a3b8;
+
+    margin-top:3px;
 }
 
-.preview {
-    min-height: 500px;
-    background: #d7d7d7;
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 15px;
+
+/* =========================
+   CONTAINER
+========================= */
+
+.container{
+
+    max-width:1100px;
+
+    margin:auto;
+
+    padding:12px;
 }
 
-canvas {
-    display: none;
-    width: 100%;
-    max-width: 700px;
-    height: auto;
-    border-radius: 8px;
-    box-shadow: 0 8px 30px rgba(0,0,0,.18);
+.editor{
+
+    display:grid;
+
+    grid-template-columns:
+        320px 1fr;
+
+    gap:14px;
 }
 
-.empty {
-    text-align: center;
-    color: #666;
-    font-size: 14px;
+
+/* =========================
+   PANEL
+========================= */
+
+.panel{
+
+    background:white;
+
+    padding:15px;
+
+    border-radius:16px;
+
+    box-shadow:
+        0 4px 20px
+        rgba(15,23,42,.06);
 }
 
-.upload {
-    display: block;
-    border: 2px dashed #aaa;
-    border-radius: 12px;
-    padding: 22px 10px;
-    text-align: center;
-    cursor: pointer;
-    margin-bottom: 16px;
+
+/* =========================
+   PREVIEW
+========================= */
+
+.preview{
+
+    min-height:500px;
+
+    background:#d7d7d7;
+
+    border-radius:16px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:10px;
+
+    overflow:hidden;
 }
 
-.upload input {
-    display: none;
+canvas{
+
+    display:none;
+
+    width:100%;
+
+    max-width:700px;
+
+    height:auto;
+
+    border-radius:8px;
+
+    box-shadow:
+        0 8px 30px
+        rgba(0,0,0,.18);
 }
 
-.upload strong {
-    display: block;
-    margin-bottom: 5px;
+.empty{
+
+    text-align:center;
+
+    color:#666;
+
+    font-size:13px;
 }
 
-.section-title {
-    font-size: 14px;
-    font-weight: bold;
-    margin: 18px 0 12px;
+
+/* =========================
+   UPLOAD
+========================= */
+
+.upload{
+
+    display:block;
+
+    border:
+        2px dashed
+        #aaa;
+
+    border-radius:12px;
+
+    padding:
+        20px
+        10px;
+
+    text-align:center;
+
+    cursor:pointer;
+
+    margin-bottom:12px;
 }
 
-.control {
-    margin-bottom: 15px;
+.upload input{
+
+    display:none;
 }
 
-.control-top {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 6px;
-    font-size: 13px;
+.upload strong{
+
+    display:block;
+
+    margin-bottom:5px;
+
+    font-size:13px;
 }
 
-input[type="range"] {
-    width: 100%;
-    accent-color: #111;
+.upload small{
+
+    color:#64748b;
+
+    font-size:10px;
 }
 
-select {
-    width: 100%;
-    padding: 11px;
-    border: 1px solid #d1d5db;
-    border-radius: 9px;
-    background: white;
-    font-size: 14px;
+
+/* =========================
+   SECTION
+========================= */
+
+.section-title{
+
+    font-size:12px;
+
+    font-weight:900;
+
+    margin:
+        17px
+        0
+        10px;
+
+    color:#334155;
 }
 
-button {
-    width: 100%;
-    padding: 13px;
-    border: 0;
-    border-radius: 10px;
-    font-weight: bold;
-    cursor: pointer;
-    font-size: 14px;
+
+/* =========================
+   CONTROL
+========================= */
+
+.control{
+
+    margin-bottom:14px;
 }
 
-.auto {
-    background: #111;
-    color: white;
-    margin-bottom: 8px;
+.control-top{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    margin-bottom:6px;
+
+    font-size:12px;
+
+    font-weight:700;
 }
 
-.reset {
-    background: #e5e7eb;
-    margin-bottom: 8px;
+input[type="range"]{
+
+    width:100%;
+
+    accent-color:#0f172a;
 }
 
-.download {
-    background: #111;
-    color: white;
+
+/* =========================
+   SELECT
+========================= */
+
+select{
+
+    width:100%;
+
+    padding:11px;
+
+    border:
+        1px solid
+        #d1d5db;
+
+    border-radius:9px;
+
+    background:white;
+
+    font-size:13px;
 }
 
-.info {
-    background: #f3f4f6;
-    border-radius: 10px;
-    padding: 10px;
-    margin-top: 12px;
-    font-size: 11px;
-    color: #666;
-    line-height: 1.5;
+
+/* =========================
+   BUTTON
+========================= */
+
+button{
+
+    width:100%;
+
+    padding:12px;
+
+    border:0;
+
+    border-radius:10px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    font-size:13px;
 }
 
-@media (max-width: 800px) {
+.auto{
 
-    .container {
-        padding: 10px;
+    background:#0f172a;
+
+    color:white;
+
+    margin-bottom:8px;
+}
+
+.reset{
+
+    background:#e5e7eb;
+
+    margin-bottom:8px;
+}
+
+.download{
+
+    background:#0f172a;
+
+    color:white;
+}
+
+
+/* =========================
+   INFO
+========================= */
+
+.info{
+
+    background:#f3f4f6;
+
+    border-radius:10px;
+
+    padding:10px;
+
+    margin-top:12px;
+
+    font-size:10px;
+
+    color:#64748b;
+
+    line-height:1.5;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:800px){
+
+    .container{
+
+        padding:9px;
     }
 
-    .editor {
-        display: flex;
-        flex-direction: column;
+    .editor{
+
+        display:flex;
+
+        flex-direction:column;
     }
 
-    .preview {
-        order: 1;
-        min-height: auto;
-        padding: 8px;
+    .preview{
+
+        order:1;
+
+        min-height:auto;
+
+        padding:7px;
     }
 
-    .panel {
-        order: 2;
+    .panel{
+
+        order:2;
     }
 
-    canvas {
-        max-width: 100%;
+    canvas{
+
+        max-width:100%;
     }
+
 }
+
 </style>
+
 </head>
+
 
 <body>
 
-<header>
-    <h1>Photo Product Editor</h1>
-    <p>Edit foto produk langsung dari HP</p>
+
+<header class="header">
+
+    <div class="header-top">
+
+        <button
+            class="back"
+            onclick="history.back()">
+
+            ‹
+
+        </button>
+
+        <div>
+
+            <div class="header-title">
+                Photo Editor
+            </div>
+
+            <div class="header-subtitle">
+                SRF V3 • Editor Foto Produk
+            </div>
+
+        </div>
+
+    </div>
+
 </header>
+
+
 
 <div class="container">
 
+
 <div class="editor">
 
-    <div class="panel">
 
-        <label class="upload">
-            <input type="file" id="upload" accept="image/*">
-            <strong>UPLOAD FOTO</strong>
-            <small>Pilih foto sandal dari HP</small>
-        </label>
+<!-- =================================================
+     PANEL
+================================================= -->
 
-        <button class="auto" id="autoEnhance">
-            AUTO ENHANCE
-        </button>
+<div class="panel">
 
-        <div class="section-title">
-            PENYESUAIAN FOTO
-        </div>
 
-        <div class="control">
-            <div class="control-top">
-                <span>Brightness</span>
-                <span id="brightnessValue">0</span>
-            </div>
+<label class="upload">
 
-            <input
-                type="range"
-                id="brightness"
-                min="-50"
-                max="50"
-                value="0"
-            >
-        </div>
+    <input
+        type="file"
+        id="upload"
+        accept="image/*">
 
-        <div class="control">
-            <div class="control-top">
-                <span>Contrast</span>
-                <span id="contrastValue">0</span>
-            </div>
+    <strong>
+        UPLOAD FOTO
+    </strong>
 
-            <input
-                type="range"
-                id="contrast"
-                min="-50"
-                max="50"
-                value="0"
-            >
-        </div>
+    <small>
+        Pilih foto sandal dari HP
+    </small>
 
-        <div class="control">
-            <div class="control-top">
-                <span>Saturation</span>
-                <span id="saturationValue">0</span>
-            </div>
+</label>
 
-            <input
-                type="range"
-                id="saturation"
-                min="-50"
-                max="50"
-                value="0"
-            >
-        </div>
 
-        <div class="section-title">
-            WATERMARK
-        </div>
+<button
+    class="auto"
+    id="autoEnhance">
 
-        <div class="control">
+    AUTO ENHANCE
 
-            <select id="watermark">
+</button>
 
-                <option value="">
-                    Tanpa Watermark
-                </option>
 
-                <option value="SRFOOTWEAR">
-                    SRFOOTWEAR
-                </option>
+<div class="section-title">
+    PENYESUAIAN FOTO
+</div>
 
-                <option value="SEKAROFFICIAL">
-                    SEKAROFFICIAL
-                </option>
 
-                <option value="KHANZAFOOTWEAR">
-                    KHANZAFOOTWEAR
-                </option>
+<!-- BRIGHTNESS -->
 
-                <option value="HYLSANDAL">
-                    HYLSANDAL
-                </option>
+<div class="control">
 
-                <option value="DUNIA SANDAL">
-                    DUNIA SANDAL
-                </option>
+    <div class="control-top">
 
-            </select>
+        <span>
+            Brightness
+        </span>
 
-        </div>
-
-        <div class="control">
-
-            <div class="control-top">
-                <span>Ukuran Watermark</span>
-                <span id="watermarkSizeValue">8%</span>
-            </div>
-
-            <input
-                type="range"
-                id="watermarkSize"
-                min="3"
-                max="15"
-                value="8"
-            >
-
-        </div>
-
-        <div class="control">
-
-            <div class="control-top">
-                <span>Opacity</span>
-                <span id="opacityValue">10%</span>
-            </div>
-
-            <input
-                type="range"
-                id="opacity"
-                min="1"
-                max="100"
-                value="10"
-            >
-
-        </div>
-
-        <button class="reset" id="reset">
-            RESET
-        </button>
-
-        <button class="download" id="download">
-            DOWNLOAD JPG
-        </button>
-
-        <div class="info">
-            Output otomatis berbentuk 1:1.
-            Background asli tidak diganti.
-            Watermark berada di tengah foto.
-            Semua proses dilakukan langsung di perangkat.
-        </div>
+        <span id="brightnessValue">
+            0
+        </span>
 
     </div>
 
-    <div class="preview">
+    <input
+        type="range"
+        id="brightness"
+        min="-50"
+        max="50"
+        value="0">
 
-        <div class="empty" id="empty">
-            Upload foto untuk melihat hasil
-        </div>
+</div>
 
-        <canvas id="canvas"></canvas>
+
+<!-- CONTRAST -->
+
+<div class="control">
+
+    <div class="control-top">
+
+        <span>
+            Contrast
+        </span>
+
+        <span id="contrastValue">
+            0
+        </span>
 
     </div>
+
+    <input
+        type="range"
+        id="contrast"
+        min="-50"
+        max="50"
+        value="0">
+
+</div>
+
+
+<!-- SATURATION -->
+
+<div class="control">
+
+    <div class="control-top">
+
+        <span>
+            Saturation
+        </span>
+
+        <span id="saturationValue">
+            0
+        </span>
+
+    </div>
+
+    <input
+        type="range"
+        id="saturation"
+        min="-50"
+        max="50"
+        value="0">
+
+</div>
+
+
+
+<div class="section-title">
+    WATERMARK
+</div>
+
+
+<!-- NAMA WATERMARK -->
+
+<div class="control">
+
+    <select id="watermark">
+
+        <option value="">
+            Tanpa Watermark
+        </option>
+
+        <option value="SRFOOTWEAR">
+            SRFOOTWEAR
+        </option>
+
+        <option value="SEKAROFFICIAL">
+            SEKAROFFICIAL
+        </option>
+
+        <option value="KHANZAFOOTWEAR">
+            KHANZAFOOTWEAR
+        </option>
+
+        <option value="HYLSANDAL">
+            HYLSANDAL
+        </option>
+
+        <option value="DUNIA SANDAL">
+            DUNIA SANDAL
+        </option>
+
+    </select>
+
+</div>
+
+
+<!-- UKURAN -->
+
+<div class="control">
+
+    <div class="control-top">
+
+        <span>
+            Ukuran Watermark
+        </span>
+
+        <span id="watermarkSizeValue">
+            5%
+        </span>
+
+    </div>
+
+    <input
+        type="range"
+        id="watermarkSize"
+        min="3"
+        max="15"
+        value="5">
+
+</div>
+
+
+<!-- OPACITY -->
+
+<div class="control">
+
+    <div class="control-top">
+
+        <span>
+            Opacity
+        </span>
+
+        <span id="opacityValue">
+            10%
+        </span>
+
+    </div>
+
+    <input
+        type="range"
+        id="opacity"
+        min="1"
+        max="100"
+        value="10">
+
+</div>
+
+
+<!-- KEMIRINGAN -->
+
+<div class="control">
+
+    <div class="control-top">
+
+        <span>
+            Kemiringan
+        </span>
+
+        <span id="rotationValue">
+            0°
+        </span>
+
+    </div>
+
+    <input
+        type="range"
+        id="rotation"
+        min="-30"
+        max="30"
+        value="0">
+
+</div>
+
+
+<button
+    class="reset"
+    id="reset">
+
+    RESET
+
+</button>
+
+
+<button
+    class="download"
+    id="download">
+
+    DOWNLOAD JPG
+
+</button>
+
+
+<div class="info">
+
+    Output otomatis 1:1.
+    Background asli tidak diganti.
+    Watermark menggunakan Arial Bold,
+    berada di tengah foto dan dapat
+    diatur ukuran, opacity serta
+    kemiringannya.
+
+</div>
+
+
+</div>
+
+
+
+<!-- =================================================
+     PREVIEW
+================================================= -->
+
+<div class="preview">
+
+    <div
+        class="empty"
+        id="empty">
+
+        Upload foto untuk melihat hasil
+
+    </div>
+
+    <canvas
+        id="canvas">
+    </canvas>
+
+</div>
+
 
 </div>
 
 </div>
+
 
 
 <script>
+
+
+/* =====================================================
+   ELEMENT
+===================================================== */
 
 const upload =
     document.getElementById("upload");
@@ -408,6 +803,10 @@ const watermarkSize =
 const opacity =
     document.getElementById("opacity");
 
+const rotation =
+    document.getElementById("rotation");
+
+
 const brightnessValue =
     document.getElementById("brightnessValue");
 
@@ -423,6 +822,10 @@ const watermarkSizeValue =
 const opacityValue =
     document.getElementById("opacityValue");
 
+const rotationValue =
+    document.getElementById("rotationValue");
+
+
 const autoEnhance =
     document.getElementById("autoEnhance");
 
@@ -432,34 +835,40 @@ const reset =
 const download =
     document.getElementById("download");
 
-let image = new Image();
 
-let loaded = false;
+let image =
+    new Image();
+
+let loaded =
+    false;
 
 
-/* ==========================
+/* =====================================================
    UPLOAD
-========================== */
+===================================================== */
 
 upload.addEventListener(
     "change",
-    function(event) {
+    function(event){
 
         const file =
             event.target.files[0];
 
-        if (!file) return;
+        if(!file) return;
+
 
         const reader =
             new FileReader();
 
+
         reader.onload =
-            function(e) {
+            function(e){
 
                 image.onload =
-                    function() {
+                    function(){
 
-                        loaded = true;
+                        loaded =
+                            true;
 
                         empty.style.display =
                             "none";
@@ -471,10 +880,12 @@ upload.addEventListener(
 
                     };
 
+
                 image.src =
                     e.target.result;
 
             };
+
 
         reader.readAsDataURL(file);
 
@@ -482,34 +893,39 @@ upload.addEventListener(
 );
 
 
-/* ==========================
+/* =====================================================
    FILTER
-========================== */
+===================================================== */
 
-function getFilter() {
+function getFilter(){
 
     const b =
-        100 + Number(brightness.value);
+        100 +
+        Number(brightness.value);
 
     const c =
-        100 + Number(contrast.value);
+        100 +
+        Number(contrast.value);
 
     const s =
-        100 + Number(saturation.value);
+        100 +
+        Number(saturation.value);
+
 
     return `
         brightness(${b}%)
         contrast(${c}%)
         saturate(${s}%)
     `;
+
 }
 
 
-/* ==========================
+/* =====================================================
    LABEL
-========================== */
+===================================================== */
 
-function updateLabels() {
+function updateLabels(){
 
     brightnessValue.textContent =
         brightness.value;
@@ -525,21 +941,28 @@ function updateLabels() {
 
     opacityValue.textContent =
         opacity.value + "%";
+
+    rotationValue.textContent =
+        rotation.value + "°";
+
 }
 
 
-/* ==========================
+/* =====================================================
    RENDER
-========================== */
+===================================================== */
 
-function render() {
+function render(){
 
-    if (!loaded) return;
+    if(!loaded)
+        return;
+
 
     updateLabels();
 
+
     /*
-       Kanvas 1:1
+       CANVAS 1:1
     */
 
     const size =
@@ -548,8 +971,13 @@ function render() {
             image.height
         );
 
-    canvas.width = size;
-    canvas.height = size;
+
+    canvas.width =
+        size;
+
+    canvas.height =
+        size;
+
 
     ctx.clearRect(
         0,
@@ -561,7 +989,7 @@ function render() {
 
     /*
        FOTO ASLI
-       Background tidak diganti.
+       BACKGROUND TIDAK DIGANTI
     */
 
     ctx.save();
@@ -569,11 +997,13 @@ function render() {
     ctx.filter =
         getFilter();
 
+
     const x =
         (size - image.width) / 2;
 
     const y =
         (size - image.height) / 2;
+
 
     ctx.drawImage(
         image,
@@ -583,31 +1013,43 @@ function render() {
         image.height
     );
 
+
     ctx.restore();
 
 
-    /*
-       WATERMARK TENGAH
-    */
+
+    /* ===============================================
+       WATERMARK
+    =============================================== */
 
     const text =
         watermark.value;
 
-    if (text) {
+
+    if(text){
 
         const fontSize =
             size *
             Number(watermarkSize.value)
             / 100;
 
+
         ctx.save();
+
 
         ctx.globalAlpha =
             Number(opacity.value)
             / 100;
 
+
+        /*
+           FONT SAMA DENGAN
+           EDITOR PERTAMA
+        */
+
         ctx.font =
             `bold ${fontSize}px Arial`;
+
 
         ctx.textAlign =
             "center";
@@ -615,25 +1057,53 @@ function render() {
         ctx.textBaseline =
             "middle";
 
+
         /*
-           Shadow tipis supaya watermark
-           tetap terlihat ketika melewati sandal.
+           PUSAT ROTASI
         */
 
-        ctx.shadowColor =
-            "rgba(0,0,0,0.25)";
+        ctx.translate(
+            size / 2,
+            size / 2
+        );
 
-        ctx.shadowBlur =
-            fontSize * 0.08;
+
+        ctx.rotate(
+            Number(rotation.value)
+            * Math.PI
+            / 180
+        );
+
+
+        /*
+           WATERMARK PUTIH
+        */
 
         ctx.fillStyle =
             "#ffffff";
 
+
+        /*
+           SHADOW TIPIS
+        */
+
+        ctx.shadowColor =
+            "rgba(0,0,0,.25)";
+
+        ctx.shadowBlur =
+            fontSize * .08;
+
+
+        /*
+           TEXT
+        */
+
         ctx.fillText(
             text,
-            size / 2,
-            size / 2
+            0,
+            0
         );
+
 
         ctx.restore();
 
@@ -642,31 +1112,34 @@ function render() {
 }
 
 
-/* ==========================
+/* =====================================================
    AUTO ENHANCE
-========================== */
+===================================================== */
 
 autoEnhance.addEventListener(
     "click",
-    function() {
+    function(){
 
-        if (!loaded) {
+        if(!loaded){
 
             alert(
                 "Upload foto terlebih dahulu."
             );
 
             return;
+
         }
 
-        /*
-           Setting awal yang aman.
-           Tidak terlalu berlebihan.
-        */
 
-        brightness.value = 8;
-        contrast.value = 12;
-        saturation.value = 8;
+        brightness.value =
+            8;
+
+        contrast.value =
+            12;
+
+        saturation.value =
+            8;
+
 
         render();
 
@@ -674,9 +1147,9 @@ autoEnhance.addEventListener(
 );
 
 
-/* ==========================
-   REALTIME UPDATE
-========================== */
+/* =====================================================
+   REALTIME
+===================================================== */
 
 [
     brightness,
@@ -684,7 +1157,9 @@ autoEnhance.addEventListener(
     saturation,
     watermark,
     watermarkSize,
-    opacity
+    opacity,
+    rotation
+
 ].forEach(
     element => {
 
@@ -702,22 +1177,37 @@ autoEnhance.addEventListener(
 );
 
 
-/* ==========================
+/* =====================================================
    RESET
-========================== */
+===================================================== */
 
 reset.addEventListener(
     "click",
-    function() {
+    function(){
 
-        brightness.value = 0;
-        contrast.value = 0;
-        saturation.value = 0;
+        brightness.value =
+            0;
 
-        watermark.value = "";
+        contrast.value =
+            0;
 
-        watermarkSize.value = 8;
-        opacity.value = 10;
+        saturation.value =
+            0;
+
+
+        watermark.value =
+            "";
+
+
+        watermarkSize.value =
+            5;
+
+        opacity.value =
+            10;
+
+        rotation.value =
+            0;
+
 
         render();
 
@@ -725,34 +1215,39 @@ reset.addEventListener(
 );
 
 
-/* ==========================
+/* =====================================================
    DOWNLOAD
-========================== */
+===================================================== */
 
 download.addEventListener(
     "click",
-    function() {
+    function(){
 
-        if (!loaded) {
+        if(!loaded){
 
             alert(
                 "Upload foto terlebih dahulu."
             );
 
             return;
+
         }
+
 
         const link =
             document.createElement("a");
 
+
         link.download =
             "foto-produk-1x1.jpg";
+
 
         link.href =
             canvas.toDataURL(
                 "image/jpeg",
-                0.95
+                .95
             );
+
 
         link.click();
 
@@ -760,18 +1255,18 @@ download.addEventListener(
 );
 
 
-/* ==========================
+/* =====================================================
    SERVICE WORKER
-========================== */
+===================================================== */
 
-if (
+if(
     "serviceWorker"
     in navigator
-) {
+){
 
     window.addEventListener(
         "load",
-        function() {
+        function(){
 
             navigator.serviceWorker
                 .register("sw.js")
@@ -788,9 +1283,11 @@ if (
 
 }
 
+
 updateLabels();
 
 </script>
+
 
 </body>
 </html>
