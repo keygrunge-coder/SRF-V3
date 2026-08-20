@@ -1,13 +1,19 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
+
 <meta charset="UTF-8">
 
 <meta name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+      content="width=device-width,
+      initial-scale=1.0,
+      maximum-scale=1.0,
+      user-scalable=no">
 
-<meta name="theme-color" content="#0f172a">
+<meta name="theme-color" content="#0b1120">
+
+<meta name="description"
+      content="SRF V3 - Sistem Operasional">
 
 <title>SRF V3</title>
 
@@ -15,10 +21,16 @@
 
 <style>
 
+/* =====================================================
+   RESET
+===================================================== */
+
 *{
     box-sizing:border-box;
     margin:0;
     padding:0;
+
+    -webkit-tap-highlight-color:transparent;
 
     font-family:
         -apple-system,
@@ -33,7 +45,8 @@ html,
 body{
     width:100%;
     min-height:100%;
-    background:#0f172a;
+
+    background:#eef2f7;
 }
 
 body{
@@ -41,89 +54,394 @@ body{
 }
 
 
-/* =========================
+/* =====================================================
    APP
-========================= */
+===================================================== */
 
 .app{
     min-height:100vh;
-    background:#f1f5f9;
+
+    background:
+        linear-gradient(
+            180deg,
+            #0b1120 0px,
+            #0b1120 190px,
+            #eef2f7 190px,
+            #eef2f7 100%
+        );
 }
 
 
-/* =========================
+/* =====================================================
    HEADER
-========================= */
+===================================================== */
 
 .header{
-    background:#0f172a;
+
     color:white;
 
     padding:
-        22px
+        20px
         18px
-        24px;
+        28px;
 
-    border-radius:
-        0
-        0
-        22px
-        22px;
+    position:relative;
+
+    overflow:hidden;
 }
 
-.header-small{
-    font-size:11px;
-    font-weight:700;
+
+/* Decorative glow */
+
+.header::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:180px;
+    height:180px;
+
+    right:-70px;
+    top:-90px;
+
+    border-radius:50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(59,130,246,.25),
+            transparent 70%
+        );
+
+    pointer-events:none;
+}
+
+
+.header-top{
+
+    display:flex;
+
+    justify-content:
+        space-between;
+
+    align-items:center;
+
+    position:relative;
+
+    z-index:2;
+}
+
+
+.brand{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+}
+
+
+.brand-logo{
+
+    width:42px;
+    height:42px;
+
+    border-radius:13px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #3b82f6,
+            #6366f1
+        );
+
+    color:white;
+
+    font-size:18px;
+
+    font-weight:900;
+
+    box-shadow:
+        0 8px 20px
+        rgba(59,130,246,.25);
+}
+
+
+.brand-text-small{
+
+    font-size:9px;
+
+    font-weight:800;
 
     color:#94a3b8;
 
-    letter-spacing:.5px;
-
-    margin-bottom:4px;
+    letter-spacing:1px;
 }
 
-.header-title{
-    font-size:27px;
-    font-weight:900;
+
+.brand-title{
+
+    font-size:20px;
+
+    font-weight:950;
 
     letter-spacing:-.5px;
 }
 
-.header-subtitle{
-    font-size:12px;
+
+.status{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:6px;
+
+    background:
+        rgba(255,255,255,.07);
+
+    border:
+        1px solid
+        rgba(255,255,255,.08);
+
+    padding:
+        7px
+        10px;
+
+    border-radius:20px;
+
+    font-size:9px;
+
+    font-weight:800;
+
     color:#cbd5e1;
+
+    backdrop-filter:blur(10px);
+}
+
+
+.status-dot{
+
+    width:7px;
+    height:7px;
+
+    border-radius:50%;
+
+    background:#22c55e;
+
+    box-shadow:
+        0 0 8px
+        rgba(34,197,94,.8);
+}
+
+
+/* =====================================================
+   WELCOME
+===================================================== */
+
+.welcome{
+
+    position:relative;
+
+    z-index:2;
+
+    margin-top:22px;
+}
+
+
+.welcome-small{
+
+    color:#94a3b8;
+
+    font-size:10px;
+
+    font-weight:700;
+}
+
+
+.welcome-title{
+
+    font-size:28px;
+
+    font-weight:950;
+
+    letter-spacing:-1px;
+
+    margin-top:3px;
+}
+
+
+.welcome-desc{
+
+    color:#cbd5e1;
+
+    font-size:11px;
 
     margin-top:5px;
 }
 
 
-/* =========================
+/* =====================================================
    CONTENT
-========================= */
+===================================================== */
 
 .content{
-    padding:16px;
-    padding-bottom:30px;
+
+    padding:
+        0
+        15px
+        30px;
+
+    margin-top:-2px;
 }
 
-.section-title{
-    font-size:13px;
+
+/* =====================================================
+   QUICK INFO
+===================================================== */
+
+.quick-info{
+
+    background:white;
+
+    border-radius:18px;
+
+    padding:14px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:
+        space-between;
+
+    box-shadow:
+        0 8px 25px
+        rgba(15,23,42,.09);
+
+    margin-bottom:18px;
+}
+
+
+.quick-left{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:11px;
+}
+
+
+.quick-icon{
+
+    width:38px;
+    height:38px;
+
+    border-radius:11px;
+
+    background:#eff6ff;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    font-size:17px;
+}
+
+
+.quick-title{
+
+    font-size:11px;
+
+    font-weight:900;
+}
+
+
+.quick-desc{
+
+    font-size:9px;
+
+    color:#64748b;
+
+    margin-top:2px;
+}
+
+
+.quick-badge{
+
+    font-size:9px;
+
     font-weight:900;
 
-    color:#475569;
+    color:#16a34a;
+
+    background:#dcfce7;
+
+    padding:
+        6px
+        8px;
+
+    border-radius:8px;
+}
+
+
+/* =====================================================
+   SECTION
+===================================================== */
+
+.section-title{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:
+        space-between;
 
     margin:
-        4px
-        2px
+        0
+        3px
         10px;
 }
 
 
-/* =========================
-   MENU
-========================= */
+.section-title-main{
+
+    font-size:12px;
+
+    font-weight:950;
+
+    color:#334155;
+
+    letter-spacing:.2px;
+}
+
+
+.section-title-count{
+
+    font-size:9px;
+
+    font-weight:800;
+
+    color:#94a3b8;
+}
+
+
+/* =====================================================
+   MENU GRID
+===================================================== */
 
 .menu{
+
     display:grid;
 
     grid-template-columns:
@@ -132,145 +450,367 @@ body{
     gap:10px;
 }
 
+
+/* =====================================================
+   MENU CARD
+===================================================== */
+
 .menu-card{
-    border:0;
+
+    position:relative;
+
+    overflow:hidden;
+
+    min-height:128px;
 
     background:white;
 
-    border-radius:15px;
+    border:
+        1px solid
+        rgba(148,163,184,.12);
 
-    min-height:125px;
+    border-radius:17px;
 
-    padding:15px;
+    padding:14px;
 
     text-align:left;
-
-    cursor:pointer;
-
-    box-shadow:
-        0 4px 14px
-        rgba(15,23,42,.07);
-
-    transition:
-        transform .12s,
-        box-shadow .12s;
 
     text-decoration:none;
 
     color:inherit;
 
     display:flex;
-    flex-direction:column;
-    justify-content:space-between;
-}
 
-.menu-card:active{
-    transform:scale(.97);
+    flex-direction:column;
+
+    justify-content:
+        space-between;
 
     box-shadow:
-        0 2px 7px
+        0 5px 18px
+        rgba(15,23,42,.055);
+
+    transition:
+        transform .12s ease,
+        box-shadow .12s ease;
+}
+
+
+.menu-card::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:80px;
+    height:80px;
+
+    right:-40px;
+    bottom:-40px;
+
+    border-radius:50%;
+
+    background:
+        rgba(59,130,246,.035);
+}
+
+
+.menu-card:active{
+
+    transform:
+        scale(.965);
+
+    box-shadow:
+        0 3px 10px
         rgba(15,23,42,.08);
 }
 
 
-/* =========================
-   ICON
-========================= */
+/* =====================================================
+   MENU ICON
+===================================================== */
 
 .menu-icon{
+
     width:42px;
     height:42px;
 
-    border-radius:12px;
+    border-radius:13px;
 
     display:flex;
+
     align-items:center;
     justify-content:center;
 
-    font-size:21px;
+    font-size:19px;
 
     margin-bottom:12px;
+
+    position:relative;
+
+    z-index:2;
 }
 
+
+/* ICON COLORS */
+
 .icon-blue{
-    background:#dbeafe;
+
+    color:#2563eb;
+
+    background:#eff6ff;
 }
 
 .icon-purple{
-    background:#ede9fe;
+
+    color:#7c3aed;
+
+    background:#f5f3ff;
 }
 
 .icon-orange{
-    background:#ffedd5;
+
+    color:#ea580c;
+
+    background:#fff7ed;
 }
 
 .icon-green{
-    background:#dcfce7;
+
+    color:#16a34a;
+
+    background:#f0fdf4;
 }
 
 .icon-cyan{
-    background:#cffafe;
+
+    color:#0891b2;
+
+    background:#ecfeff;
 }
 
 .icon-pink{
-    background:#fce7f3;
+
+    color:#db2777;
+
+    background:#fdf2f8;
+}
+
+.icon-indigo{
+
+    color:#4f46e5;
+
+    background:#eef2ff;
 }
 
 
-/* =========================
-   TEXT
-========================= */
+/* =====================================================
+   MENU TEXT
+===================================================== */
 
 .menu-name{
-    font-size:13px;
-    font-weight:900;
+
+    font-size:12px;
+
+    font-weight:950;
 
     color:#0f172a;
+
+    position:relative;
+
+    z-index:2;
 }
 
+
 .menu-desc{
+
     font-size:9px;
+
     font-weight:600;
+
+    line-height:1.35;
 
     color:#64748b;
 
     margin-top:3px;
 
-    line-height:1.35;
+    position:relative;
+
+    z-index:2;
 }
 
 
-/* =========================
+/* =====================================================
+   ARROW
+===================================================== */
+
+.menu-arrow{
+
+    position:absolute;
+
+    right:12px;
+    bottom:12px;
+
+    font-size:12px;
+
+    color:#cbd5e1;
+
+    z-index:2;
+}
+
+
+/* =====================================================
+   FEATURE CARD
+===================================================== */
+
+.feature{
+
+    margin-top:18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #111827,
+            #1e293b
+        );
+
+    color:white;
+
+    border-radius:18px;
+
+    padding:16px;
+
+    box-shadow:
+        0 8px 25px
+        rgba(15,23,42,.15);
+
+    text-decoration:none;
+
+    display:block;
+
+    position:relative;
+
+    overflow:hidden;
+}
+
+
+.feature::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:150px;
+    height:150px;
+
+    right:-60px;
+    top:-60px;
+
+    border-radius:50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(59,130,246,.35),
+            transparent 70%
+        );
+}
+
+
+.feature-label{
+
+    font-size:9px;
+
+    color:#93c5fd;
+
+    font-weight:900;
+
+    letter-spacing:.8px;
+}
+
+
+.feature-title{
+
+    font-size:16px;
+
+    font-weight:950;
+
+    margin-top:5px;
+}
+
+
+.feature-desc{
+
+    font-size:10px;
+
+    color:#cbd5e1;
+
+    margin-top:4px;
+
+    max-width:260px;
+
+    line-height:1.4;
+}
+
+
+.feature-arrow{
+
+    position:absolute;
+
+    right:16px;
+    bottom:16px;
+
+    width:30px;
+    height:30px;
+
+    border-radius:50%;
+
+    background:
+        rgba(255,255,255,.1);
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    font-size:13px;
+}
+
+
+/* =====================================================
    FOOTER
-========================= */
+===================================================== */
 
 .footer{
+
     text-align:center;
 
     color:#94a3b8;
 
-    font-size:9px;
+    font-size:8px;
+
     font-weight:700;
 
     padding:
-        5px
+        18px
         0
-        20px;
+        8px;
 }
 
 
-/* =========================
+/* =====================================================
    MOBILE
-========================= */
+===================================================== */
 
 @media(max-width:360px){
 
-    .header-title{
+    .welcome-title{
         font-size:24px;
     }
 
     .content{
-        padding:12px;
+        padding-left:11px;
+        padding-right:11px;
     }
 
     .menu{
@@ -278,279 +818,482 @@ body{
     }
 
     .menu-card{
-        min-height:115px;
-        padding:13px;
+        min-height:118px;
+        padding:12px;
+    }
+
+}
+
+
+/* =====================================================
+   INSTALL / PWA
+===================================================== */
+
+@media(display-mode:standalone){
+
+    .header{
+        padding-top:28px;
     }
 
 }
 
 </style>
+
 </head>
 
+
 <body>
+
 
 <div class="app">
 
 
-    <!-- =====================
-         HEADER
-    ====================== -->
+<!-- ===================================================
+     HEADER
+==================================================== -->
 
-    <header class="header">
+<header class="header">
 
-        <div class="header-small">
-            SISTEM OPERASIONAL
-        </div>
+    <div class="header-top">
 
-        <div class="header-title">
-            SRF V3
-        </div>
+        <div class="brand">
 
-        <div class="header-subtitle">
-            Scanner & Tools
-        </div>
+            <div class="brand-logo">
+                SR
+            </div>
 
-    </header>
+            <div>
 
+                <div class="brand-text-small">
+                    SISTEM OPERASIONAL
+                </div>
 
-    <!-- =====================
-         MENU
-    ====================== -->
+                <div class="brand-title">
+                    SRF V3
+                </div>
 
-    <main class="content">
+            </div>
 
-        <div class="section-title">
-            MENU UTAMA
         </div>
 
 
-        <div class="menu">
+        <div class="status">
 
+            <span class="status-dot"></span>
 
-            <!-- PENGIRIMAN -->
+            ONLINE
 
-            <a
-                href="pengiriman.html"
-                class="menu-card">
-
-                <div>
-
-                    <div class="menu-icon icon-blue">
-                        📦
-                    </div>
-
-                    <div class="menu-name">
-                        Pengiriman
-                    </div>
-
-                    <div class="menu-desc">
-                        Scan resi pengiriman
-                    </div>
-
-                </div>
-
-            </a>
-
-
-            <!-- SCAN RETUR -->
-
-            <a
-                href="scanretur.html"
-                class="menu-card">
-
-                <div>
-
-                    <div class="menu-icon icon-purple">
-                        ↩️
-                    </div>
-
-                    <div class="menu-name">
-                        Scan Retur
-                    </div>
-
-                    <div class="menu-desc">
-                        Scan barang yang kembali
-                    </div>
-
-                </div>
-
-            </a>
-
-
-           <!-- tes bagian  pemisah -->    
-
-  <a
-                href="pemisah.html"
-                class="menu-card">
-
-                <div>
-
-                    <div class="menu-icon icon-purple">
-                        ✂️
-                    </div>
-
-                    <div class="menu-name">
-                        merekap pesanan
-                    </div>
-                      <div class="menu-name">
-                        rekap data belanja
-                    </div>
-                    
-
-                </div>
-
-            </a>
-
-
-            <!-- UPLOAD JNT -->
-
-            <a
-                href="uploadjnt.html"
-                class="menu-card">
-
-                <div>
-
-                    <div class="menu-icon icon-orange">
-                        🚚
-                    </div>
-
-                    <div class="menu-name">
-                        Upload Retur J&T
-                    </div>
-
-                    <div class="menu-desc">
-                        Upload data retur J&T
-                    </div>
-
-                </div>
-
-            </a>
-
-
-            <!-- UPLOAD SPX -->
-
-            <a
-                href="uploadspx.html"
-                class="menu-card">
-
-                <div>
-
-                    <div class="menu-icon icon-green">
-                        🚛
-                    </div>
-
-                    <div class="menu-name">
-                        Upload Retur SPX
-                    </div>
-
-                    <div class="menu-desc">
-                        Upload data retur SPX
-                    </div>
-
-                </div>
-
-            </a>
-
-
-            <!-- KALKULATOR -->
-
-            <a
-                href="kalkulator.html"
-                class="menu-card">
-
-                <div>
-
-                    <div class="menu-icon icon-cyan">
-                        🧮
-                    </div>
-
-                    <div class="menu-name">
-                        Kalkulator
-                    </div>
-
-                    <div class="menu-desc">
-                        Kalkulator harga & profit
-                    </div>
-
-                </div>
-
-            </a>
-
-<!-- PROMPT -->
-
-<a
-    href="prompt.html"
-    class="menu-card">
-
-    <div>
-
-        <div class="menu-icon icon-pink">
-            ✨
-        </div>
-
-        <div class="menu-name">
-            Prompt
-        </div>
-
-        <div class="menu-desc">
-            Membuat prompt AI
         </div>
 
     </div>
 
-</a>
-            <!-- SEO JUDUL -->
 
-            <a
-                href="seojudulspx.html"
-                class="menu-card">
+    <div class="welcome">
 
-                <div>
+        <div class="welcome-small">
+            SELAMAT DATANG
+        </div>
 
-                    <div class="menu-icon icon-pink">
-                        ✍️
-                    </div>
+        <div class="welcome-title">
+            Dashboard
+        </div>
 
-                    <div class="menu-name">
-                        SEO Judul SPX
-                    </div>
+        <div class="welcome-desc">
+            Scanner & tools operasional
+        </div>
 
-                    <div class="menu-desc">
-                        Membuat judul produk
-                    </div>
+    </div>
 
+</header>
+
+
+
+<!-- ===================================================
+     CONTENT
+==================================================== -->
+
+<main class="content">
+
+
+    <!-- QUICK INFO -->
+
+    <div class="quick-info">
+
+        <div class="quick-left">
+
+            <div class="quick-icon">
+                ⚡
+            </div>
+
+            <div>
+
+                <div class="quick-title">
+                    SRF V3 Aktif
                 </div>
 
-            </a>
+                <div class="quick-desc">
+                    Sistem siap digunakan
+                </div>
 
+            </div>
 
         </div>
 
-    </main>
+
+        <div class="quick-badge">
+            READY
+        </div>
+
+    </div>
 
 
-    <!-- =====================
-         FOOTER
-    ====================== -->
 
-    <footer class="footer">
+    <!-- MENU -->
 
-        SRF V3 • Sistem Operasional
+    <div class="section-title">
 
-    </footer>
+        <div class="section-title-main">
+            MENU UTAMA
+        </div>
+
+        <div class="section-title-count">
+            9 TOOLS
+        </div>
+
+    </div>
+
+
+    <div class="menu">
+
+
+        <!-- PENGIRIMAN -->
+
+        <a
+            href="pengiriman.html"
+            class="menu-card">
+
+            <div>
+
+                <div class="menu-icon icon-blue">
+                    📦
+                </div>
+
+                <div class="menu-name">
+                    Pengiriman
+                </div>
+
+                <div class="menu-desc">
+                    Scan resi pengiriman
+                </div>
+
+            </div>
+
+            <div class="menu-arrow">
+                →
+            </div>
+
+        </a>
+
+
+
+        <!-- SCAN RETUR -->
+
+        <a
+            href="scanretur.html"
+            class="menu-card">
+
+            <div>
+
+                <div class="menu-icon icon-purple">
+                    ↩
+                </div>
+
+                <div class="menu-name">
+                    Scan Retur
+                </div>
+
+                <div class="menu-desc">
+                    Scan barang yang kembali
+                </div>
+
+            </div>
+
+            <div class="menu-arrow">
+                →
+            </div>
+
+        </a>
+
+
+
+        <!-- PEMISAH -->
+
+        <a
+            href="pemisah.html"
+            class="menu-card">
+
+            <div>
+
+                <div class="menu-icon icon-indigo">
+                    ✂
+                </div>
+
+                <div class="menu-name">
+                    Rekap Pesanan
+                </div>
+
+                <div class="menu-desc">
+                    Rekap data belanja
+                </div>
+
+            </div>
+
+            <div class="menu-arrow">
+                →
+            </div>
+
+        </a>
+
+
+
+        <!-- UPLOAD JNT -->
+
+        <a
+            href="uploadjnt.html"
+            class="menu-card">
+
+            <div>
+
+                <div class="menu-icon icon-orange">
+                    🚚
+                </div>
+
+                <div class="menu-name">
+                    Upload Retur J&T
+                </div>
+
+                <div class="menu-desc">
+                    Upload data retur J&T
+                </div>
+
+            </div>
+
+            <div class="menu-arrow">
+                →
+            </div>
+
+        </a>
+
+
+
+        <!-- UPLOAD SPX -->
+
+        <a
+            href="uploadspx.html"
+            class="menu-card">
+
+            <div>
+
+                <div class="menu-icon icon-green">
+                    🚛
+                </div>
+
+                <div class="menu-name">
+                    Upload Retur SPX
+                </div>
+
+                <div class="menu-desc">
+                    Upload data retur SPX
+                </div>
+
+            </div>
+
+            <div class="menu-arrow">
+                →
+            </div>
+
+        </a>
+
+
+
+        <!-- KALKULATOR -->
+
+        <a
+            href="kalkulator.html"
+            class="menu-card">
+
+            <div>
+
+                <div class="menu-icon icon-cyan">
+                    🧮
+                </div>
+
+                <div class="menu-name">
+                    Kalkulator
+                </div>
+
+                <div class="menu-desc">
+                    Harga & profit
+                </div>
+
+            </div>
+
+            <div class="menu-arrow">
+                →
+            </div>
+
+        </a>
+
+
+
+        <!-- PROMPT -->
+
+        <a
+            href="prompt.html"
+            class="menu-card">
+
+            <div>
+
+                <div class="menu-icon icon-pink">
+                    ✨
+                </div>
+
+                <div class="menu-name">
+                    Prompt AI
+                </div>
+
+                <div class="menu-desc">
+                    Membuat prompt AI
+                </div>
+
+            </div>
+
+            <div class="menu-arrow">
+                →
+            </div>
+
+        </a>
+
+
+
+        <!-- SEO -->
+
+        <a
+            href="seojudulspx.html"
+            class="menu-card">
+
+            <div>
+
+                <div class="menu-icon icon-pink">
+                    ✍
+                </div>
+
+                <div class="menu-name">
+                    SEO Judul SPX
+                </div>
+
+                <div class="menu-desc">
+                    Membuat judul produk
+                </div>
+
+            </div>
+
+            <div class="menu-arrow">
+                →
+            </div>
+
+        </a>
+
+
+
+        <!-- PHOTO EDITOR -->
+
+        <a
+            href="photoeditor.html"
+            class="menu-card">
+
+            <div>
+
+                <div class="menu-icon icon-indigo">
+                    🖼
+                </div>
+
+                <div class="menu-name">
+                    Photo Editor
+                </div>
+
+                <div class="menu-desc">
+                    Edit foto produk 1:1
+                </div>
+
+            </div>
+
+            <div class="menu-arrow">
+                →
+            </div>
+
+        </a>
+
+
+    </div>
+
+
+
+    <!-- FEATURE -->
+
+    <a
+        href="photoeditor.html"
+        class="feature">
+
+        <div class="feature-label">
+            TOOLS TERBARU
+        </div>
+
+        <div class="feature-title">
+            Photo Product Editor
+        </div>
+
+        <div class="feature-desc">
+            Buat foto produk 1:1,
+            auto enhance dan tambahkan
+            watermark langsung dari HP.
+        </div>
+
+        <div class="feature-arrow">
+            →
+        </div>
+
+    </a>
+
+
+</main>
+
+
+
+<!-- ===================================================
+     FOOTER
+==================================================== -->
+
+<footer class="footer">
+
+    SRF V3 • Sistem Operasional
+
+</footer>
 
 
 </div>
 
 
-<!-- =========================
+
+<!-- ===================================================
      SERVICE WORKER
-========================= -->
+==================================================== -->
 
 <script>
 
 if(
-    "serviceWorker" in navigator
+    "serviceWorker"
+    in navigator
 ){
 
     window.addEventListener(
@@ -584,7 +1327,48 @@ if(
 
 }
 
+
+/* =====================================================
+   ONLINE / OFFLINE STATUS
+===================================================== */
+
+const statusText =
+    document.querySelector(".status");
+
+const updateStatus =
+    function(){
+
+        if(navigator.onLine){
+
+            statusText.innerHTML =
+                '<span class="status-dot"></span> ONLINE';
+
+        }else{
+
+            statusText.innerHTML =
+                '<span class="status-dot" ' +
+                'style="background:#f59e0b;' +
+                'box-shadow:none"></span> OFFLINE';
+
+        }
+
+    };
+
+
+window.addEventListener(
+    "online",
+    updateStatus
+);
+
+window.addEventListener(
+    "offline",
+    updateStatus
+);
+
+updateStatus();
+
 </script>
+
 
 </body>
 </html>
