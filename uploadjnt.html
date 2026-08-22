@@ -7,7 +7,7 @@
 
 <style>
 .header-box {
-    background: #003399; /* Warna biru */
+    background: #003399;
     color: #fff;
     padding: 15px;
     border-radius: 12px;
@@ -16,7 +16,7 @@
 }
 
 .btn-nav {
-    background: #cc0000; /* Warna merah */
+    background: #cc0000;
     color: white;
     border: none;
     padding: 8px 15px;
@@ -25,7 +25,7 @@
     cursor: pointer;
     text-decoration: none;
     display: inline-block;
-    margin: 5px; /* Memberi jarak antar tombol */
+    margin: 5px;
     font-size: 13px;
 }
     
@@ -43,7 +43,6 @@ body{
     border-radius: 10px;
 }
 
-/* Card pembungkus kotak baru */
 .card {
     background: #fff;
     border: 1px solid #ddd;
@@ -68,7 +67,6 @@ textarea{
     border-radius: 4px;
 }
 
-/* Textarea khusus list hasil yang lebih kecil */
 .card textarea {
     height: 150px;
 }
@@ -89,7 +87,6 @@ button:hover {
     background: #0b5ed7;
 }
 
-/* Style tabel hasil ringkasan */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -112,7 +109,7 @@ table td:last-child {
 <div class="container">
 
 <div class="header-box">
-<h3> <B>UPLOAD RETUR JNT TIKTOK TOKOPEDIA</B> </h3>
+<h3> <b>UPLOAD RETUR JNT TIKTOK TOKOPEDIA</b> </h3>
 <a href="uploadspx.html" class="btn-nav">UPLOAD RETUR SPX</a>
 </div>
 
@@ -125,7 +122,6 @@ table td:last-child {
 Upload ke Sheet
 </button>
 
-<!-- Kotak Hasil Ringkasan -->
 <div class="card">
 <h3>Hasil Upload</h3>
 <table>
@@ -140,13 +136,11 @@ Upload ke Sheet
 </table>
 </div>
 
-<!-- Kotak Resi Berhasil -->
 <div class="card">
 <h3>Resi Berhasil</h3>
 <textarea id="listBerhasil" readonly placeholder="Daftar resi berhasil akan muncul di sini..."></textarea>
 </div>
 
-<!-- Kotak Resi Duplikat -->
 <div class="card">
 <h3>Resi Duplikat</h3>
 <textarea id="listDuplikat" readonly placeholder="Daftar resi duplikat akan muncul di sini..."></textarea>
@@ -154,11 +148,11 @@ Upload ke Sheet
 
 </div>
 
-<!-- Memanggil file config.js sebelum script utama -->
+<!-- Memanggil file config.js -->
 <script src="config.js"></script>
 
 <script>
-// Tambahan agar bisa tekan Ctrl + Enter untuk langsung upload
+// Shortcut Ctrl + Enter
 document.getElementById("rawData").addEventListener("keydown", function(event) {
     if (event.key === "Enter" && event.ctrlKey) {
         event.preventDefault();
@@ -167,11 +161,18 @@ document.getElementById("rawData").addEventListener("keydown", function(event) {
 });
 
 async function uploadRetur(){
-
     const text = document.getElementById("rawData").value.trim();
 
     if(!text){
         alert("Paste data dulu");
+        return;
+    }
+
+    // Pastikan APP_URL terbaca dari config.js
+    const targetUrl = typeof APP_URL !== "undefined" ? APP_URL : (typeof CONFIG !== "undefined" ? CONFIG.APP_URL : "");
+
+    if(!targetUrl){
+        alert("URL Apps Script tidak ditemukan di config.js!");
         return;
     }
 
@@ -181,28 +182,28 @@ async function uploadRetur(){
     document.getElementById("listDuplikat").value = "Sedang memproses...";
 
     try{
-
-        const r = await fetch(CONFIG.APP_URL,{
-            method:"POST",
-            body:JSON.stringify({
-                source:"uploadRetur",
-                text:text
+        const r = await fetch(targetUrl, {
+            method: "POST",
+            headers: {
+                "Content-Type": "text/plain;charset=utf-8"
+            },
+            body: JSON.stringify({
+                source: "uploadRetur",
+                text: text
             })
         });
 
         const json = await r.json();
 
-        document.getElementById("hasilBerhasil").innerText = json.berhasil || 0;
-        document.getElementById("hasilDuplikat").innerText = json.duplikat || 0;
+        document.getElementById("hasilBerhasil").innerText = json.berhasil || (json.listBerhasil ? json.listBerhasil.length : 0);
+        document.getElementById("hasilDuplikat").innerText = json.duplikat || (json.listDuplikat ? json.listDuplikat.length : 0);
         
         document.getElementById("listBerhasil").value = (json.listBerhasil || []).join("\n");
         document.getElementById("listDuplikat").value = (json.listDuplikat || []).join("\n");
 
     }catch(err){
-
-        document.getElementById("listBerhasil").value = err.toString();
-        document.getElementById("listDuplikat").value = err.toString();
-
+        document.getElementById("listBerhasil").value = "Error: " + err.toString();
+        document.getElementById("listDuplikat").value = "Error: " + err.toString();
     }
 }
 </script>
