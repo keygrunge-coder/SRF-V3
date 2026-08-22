@@ -7,7 +7,7 @@
 
 <style>
 .header-box {
-    background: #003399;
+    background: #003399; /* Warna biru */
     color: #fff;
     padding: 15px;
     border-radius: 12px;
@@ -16,7 +16,7 @@
 }
 
 .btn-nav {
-    background: #cc0000;
+    background: #cc0000; /* Warna merah */
     color: white;
     border: none;
     padding: 8px 15px;
@@ -25,7 +25,7 @@
     cursor: pointer;
     text-decoration: none;
     display: inline-block;
-    margin: 5px;
+    margin: 5px; /* Memberi jarak antar tombol */
     font-size: 13px;
 }
     
@@ -43,6 +43,7 @@ body{
     border-radius: 10px;
 }
 
+/* Card pembungkus kotak baru */
 .card {
     background: #fff;
     border: 1px solid #ddd;
@@ -67,6 +68,7 @@ textarea{
     border-radius: 4px;
 }
 
+/* Textarea khusus list hasil yang lebih kecil */
 .card textarea {
     height: 150px;
 }
@@ -87,6 +89,7 @@ button:hover {
     background: #0b5ed7;
 }
 
+/* Style tabel hasil ringkasan */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -151,7 +154,7 @@ Upload ke Sheet
 
 </div>
 
-<!-- Memanggil file config.js milikmu -->
+<!-- Memanggil file config.js sebelum script utama -->
 <script src="config.js"></script>
 
 <script>
@@ -172,27 +175,18 @@ async function uploadRetur(){
         return;
     }
 
-    // Pengecekan keamanan jika variabel APP_URL belum ke-load
-    if (typeof APP_URL === "undefined") {
-        alert("Error: Variabel APP_URL tidak terbaca dari config.js!");
-        return;
-    }
-
     document.getElementById("hasilBerhasil").innerText = "...";
     document.getElementById("hasilDuplikat").innerText = "...";
     document.getElementById("listBerhasil").value = "Sedang memproses...";
     document.getElementById("listDuplikat").value = "Sedang memproses...";
 
     try{
-        // Menggunakan APP_URL langsung sesuai format config.js lu
-        const r = await fetch(APP_URL, {
-            method: "POST",
-            headers: {
-                "Content-Type": "text/plain;charset=utf-8"
-            },
-            body: JSON.stringify({
-                source: "uploadRetur",
-                text: text
+
+        const r = await fetch(CONFIG.APP_URL,{
+            method:"POST",
+            body:JSON.stringify({
+                source:"uploadRetur",
+                text:text
             })
         });
 
@@ -205,8 +199,10 @@ async function uploadRetur(){
         document.getElementById("listDuplikat").value = (json.listDuplikat || []).join("\n");
 
     }catch(err){
+
         document.getElementById("listBerhasil").value = err.toString();
         document.getElementById("listDuplikat").value = err.toString();
+
     }
 }
 </script>
