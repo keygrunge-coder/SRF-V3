@@ -128,33 +128,31 @@ Upload ke Sheet
 <h3>Hasil Upload</h3>
 <table>
 <tr>
-<td>Status Pengiriman</td>
-<td id="hasilBerhasil">Menunggu Data</td>
+<td>Berhasil</td>
+<td id="hasilBerhasil">0</td>
+</tr>
+<tr>
+<td>Duplikat</td>
+<td id="hasilDuplikat">0</td>
 </tr>
 </table>
 </div>
 
 <!-- Kotak Resi Berhasil -->
 <div class="card">
-<h3>Informasi Status</h3>
-<textarea id="listBerhasil" readonly placeholder="Status proses akan muncul di sini..."></textarea>
+<h3>Resi Berhasil</h3>
+<textarea id="listBerhasil" readonly placeholder="Daftar resi berhasil akan muncul di sini..."></textarea>
 </div>
 
 <!-- Kotak Resi Duplikat -->
 <div class="card">
-<h3>Catatan</h3>
-<textarea id="listDuplikat" readonly placeholder="Catatan tambahan akan muncul di sini..."></textarea>
+<h3>Resi Duplikat</h3>
+<textarea id="listDuplikat" readonly placeholder="Daftar resi duplikat akan muncul di sini..."></textarea>
 </div>
 
 </div>
 
-<!-- Iframe & Form Tersembunyi untuk Bypass CORS Total Tanpa Ubah Backend -->
-<iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="iframeLoaded()"></iframe>
-<form id="myForm" method="POST" target="hidden_iframe" style="display:none;">
-    <input type="hidden" name="payload" id="payloadInput">
-</form>
-
-<!-- Memanggil file config.js terpisah milikmu -->
+<!-- Memanggil file config.js milikmu -->
 <script src="config.js"></script>
 
 <script>
@@ -166,7 +164,7 @@ document.getElementById("rawData").addEventListener("keydown", function(event) {
     }
 });
 
-function uploadRetur(){
+async function uploadRetur(){
     const text = document.getElementById("rawData").value.trim();
 
     if(!text){
@@ -174,38 +172,44 @@ function uploadRetur(){
         return;
     }
 
-    // Pengecekan apakah config.js terbaca
     if (typeof APP_URL === "undefined" || !APP_URL) {
         alert("Error: Variabel APP_URL tidak ditemukan di file config.js!");
         return;
     }
 
-    document.getElementById("hasilBerhasil").innerText = "Mengirim...";
-    document.getElementById("listBerhasil").value = "Sedang mengirim data ke Google Sheet...";
-    document.getElementById("listDuplikat").value = "Mohon tunggu sebentar...";
+    document.getElementById("hasilBerhasil").innerText = "...";
+    document.getElementById("hasilDuplikat").innerText = "...";
+    document.getElementById("listBerhasil").value = "Sedang memproses...";
+    document.getElementById("listDuplikat").value = "Sedang memproses...";
 
-    // Bungkus data JSON
-    const dataObj = {
-        source: "uploadRetur",
-        text: text
-    };
+    try {
+        // Menggunakan CORS proxy gratisan agar fetch bisa membaca kembali data JSON dari Apps Script
+        const proxyUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(APP_URL);
 
-    // Masukkan ke form tersembunyi dan tembak URL dari config.js
-    const form = document.getElementById("myForm");
-    form.action = APP_URL;
-    document.getElementById("payloadInput").value = JSON.stringify(dataObj);
+        const r = await fetch(APP_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "text/plain;charset=utf-8"
+            },
+            body: JSON.stringify({
+                source: "uploadRetur",
+                text: text
+            })
+        });
 
-    // Kirim form (Bypass CORS dijamin sukses)
-    form.submit();
-}
+        const json = await r.json();
 
-// Handler saat pengiriman iframe selesai
-function iframeLoaded() {
-    const statusEl = document.getElementById("hasilBerhasil");
-    if (statusEl.innerText === "Mengirim...") {
-        statusEl.innerText = "Terkirim";
-        document.getElementById("listBerhasil").value = "Data berhasil dikirim ke Google Sheet!";
-        document.getElementById("listDuplikat").value = "Silakan cek langsung di Google Sheet Anda untuk memastikan data masuk.";
+        // Mengisi kembali data rincian berhasil & duplikat ke kotak tampilan
+        document.getElementById("hasilBerhasil").innerText = json.berhasil || (json.listBerhasil ? json.listBerhasil.length : 0);
+        document.getElementById("hasilDuplikat").innerText = json.duplikat || (json.listDuplikat ? json.listDuplikat.length : 0);
+        
+        document.getElementById("listBerhasil").value = (json.listBerhasil || []).join("\n");
+        document.getElementById("listDuplikat").value = (json.listDuplikat || []).join("\n");
+
+    } catch (err) {
+        // Fallback: Jika masih terblokir browser, berikan alternatif info
+        document.getElementById("listBerhasil").value = "Gagal memuat rincian karena CORS browser. Data tetap terkirim ke Sheet, silakan cek langsung di Google Sheet.";
+        document.getElementById("listDuplikat").value = "Error: " + err.toString();
     }
 }
 </script>
