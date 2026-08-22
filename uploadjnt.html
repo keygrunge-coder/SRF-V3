@@ -543,6 +543,7 @@ textarea[readonly]{
 
 <div class="header">
 
+ 
 <div class="header-top">
 
     <div>
@@ -566,7 +567,7 @@ textarea[readonly]{
     </div>
 
 </div>
-
+ 
 
 </div>
 
@@ -576,6 +577,14 @@ textarea[readonly]{
 
 <div class="nav">
 
+ 
+<a
+    href="index.html"
+    class="nav-btn nav-home">
+
+    MENU UTAMA
+
+</a>
 
 <a
     href="scanretur.html"
@@ -593,6 +602,14 @@ textarea[readonly]{
 
 </a>
 
+<a
+    href="uploadjnt.html"
+    class="nav-btn nav-jnt">
+
+    UPLOAD JNT
+
+</a>
+ 
 
 </div>
 
@@ -602,7 +619,7 @@ textarea[readonly]{
 
 <div class="card">
 
-
+ 
 <div class="card-title">
     DATA RETUR
 </div>
@@ -655,7 +672,7 @@ textarea[readonly]{
     </span>
 
 </div>
-
+ 
 
 </div>
 
@@ -846,7 +863,7 @@ textarea[readonly]{
 
  
 SRF V3 • Upload Retur JNT
- 
+
 
 </div>
 
@@ -868,13 +885,13 @@ function getAppUrl(){
 
     try{
 
-        if (
-            typeof CONFIG !== "undefined" &&
-            CONFIG.APP_URL
-        ) {
+        if(
+            typeof APP_URL !== "undefined" &&
+            APP_URL
+        ){
 
             return String(
-                CONFIG.APP_URL
+                APP_URL
             ).trim();
 
         }
@@ -1274,11 +1291,18 @@ async function uploadRetur(){
         const response =
             await fetch(
 
-                CONFIG.APP_URL,
+                url,
 
                 {
 
-                    method: "POST",
+                    method:"POST",
+
+                    headers:{
+
+                        "Content-Type":
+                            "text/plain;charset=utf-8"
+
+                    },
 
                     body:
                         JSON.stringify({
