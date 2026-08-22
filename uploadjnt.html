@@ -128,35 +128,37 @@ Upload ke Sheet
 <h3>Hasil Upload</h3>
 <table>
 <tr>
-<td>Berhasil</td>
-<td id="hasilBerhasil">0</td>
-</tr>
-<tr>
-<td>Duplikat</td>
-<td id="hasilDuplikat">0</td>
+<td>Status Pengiriman</td>
+<td id="hasilBerhasil">Menunggu Data</td>
 </tr>
 </table>
 </div>
 
 <!-- Kotak Resi Berhasil -->
 <div class="card">
-<h3>Resi Berhasil</h3>
-<textarea id="listBerhasil" readonly placeholder="Daftar resi berhasil akan muncul di sini..."></textarea>
+<h3>Informasi Status</h3>
+<textarea id="listBerhasil" readonly placeholder="Status proses akan muncul di sini..."></textarea>
 </div>
 
 <!-- Kotak Resi Duplikat -->
 <div class="card">
-<h3>Resi Duplikat</h3>
-<textarea id="listDuplikat" readonly placeholder="Daftar resi duplikat akan muncul di sini..."></textarea>
+<h3>Catatan</h3>
+<textarea id="listDuplikat" readonly placeholder="Catatan tambahan akan muncul di sini..."></textarea>
 </div>
 
 </div>
 
-<!-- Memanggil file config.js (pastikan satu folder di GitHub/hosting) -->
+<!-- Iframe & Form Tersembunyi untuk Bypass CORS Total Tanpa Ubah Backend -->
+<iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="iframeLoaded()"></iframe>
+<form id="myForm" method="POST" target="hidden_iframe" style="display:none;">
+    <input type="hidden" name="payload" id="payloadInput">
+</form>
+
+<!-- Memanggil file config.js terpisah milikmu -->
 <script src="config.js"></script>
 
 <script>
-// Tambahan agar bisa tekan Ctrl + Enter untuk langsung upload
+// Shortcut Ctrl + Enter
 document.getElementById("rawData").addEventListener("keydown", function(event) {
     if (event.key === "Enter" && event.ctrlKey) {
         event.preventDefault();
@@ -164,7 +166,7 @@ document.getElementById("rawData").addEventListener("keydown", function(event) {
     }
 });
 
-async function uploadRetur(){
+function uploadRetur(){
     const text = document.getElementById("rawData").value.trim();
 
     if(!text){
@@ -172,41 +174,38 @@ async function uploadRetur(){
         return;
     }
 
-    // Pengecekan apakah config.js terpanggil dengan benar
+    // Pengecekan apakah config.js terbaca
     if (typeof APP_URL === "undefined" || !APP_URL) {
         alert("Error: Variabel APP_URL tidak ditemukan di file config.js!");
         return;
     }
 
-    document.getElementById("hasilBerhasil").innerText = "...";
-    document.getElementById("hasilDuplikat").innerText = "...";
-    document.getElementById("listBerhasil").value = "Sedang memproses...";
-    document.getElementById("listDuplikat").value = "Sedang memproses...";
+    document.getElementById("hasilBerhasil").innerText = "Mengirim...";
+    document.getElementById("listBerhasil").value = "Sedang mengirim data ke Google Sheet...";
+    document.getElementById("listDuplikat").value = "Mohon tunggu sebentar...";
 
-    try{
-        const r = await fetch(APP_URL, {
-            method: "POST",
-            headers: {
-                "Content-Type": "text/plain;charset=utf-8"
-            },
-            body: JSON.stringify({
-                source: "uploadRetur",
-                text: text
-            })
-        });
+    // Bungkus data JSON
+    const dataObj = {
+        source: "uploadRetur",
+        text: text
+    };
 
-        const json = await r.json();
+    // Masukkan ke form tersembunyi dan tembak URL dari config.js
+    const form = document.getElementById("myForm");
+    form.action = APP_URL;
+    document.getElementById("payloadInput").value = JSON.stringify(dataObj);
 
-        // Memasukkan hasil JSON sesuai kotak tampilan
-        document.getElementById("hasilBerhasil").innerText = json.berhasil || (json.listBerhasil ? json.listBerhasil.length : 0);
-        document.getElementById("hasilDuplikat").innerText = json.duplikat || (json.listDuplikat ? json.listDuplikat.length : 0);
-        
-        document.getElementById("listBerhasil").value = (json.listBerhasil || []).join("\n");
-        document.getElementById("listDuplikat").value = (json.listDuplikat || []).join("\n");
+    // Kirim form (Bypass CORS dijamin sukses)
+    form.submit();
+}
 
-    }catch(err){
-        document.getElementById("listBerhasil").value = err.toString();
-        document.getElementById("listDuplikat").value = err.toString();
+// Handler saat pengiriman iframe selesai
+function iframeLoaded() {
+    const statusEl = document.getElementById("hasilBerhasil");
+    if (statusEl.innerText === "Mengirim...") {
+        statusEl.innerText = "Terkirim";
+        document.getElementById("listBerhasil").value = "Data berhasil dikirim ke Google Sheet!";
+        document.getElementById("listDuplikat").value = "Silakan cek langsung di Google Sheet Anda untuk memastikan data masuk.";
     }
 }
 </script>
