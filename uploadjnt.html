@@ -1,13 +1,11 @@
 <!DOCTYPE html>
-
 <html lang="id">
-
 <head>
 
 <meta charset="UTF-8">
 
 <meta name="viewport"
-   content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <title>SRF V3 • Upload Retur JNT</title>
 
@@ -128,7 +126,9 @@ body{
     display:flex;
     align-items:center;
     justify-content:space-between;
+
     gap:8px;
+
     margin-bottom:12px;
 }
 
@@ -140,14 +140,21 @@ body{
 
 .nav-btn{
     border:0;
+
     padding:9px 11px;
+
     border-radius:9px;
+
     color:white;
+
     font-size:10px;
     font-weight:900;
+
     text-decoration:none;
     text-align:center;
+
     cursor:pointer;
+
     white-space:nowrap;
 }
 
@@ -534,13 +541,13 @@ textarea[readonly]{
 
 <div class="container">
 
+
 <!-- =========================================================
      HEADER
 ========================================================= -->
 
 <div class="header">
 
- 
 <div class="header-top">
 
     <div>
@@ -564,9 +571,9 @@ textarea[readonly]{
     </div>
 
 </div>
- 
 
 </div>
+
 
 <!-- =========================================================
      NAVIGATION
@@ -574,7 +581,6 @@ textarea[readonly]{
 
 <div class="nav">
 
- 
 <a
     href="index.html"
     class="nav-btn nav-home">
@@ -602,9 +608,9 @@ textarea[readonly]{
 </a>
 
 </div>
- 
 
 </div>
+
 
 <!-- =========================================================
      INPUT
@@ -612,7 +618,6 @@ textarea[readonly]{
 
 <div class="card">
 
- 
 <div class="card-title">
     DATA RETUR
 </div>
@@ -633,23 +638,23 @@ textarea[readonly]{
 
 <div class="actions">
 
-    <button
-        id="uploadButton"
-        class="btn btn-upload"
-        onclick="uploadRetur()">
+<button
+    id="uploadButton"
+    class="btn btn-upload"
+    onclick="uploadRetur()">
 
-        UPLOAD KE SHEET
+    UPLOAD KE SHEET
 
-    </button>
+</button>
 
 
-    <button
-        class="btn btn-clear"
-        onclick="clearData()">
+<button
+    class="btn btn-clear"
+    onclick="clearData()">
 
-        HAPUS
+    HAPUS
 
-    </button>
+</button>
 
 </div>
 
@@ -665,9 +670,9 @@ textarea[readonly]{
     </span>
 
 </div>
- 
 
 </div>
+
 
 <!-- =========================================================
      RINGKASAN
@@ -675,67 +680,66 @@ textarea[readonly]{
 
 <div class="card">
 
- 
 <div class="card-title">
     HASIL UPLOAD
 </div>
 
 <div class="summary">
 
-    <div class="summary-box">
+<div class="summary-box">
 
-        <div class="summary-label">
-            BERHASIL
-        </div>
+<div class="summary-label">
+    BERHASIL
+</div>
 
-        <div
-            id="hasilBerhasil"
-            class="summary-value summary-success">
+<div
+    id="hasilBerhasil"
+    class="summary-value summary-success">
 
-            0
-
-        </div>
-
-    </div>
-
-
-    <div class="summary-box">
-
-        <div class="summary-label">
-            DUPLIKAT
-        </div>
-
-        <div
-            id="hasilDuplikat"
-            class="summary-value summary-warning">
-
-            0
-
-        </div>
-
-    </div>
-
-
-    <div class="summary-box">
-
-        <div class="summary-label">
-            TIDAK TERBACA
-        </div>
-
-        <div
-            id="hasilError"
-            class="summary-value summary-error">
-
-            0
-
-        </div>
-
-    </div>
+    0
 
 </div>
- 
 
 </div>
+
+
+<div class="summary-box">
+
+<div class="summary-label">
+    DUPLIKAT
+</div>
+
+<div
+    id="hasilDuplikat"
+    class="summary-value summary-warning">
+
+    0
+
+</div>
+
+</div>
+
+
+<div class="summary-box">
+
+<div class="summary-label">
+    TIDAK TERBACA
+</div>
+
+<div
+    id="hasilError"
+    class="summary-value summary-error">
+
+    0
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
 
 <!-- =========================================================
      BERHASIL
@@ -743,20 +747,19 @@ textarea[readonly]{
 
 <div class="card">
 
- 
 <div class="result-header">
 
-    <div class="result-title">
-        RESI BERHASIL
-    </div>
+<div class="result-title">
+    RESI BERHASIL
+</div>
 
-    <div
-        id="jumlahBerhasil"
-        class="result-count">
+<div
+    id="jumlahBerhasil"
+    class="result-count">
 
-        0 RESI
+    0 RESI
 
-    </div>
+</div>
 
 </div>
 
@@ -768,9 +771,9 @@ textarea[readonly]{
     Belum ada data.
 
 </div>
- 
 
 </div>
+
 
 <!-- =========================================================
      DUPLIKAT
@@ -778,20 +781,19 @@ textarea[readonly]{
 
 <div class="card">
 
- 
 <div class="result-header">
 
-    <div class="result-title">
-        RESI DUPLIKAT
-    </div>
+<div class="result-title">
+    RESI DUPLIKAT
+</div>
 
-    <div
-        id="jumlahDuplikat"
-        class="result-count">
+<div
+    id="jumlahDuplikat"
+    class="result-count">
 
-        0 RESI
+    0 RESI
 
-    </div>
+</div>
 
 </div>
 
@@ -803,9 +805,9 @@ textarea[readonly]{
     Belum ada data.
 
 </div>
- 
 
 </div>
+
 
 <!-- =========================================================
      DATA TIDAK TERBACA
@@ -813,20 +815,19 @@ textarea[readonly]{
 
 <div class="card">
 
- 
 <div class="result-header">
 
-    <div class="result-title">
-        DATA TIDAK TERBACA
-    </div>
+<div class="result-title">
+    DATA TIDAK TERBACA
+</div>
 
-    <div
-        id="jumlahError"
-        class="result-count">
+<div
+    id="jumlahError"
+    class="result-count">
 
-        0 DATA
+    0 DATA
 
-    </div>
+</div>
 
 </div>
 
@@ -838,9 +839,9 @@ textarea[readonly]{
     Tidak ada data bermasalah.
 
 </div>
- 
 
 </div>
+
 
 <!-- =========================================================
      ERROR SERVER
@@ -852,18 +853,18 @@ textarea[readonly]{
 
 </div>
 
+
 <div class="footer">
 
- 
 SRF V3 • Upload Retur JNT
- 
 
 </div>
 
 </div>
+
 
 <!-- =========================================================
-     CONFIG GLOBAL
+     CONFIG
 ========================================================= -->
 
 <script src="config.js"></script>
@@ -871,7 +872,7 @@ SRF V3 • Upload Retur JNT
 <script>
 
 /* =========================================================
-   CEK CONFIG
+   CONFIG
 ========================================================= */
 
 function getAppUrl(){
@@ -883,9 +884,7 @@ function getAppUrl(){
             APP_URL
         ){
 
-            return String(
-                APP_URL
-            ).trim();
+            return String(APP_URL).trim();
 
         }
 
@@ -905,24 +904,16 @@ function getAppUrl(){
 ========================================================= */
 
 const rawData =
-    document.getElementById(
-        "rawData"
-    );
+    document.getElementById("rawData");
 
 const uploadButton =
-    document.getElementById(
-        "uploadButton"
-    );
+    document.getElementById("uploadButton");
 
 const loading =
-    document.getElementById(
-        "loading"
-    );
+    document.getElementById("loading");
 
 const connectionStatus =
-    document.getElementById(
-        "connectionStatus"
-    );
+    document.getElementById("connectionStatus");
 
 
 /* =========================================================
@@ -933,8 +924,7 @@ window.addEventListener(
     "load",
     function(){
 
-        const url =
-            getAppUrl();
+        const url = getAppUrl();
 
         if(url){
 
@@ -970,52 +960,38 @@ function resetResult(){
         "hasilBerhasil"
     ).innerText = "0";
 
-
     document.getElementById(
         "hasilDuplikat"
     ).innerText = "0";
-
 
     document.getElementById(
         "hasilError"
     ).innerText = "0";
 
-
     document.getElementById(
         "jumlahBerhasil"
-    ).innerText =
-        "0 RESI";
-
+    ).innerText = "0 RESI";
 
     document.getElementById(
         "jumlahDuplikat"
-    ).innerText =
-        "0 RESI";
-
+    ).innerText = "0 RESI";
 
     document.getElementById(
         "jumlahError"
-    ).innerText =
-        "0 DATA";
-
+    ).innerText = "0 DATA";
 
     document.getElementById(
         "listBerhasil"
-    ).innerText =
-        "Belum ada data.";
-
+    ).innerText = "Belum ada data.";
 
     document.getElementById(
         "listDuplikat"
-    ).innerText =
-        "Belum ada data.";
-
+    ).innerText = "Belum ada data.";
 
     document.getElementById(
         "listError"
     ).innerText =
         "Tidak ada data bermasalah.";
-
 
     hideError();
 
@@ -1029,16 +1005,12 @@ function resetResult(){
 function showError(message){
 
     const box =
-        document.getElementById(
-            "errorBox"
-        );
+        document.getElementById("errorBox");
 
     box.innerText =
         message || "Terjadi kesalahan.";
 
-    box.classList.add(
-        "show"
-    );
+    box.classList.add("show");
 
 }
 
@@ -1047,9 +1019,7 @@ function hideError(){
 
     document.getElementById(
         "errorBox"
-    ).classList.remove(
-        "show"
-    );
+    ).classList.remove("show");
 
 }
 
@@ -1070,7 +1040,7 @@ function clearData(){
 
 
 /* =========================================================
-   SAFE JSON
+   SERVER RESPONSE
 ========================================================= */
 
 async function readServerResponse(response){
@@ -1078,6 +1048,10 @@ async function readServerResponse(response){
     const text =
         await response.text();
 
+    console.log(
+        "RAW SERVER RESPONSE:",
+        text
+    );
 
     if(!text){
 
@@ -1087,22 +1061,15 @@ async function readServerResponse(response){
 
     }
 
-
     try{
 
-        return JSON.parse(
-            text
-        );
+        return JSON.parse(text);
 
     }catch(e){
 
-        console.error(
-            "RAW SERVER RESPONSE:",
-            text
-        );
-
         throw new Error(
-            "Response server bukan JSON."
+            "Response server bukan JSON: " +
+            text.substring(0,300)
         );
 
     }
@@ -1111,27 +1078,18 @@ async function readServerResponse(response){
 
 
 /* =========================================================
-   ANALISIS DATA MENTAH
-=========================================================
-
-   Tujuannya bukan menggantikan parser Google Apps Script.
-
-   Hanya mendeteksi kemungkinan blok kosong /
-   data yang tidak memiliki resi.
-
+   CEK DATA
 ========================================================= */
 
 function cekDataMentah(text){
 
     const lines =
         text
-            .split(/\r?\n/)
-            .map(
-                line =>
-                    line.trim()
-            )
-            .filter(Boolean);
-
+        .split(/\r?\n/)
+        .map(
+            line => line.trim()
+        )
+        .filter(Boolean);
 
     if(lines.length === 0){
 
@@ -1142,7 +1100,6 @@ function cekDataMentah(text){
 
     }
 
-
     return {
         valid:true,
         lines:lines
@@ -1152,21 +1109,16 @@ function cekDataMentah(text){
 
 
 /* =========================================================
-   UPLOAD
+   UPLOAD RETUR
 ========================================================= */
 
 async function uploadRetur(){
 
     hideError();
 
-
     const text =
         rawData.value.trim();
 
-
-    /* -----------------------------------------
-       DATA KOSONG
-    ----------------------------------------- */
 
     if(!text){
 
@@ -1181,21 +1133,13 @@ async function uploadRetur(){
     }
 
 
-    /* -----------------------------------------
-       VALIDASI DATA
-    ----------------------------------------- */
-
     const check =
-        cekDataMentah(
-            text
-        );
+        cekDataMentah(text);
 
 
     if(!check.valid){
 
-        showError(
-            check.message
-        );
+        showError(check.message);
 
         return;
 
@@ -1205,10 +1149,6 @@ async function uploadRetur(){
     const url =
         getAppUrl();
 
-
-    /* -----------------------------------------
-       CONFIG TIDAK ADA
-    ----------------------------------------- */
 
     if(!url){
 
@@ -1228,10 +1168,6 @@ async function uploadRetur(){
     }
 
 
-    /* -----------------------------------------
-       UI LOADING
-    ----------------------------------------- */
-
     uploadButton.disabled =
         true;
 
@@ -1243,15 +1179,11 @@ async function uploadRetur(){
     connectionStatus.innerText =
         "UPLOADING";
 
-
     connectionStatus.classList.remove(
-        "online"
+        "online",
+        "error"
     );
 
-
-    /* -----------------------------------------
-       RESET HASIL
-    ----------------------------------------- */
 
     resetResult();
 
@@ -1261,12 +1193,10 @@ async function uploadRetur(){
     ).innerText =
         "Sedang memproses...";
 
-
     document.getElementById(
         "listDuplikat"
     ).innerText =
         "Sedang memproses...";
-
 
     document.getElementById(
         "listError"
@@ -1276,50 +1206,47 @@ async function uploadRetur(){
 
     try{
 
+        /*
+         * =====================================================
+         * PENTING:
+         * Gunakan text/plain.
+         *
+         * Jangan application/json karena browser dapat
+         * melakukan OPTIONS preflight ke Apps Script.
+         * =====================================================
+         */
 
-        /* -------------------------------------
-           REQUEST
-        ------------------------------------- */
+        const payload =
+            JSON.stringify({
+
+                source:"uploadRetur",
+
+                text:text
+
+            });
+
 
         const response =
             await fetch(
-
                 url,
-
                 {
-
                     method:"POST",
 
+                    mode:"cors",
+
+                    redirect:"follow",
+
                     headers:{
-
                         "Content-Type":
-                            "text/plain;charset=utf-8"
-
+                            "text/plain;charset=UTF-8"
                     },
 
-                    body:
-                        JSON.stringify({
-
-                            source:
-                                "uploadRetur",
-
-                            text:
-                                text
-
-                        })
-
+                    body:payload
                 }
-
             );
 
 
-        /* -------------------------------------
-           HTTP ERROR
-        ------------------------------------- */
-
-        if(
-            !response.ok
-        ){
+        if(!response.ok){
 
             throw new Error(
                 "HTTP Error " +
@@ -1328,10 +1255,6 @@ async function uploadRetur(){
 
         }
 
-
-        /* -------------------------------------
-           RESPONSE
-        ------------------------------------- */
 
         const json =
             await readServerResponse(
@@ -1345,9 +1268,13 @@ async function uploadRetur(){
         );
 
 
-        /* -------------------------------------
-           AMBIL HASIL SECARA AMAN
-        ------------------------------------- */
+        /*
+         * Backend bisa mengirim:
+         *
+         * listBerhasil
+         * listDuplikat
+         * listError
+         */
 
         const berhasil =
             Array.isArray(
@@ -1365,14 +1292,6 @@ async function uploadRetur(){
             : [];
 
 
-        /*
-         * Backend lama belum mengembalikan
-         * list error.
-         *
-         * Jadi jangan dianggap error
-         * kalau field tersebut belum ada.
-         */
-
         const errorList =
             Array.isArray(
                 json.listError
@@ -1381,9 +1300,11 @@ async function uploadRetur(){
             : [];
 
 
-        /* -------------------------------------
-           TAMPILKAN RINGKASAN
-        ------------------------------------- */
+        /*
+         * =====================================================
+         * HASIL
+         * =====================================================
+         */
 
         document.getElementById(
             "hasilBerhasil"
@@ -1424,9 +1345,11 @@ async function uploadRetur(){
             " DATA";
 
 
-        /* -------------------------------------
-           LIST BERHASIL
-        ------------------------------------- */
+        /*
+         * =====================================================
+         * LIST BERHASIL
+         * =====================================================
+         */
 
         document.getElementById(
             "listBerhasil"
@@ -1439,9 +1362,11 @@ async function uploadRetur(){
             : "Tidak ada resi berhasil.";
 
 
-        /* -------------------------------------
-           LIST DUPLIKAT
-        ------------------------------------- */
+        /*
+         * =====================================================
+         * LIST DUPLIKAT
+         * =====================================================
+         */
 
         document.getElementById(
             "listDuplikat"
@@ -1454,9 +1379,11 @@ async function uploadRetur(){
             : "Tidak ada resi duplikat.";
 
 
-        /* -------------------------------------
-           LIST ERROR
-        ------------------------------------- */
+        /*
+         * =====================================================
+         * LIST ERROR
+         * =====================================================
+         */
 
         document.getElementById(
             "listError"
@@ -1469,12 +1396,18 @@ async function uploadRetur(){
             : "Tidak ada data bermasalah.";
 
 
-        /* -------------------------------------
-           SUCCESS
-        ------------------------------------- */
+        /*
+         * =====================================================
+         * STATUS
+         * =====================================================
+         */
 
         connectionStatus.innerText =
             "ONLINE";
+
+        connectionStatus.classList.remove(
+            "error"
+        );
 
         connectionStatus.classList.add(
             "online"
@@ -1482,7 +1415,6 @@ async function uploadRetur(){
 
 
     }catch(error){
-
 
         console.error(
             "UPLOAD RETUR ERROR:",
@@ -1492,6 +1424,7 @@ async function uploadRetur(){
 
         connectionStatus.innerText =
             "ERROR";
+
 
         connectionStatus.classList.remove(
             "online"
@@ -1528,10 +1461,8 @@ async function uploadRetur(){
 
     }finally{
 
-
         uploadButton.disabled =
             false;
-
 
         loading.classList.remove(
             "show"
@@ -1581,5 +1512,4 @@ window.addEventListener(
 </script>
 
 </body>
-
 </html>
