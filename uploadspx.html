@@ -7,7 +7,7 @@
 
 <style>
 .header-box {
-    background: #EE4D2D; /* Warna Oranye Khas Shopee */
+    background: #EE4D2D;
     color: #fff;
     padding: 15px;
     border-radius: 12px;
@@ -16,7 +16,7 @@
 }
 
 .btn-nav {
-    background: #333; /* Warna tombol navigasi */
+    background: #333;
     color: white;
     border: none;
     padding: 8px 15px;
@@ -25,7 +25,7 @@
     cursor: pointer;
     text-decoration: none;
     display: inline-block;
-    margin: 5px; /* Memberi jarak antar tombol */
+    margin: 5px;
     font-size: 13px;
 }
     
@@ -43,7 +43,6 @@ body{
     border-radius: 10px;
 }
 
-/* Card pembungkus kotak baru */
 .card {
     background: #fff;
     border: 1px solid #ddd;
@@ -68,7 +67,6 @@ textarea{
     border-radius: 4px;
 }
 
-/* Textarea khusus list hasil yang lebih kecil */
 .card textarea {
     height: 150px;
 }
@@ -77,7 +75,7 @@ button{
     width: 100%;
     padding: 15px;
     margin-top: 10px;
-    background: #EE4D2D; /* Tombol utama warna Shopee */
+    background: #EE4D2D;
     color: white;
     border: none;
     border-radius: 6px;
@@ -89,7 +87,6 @@ button:hover {
     background: #d73d1a;
 }
 
-/* Style tabel hasil ringkasan */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -112,8 +109,7 @@ table td:last-child {
 <div class="container">
 
 <div class="header-box">
-<h3> <B>UPLOAD RETUR SHOPEE</B> </h3>
-
+<h3> <b>UPLOAD RETUR SHOPEE</b> </h3>
 <a href="uploadjnt.html" class="btn-nav">UPLOAD RETUR TIKTOK</a>
 </div>
 
@@ -126,7 +122,6 @@ table td:last-child {
 Upload ke Sheet
 </button>
 
-<!-- Kotak Hasil Ringkasan -->
 <div class="card">
 <h3>Hasil Upload</h3>
 <table>
@@ -141,13 +136,11 @@ Upload ke Sheet
 </table>
 </div>
 
-<!-- Kotak Resi Berhasil -->
 <div class="card">
 <h3>Resi Berhasil</h3>
 <textarea id="listBerhasil" readonly placeholder="Daftar resi berhasil akan muncul di sini..."></textarea>
 </div>
 
-<!-- Kotak Resi Duplikat -->
 <div class="card">
 <h3>Resi Duplikat</h3>
 <textarea id="listDuplikat" readonly placeholder="Daftar resi duplikat akan muncul di sini..."></textarea>
@@ -155,11 +148,10 @@ Upload ke Sheet
 
 </div>
 
-<!-- Memanggil file config.js sebelum script utama -->
+<!-- Memanggil file config.js -->
 <script src="config.js"></script>
 
 <script>
-// Shortcut Ctrl + Enter untuk langsung upload
 document.getElementById("rawData").addEventListener("keydown", function(event) {
     if (event.key === "Enter" && event.ctrlKey) {
         event.preventDefault();
@@ -182,12 +174,12 @@ async function uploadRetur(){
     document.getElementById("listDuplikat").value = "Sedang memproses...";
 
     try{
-
-        const r = await fetch(CONFIG.APP_URL,{
-            method:"POST",
-            body:JSON.stringify({
-                source:"uploadReturShopee",
-                text:text
+        // Menggunakan APP_URL langsung tanpa CONFIG.
+        const r = await fetch(APP_URL, {
+            method: "POST",
+            body: JSON.stringify({
+                source: "uploadReturShopee",
+                text: text
             })
         });
 
@@ -200,10 +192,8 @@ async function uploadRetur(){
         document.getElementById("listDuplikat").value = (json.listDuplikat || []).join("\n");
 
     }catch(err){
-
         document.getElementById("listBerhasil").value = err.toString();
         document.getElementById("listDuplikat").value = err.toString();
-
     }
 }
 </script>
