@@ -1,11 +1,28 @@
+```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Upload Retur Shopee</title>
+<title>Upload Retur SPX</title>
 
 <style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    padding: 20px;
+    margin: 0;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+}
+
 .header-box {
     background: #EE4D2D;
     color: #fff;
@@ -13,6 +30,10 @@
     border-radius: 12px;
     margin-bottom: 20px;
     text-align: center;
+}
+
+.header-box h3 {
+    margin: 0 0 10px 0;
 }
 
 .btn-nav {
@@ -27,20 +48,6 @@
     display: inline-block;
     margin: 5px;
     font-size: 13px;
-}
-    
-body{
-    font-family: Arial, sans-serif;
-    background: #f4f4f4;
-    padding: 20px;
-}
-
-.container{
-    max-width: 900px;
-    margin: auto;
-    background: #fff;
-    padding: 20px;
-    border-radius: 10px;
 }
 
 .card {
@@ -58,33 +65,44 @@ body{
     color: #333;
 }
 
-textarea{
+textarea {
     width: 100%;
-    height: 350px;
     padding: 10px;
-    box-sizing: border-box;
     border: 1px solid #ccc;
     border-radius: 4px;
+    resize: vertical;
+    font-family: Arial, sans-serif;
 }
 
-.card textarea {
+#rawData {
+    height: 350px;
+}
+
+#listBerhasil,
+#listDuplikat {
     height: 150px;
 }
 
-button{
+button {
     width: 100%;
     padding: 15px;
-    margin-top: 10px;
+    margin-top: 15px;
     background: #EE4D2D;
     color: white;
     border: none;
     border-radius: 6px;
     font-size: 16px;
+    font-weight: bold;
     cursor: pointer;
 }
 
 button:hover {
     background: #d73d1a;
+}
+
+button:disabled {
+    background: #999;
+    cursor: not-allowed;
 }
 
 table {
@@ -101,102 +119,393 @@ table td:last-child {
     text-align: right;
     font-weight: bold;
 }
+
+.status {
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    display: none;
+    font-size: 14px;
+}
+
+.status.success {
+    display: block;
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.status.error {
+    display: block;
+    background: #ffebee;
+    color: #c62828;
+}
 </style>
 
 </head>
+
 <body>
 
 <div class="container">
 
-<div class="header-box">
-<h3> <b>UPLOAD RETUR SHOPEE</b> </h3>
-<a href="uploadjnt.html" class="btn-nav">UPLOAD RETUR TIKTOK</a>
+    <div class="header-box">
+
+        <h3>UPLOAD RETUR SPX</h3>
+
+        <a href="index.html" class="btn-nav">
+            KEMBALI
+        </a>
+
+    </div>
+
+
+    <div class="card">
+
+        <h3>Tempel Data Retur Shopee</h3>
+
+        <textarea
+            id="rawData"
+            placeholder="Paste data retur Shopee di sini..."
+        ></textarea>
+
+    </div>
+
+
+    <button
+        id="btnUpload"
+        onclick="uploadReturSPX()"
+    >
+        UPLOAD KE SHEET
+    </button>
+
+
+    <div
+        id="statusBox"
+        class="status"
+    ></div>
+
+
+    <div class="card">
+
+        <h3>Hasil Upload</h3>
+
+        <table>
+
+            <tr>
+                <td>Berhasil</td>
+                <td id="hasilBerhasil">0</td>
+            </tr>
+
+            <tr>
+                <td>Duplikat</td>
+                <td id="hasilDuplikat">0</td>
+            </tr>
+
+        </table>
+
+    </div>
+
+
+    <div class="card">
+
+        <h3>Resi Berhasil</h3>
+
+        <textarea
+            id="listBerhasil"
+            readonly
+            placeholder="Daftar resi berhasil akan muncul di sini..."
+        ></textarea>
+
+    </div>
+
+
+    <div class="card">
+
+        <h3>Resi Duplikat</h3>
+
+        <textarea
+            id="listDuplikat"
+            readonly
+            placeholder="Daftar resi duplikat akan muncul di sini..."
+        ></textarea>
+
+    </div>
+
 </div>
 
-<div class="card">
-<h3>Tempel Data Retur Shopee</h3>
-<textarea id="rawData" placeholder="Paste data Shopee di sini..."></textarea>
-</div>
 
-<button onclick="uploadRetur()">
-Upload ke Sheet
-</button>
-
-<div class="card">
-<h3>Hasil Upload</h3>
-<table>
-<tr>
-<td>Berhasil</td>
-<td id="hasilBerhasil">0</td>
-</tr>
-<tr>
-<td>Duplikat</td>
-<td id="hasilDuplikat">0</td>
-</tr>
-</table>
-</div>
-
-<div class="card">
-<h3>Resi Berhasil</h3>
-<textarea id="listBerhasil" readonly placeholder="Daftar resi berhasil akan muncul di sini..."></textarea>
-</div>
-
-<div class="card">
-<h3>Resi Duplikat</h3>
-<textarea id="listDuplikat" readonly placeholder="Daftar resi duplikat akan muncul di sini..."></textarea>
-</div>
-
-</div>
-
-<!-- Memanggil file config.js -->
+<!-- CONFIG -->
 <script src="config.js"></script>
 
+
 <script>
-document.getElementById("rawData").addEventListener("keydown", function(event) {
-    if (event.key === "Enter" && event.ctrlKey) {
+
+document
+.getElementById("rawData")
+.addEventListener("keydown", function(event) {
+
+    if (
+        event.key === "Enter" &&
+        event.ctrlKey
+    ) {
+
         event.preventDefault();
-        uploadRetur();
+
+        uploadReturSPX();
+
     }
+
 });
 
-async function uploadRetur(){
 
-    const text = document.getElementById("rawData").value.trim();
+async function uploadReturSPX() {
 
-    if(!text){
-        alert("Paste data dulu");
+    const text =
+        document
+        .getElementById("rawData")
+        .value
+        .trim();
+
+
+    if (!text) {
+
+        alert("Paste data retur dulu.");
+
         return;
+
     }
 
-    document.getElementById("hasilBerhasil").innerText = "...";
-    document.getElementById("hasilDuplikat").innerText = "...";
-    document.getElementById("listBerhasil").value = "Sedang memproses...";
-    document.getElementById("listDuplikat").value = "Sedang memproses...";
 
-    try{
-        // Menggunakan APP_URL langsung tanpa CONFIG.
-        const r = await fetch(APP_URL, {
-            method: "POST",
-            body: JSON.stringify({
-                source: "uploadReturShopee",
-                text: text
-            })
-        });
+    const button =
+        document
+        .getElementById("btnUpload");
 
-        const json = await r.json();
 
-        document.getElementById("hasilBerhasil").innerText = json.berhasil || 0;
-        document.getElementById("hasilDuplikat").innerText = json.duplikat || 0;
-        
-        document.getElementById("listBerhasil").value = (json.listBerhasil || []).join("\n");
-        document.getElementById("listDuplikat").value = (json.listDuplikat || []).join("\n");
+    const statusBox =
+        document
+        .getElementById("statusBox");
 
-    }catch(err){
-        document.getElementById("listBerhasil").value = err.toString();
-        document.getElementById("listDuplikat").value = err.toString();
+
+    const hasilBerhasil =
+        document
+        .getElementById("hasilBerhasil");
+
+
+    const hasilDuplikat =
+        document
+        .getElementById("hasilDuplikat");
+
+
+    const listBerhasil =
+        document
+        .getElementById("listBerhasil");
+
+
+    const listDuplikat =
+        document
+        .getElementById("listDuplikat");
+
+
+    /*
+     * RESET TAMPILAN
+     */
+
+    hasilBerhasil.innerText = "...";
+
+    hasilDuplikat.innerText = "...";
+
+    listBerhasil.value =
+        "Sedang memproses...";
+
+    listDuplikat.value =
+        "Sedang memproses...";
+
+
+    statusBox.className = "status";
+
+    statusBox.innerText = "";
+
+
+    button.disabled = true;
+
+    button.innerText =
+        "SEDANG UPLOAD...";
+
+
+    try {
+
+        /*
+         * CEK APP_URL
+         */
+
+        if (
+            typeof APP_URL === "undefined" ||
+            !APP_URL
+        ) {
+
+            throw new Error(
+                "APP_URL tidak ditemukan di config.js"
+            );
+
+        }
+
+
+        /*
+         * KIRIM KE GAS
+         *
+         * SOURCE HARUS:
+         * uploadreturspx
+         */
+
+        const response =
+            await fetch(
+                APP_URL,
+                {
+                    method: "POST",
+
+                    body: JSON.stringify({
+
+                        source:
+                            "uploadreturspx",
+
+                        text:
+                            text
+
+                    })
+
+                }
+            );
+
+
+        /*
+         * CEK HTTP RESPONSE
+         */
+
+        if (!response.ok) {
+
+            throw new Error(
+                "HTTP Error " +
+                response.status
+            );
+
+        }
+
+
+        /*
+         * BACA JSON
+         */
+
+        const json =
+            await response.json();
+
+
+        /*
+         * JIKA GAS MENGEMBALIKAN ERROR
+         */
+
+        if (
+            json.status === "error"
+        ) {
+
+            throw new Error(
+                json.message ||
+                "Terjadi error di Apps Script"
+            );
+
+        }
+
+
+        /*
+         * TAMPILKAN HASIL
+         */
+
+        hasilBerhasil.innerText =
+            json.berhasil || 0;
+
+
+        hasilDuplikat.innerText =
+            json.duplikat || 0;
+
+
+        listBerhasil.value =
+            (
+                json.listBerhasil || []
+            ).join("\n");
+
+
+        listDuplikat.value =
+            (
+                json.listDuplikat || []
+            ).join("\n");
+
+
+        /*
+         * STATUS SUKSES
+         */
+
+        statusBox.className =
+            "status success";
+
+
+        statusBox.innerText =
+            "Upload berhasil. " +
+            "Berhasil: " +
+            (json.berhasil || 0) +
+            " | Duplikat: " +
+            (json.duplikat || 0);
+
+
     }
+    catch (error) {
+
+        /*
+         * TAMPILKAN ERROR
+         */
+
+        hasilBerhasil.innerText =
+            "0";
+
+
+        hasilDuplikat.innerText =
+            "0";
+
+
+        listBerhasil.value =
+            "ERROR:\n" +
+            error.message;
+
+
+        listDuplikat.value =
+            "Upload gagal.";
+
+
+        statusBox.className =
+            "status error";
+
+
+        statusBox.innerText =
+            "Upload gagal: " +
+            error.message;
+
+
+        console.error(
+            "UPLOAD SPX ERROR:",
+            error
+        );
+
+    }
+    finally {
+
+        button.disabled = false;
+
+        button.innerText =
+            "UPLOAD KE SHEET";
+
+    }
+
 }
+
 </script>
 
 </body>
 </html>
+```
