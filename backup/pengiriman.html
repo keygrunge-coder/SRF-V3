@@ -257,10 +257,9 @@ button{
     bottom:10px;
     z-index:40;
     display:grid;
-    grid-template-columns:1fr 1fr 1fr 1fr;
+    grid-template-columns:1fr 1fr 1fr;
     gap:7px
 }
-
 
 .bottom-btn{
     height:50px;
@@ -282,10 +281,6 @@ button{
 
 .bottom-btn.queue{
     background:#475569
-}
-
-.bottom-btn.canceled{
-    background:#b91c1c;
 }
 
 .bottom-btn.history{
@@ -707,8 +702,7 @@ button{
             class="bottom-btn sync"
             onclick="syncKeServer()"
         >
-      
-              SYNC
+            SYNC
             <span
                 id="syncCount"
                 class="count"
@@ -731,18 +725,6 @@ button{
             </span>
         </button>
 
-<button
-    class="bottom-btn canceled"
-    onclick="openCanceled()"
->
-    BATAL
-    <span
-        id="canceledButtonCount"
-        class="count"
-    >
-        0
-    </span>
-</button>
 
         <button
             class="bottom-btn history"
@@ -919,98 +901,7 @@ button{
     </div>
 
 </div>
-<!-- =======================================================
-     DIBATALKAN MODAL
-======================================================= -->
 
-<div
-    id="canceledModal"
-    class="modal"
-    onclick="closeModalOutside(event,'canceledModal')"
->
-
-    <div class="sheet">
-
-        <div class="sheet-head">
-
-            <div class="sheet-title">
-
-                RESI DIBATALKAN
-                (<span id="canceledCount">0</span>)
-
-            </div>
-
-            <button
-                class="sheet-close"
-                onclick="closeModal('canceledModal')"
-            >
-                TUTUP
-            </button>
-
-        </div>
-
-
-        <div class="sheet-body">
-
-            <div class="form-box open">
-
-                <label>
-                    INPUT RESI YANG DIBATALKAN
-                </label>
-
-                <div class="form-row">
-
-                    <input
-                        id="canceledResiInput"
-                        type="text"
-                        placeholder="Masukkan nomor resi"
-                        autocomplete="off"
-                    >
-
-                    <button
-                        onclick="addCanceledResi()"
-                    >
-                        SIMPAN
-                    </button>
-
-                </div>
-
-            </div>
-
-
-            <input
-                id="canceledSearch"
-                class="search"
-                type="search"
-                placeholder="Cari nomor resi..."
-                oninput="renderCanceled()"
-            >
-
-
-            <div
-                class="toolbar"
-            >
-
-                <button
-                    class="tool-btn danger"
-                    onclick="deleteAllCanceled()"
-                >
-                    HAPUS SEMUA
-                </button>
-
-            </div>
-
-
-            <div
-                id="canceledList"
-                class="list"
-            ></div>
-
-        </div>
-
-    </div>
-
-</div>
 
 <script src="config.js"></script>
 
@@ -1034,18 +925,9 @@ const ROBOT_CONFIG = {
 
     pesan:{
 
-        resiDibatalkan:
-    "Paket di batalkan",
+        jntBerhasil:"Je en Te sukses ",
 
-resiDibatalkanBerhasil:
-    "Resi berhasil dimasukkan ke daftar dibatalkan",
-
-resiSudahDibatalkan:
-    "Paket ini sudah di batalkan",
-
-        jntBerhasil:"paket Je en Te ",
-
-        spxBerhasil:"paket SPX ",
+        spxBerhasil:"SPX sukses ",
 
         siap:"Kamera mati, scanner siap",
 
@@ -1121,9 +1003,6 @@ const STORAGE_HISTORY =
     "srf_pengiriman_history_v3";
 
 
-const STORAGE_CANCELED =
-    "srf_pengiriman_canceled_v3";
-
 /* =========================================================
    STATE
 ========================================================= */
@@ -1141,11 +1020,6 @@ let scanHistory =
         []
     );
 
-let canceledResi =
-    loadJSON(
-        STORAGE_CANCELED,
-        []
-    );
 
 let html5QrCode =
     null;
@@ -1224,14 +1098,6 @@ function saveData(){
         )
     );
 
-
-    localStorage.setItem(
-        STORAGE_CANCELED,
-        JSON.stringify(
-            canceledResi
-        )
-    );
-
 }
 
 
@@ -1284,15 +1150,11 @@ window.addEventListener(
     "load",
     ()=>{
 
-       updateUI();
+        updateUI();
 
-       renderQueue();
+        renderQueue();
 
-       renderHistory();
-
-       renderCanceled();
-
-       updateCanceledUI();
+        renderHistory();
 
         loadDashboard();
 
@@ -1745,23 +1607,6 @@ function findHistory(
 
 }
 
-/* =========================================================
-   CEK RESI DIBATALKAN
-========================================================= */
-
-function isCanceledResi(resi){
-
-    const r =
-        normalizeResi(
-            resi
-        );
-
-    return canceledResi.some(
-        x =>
-            normalizeResi(x) === r
-    );
-
-}
 
 /* =========================================================
    DOUBLE ALERT
@@ -1822,42 +1667,6 @@ function simpanLokal(
         return false;
 
     }
-
-    /* =========================================
-   CEK DIBATALKAN
-   WAJIB SEBELUM CEK EKSPEDISI
-========================================= */
-
-if(
-    isCanceledResi(resi)
-){
-
-    beep(
-        220,
-        .45
-    );
-
-
-    setStatus(
-        "red",
-        "PAKET DIBATALKAN • " + resi
-    );
-
-
-    showNotif(
-        "PAKET DI BATALKAN",
-        "error"
-    );
-
-
-    speak(
-        ROBOT_CONFIG.pesan.resiDibatalkan
-    );
-
-
-    return false;
-
-}
 
 
     const ekspedisi =
@@ -3554,447 +3363,6 @@ document.addEventListener(
     },
     {
         passive:false
-    }
-);
-
-/* =========================================================
-   RESI DIBATALKAN
-========================================================= */
-
-function openCanceled(){
-
-    renderCanceled();
-
-    document.getElementById(
-        "canceledModal"
-    ).classList.add(
-        "open"
-    );
-
-
-    setTimeout(
-        ()=>{
-
-            document.getElementById(
-                "canceledResiInput"
-            ).focus();
-
-        },
-        100
-    );
-
-}
-
-
-/* =========================================================
-   UPDATE JUMLAH DIBATALKAN
-========================================================= */
-
-function updateCanceledUI(){
-
-    const total =
-        canceledResi.length;
-
-
-    const btn =
-        document.getElementById(
-            "canceledButtonCount"
-        );
-
-
-    const modal =
-        document.getElementById(
-            "canceledCount"
-        );
-
-
-    if(btn){
-
-        btn.innerText =
-            total;
-
-    }
-
-
-    if(modal){
-
-        modal.innerText =
-            total;
-
-    }
-
-}
-
-
-/* =========================================================
-   TAMBAH RESI DIBATALKAN
-========================================================= */
-
-function addCanceledResi(){
-
-    const input =
-        document.getElementById(
-            "canceledResiInput"
-        );
-
-
-    const resi =
-        normalizeResi(
-            input.value
-        );
-
-
-    if(!resi){
-
-        showNotif(
-            "MASUKKAN NOMOR RESI",
-            "warning"
-        );
-
-        input.focus();
-
-        return;
-
-    }
-
-
-    /* =========================================
-       CEK SUDAH ADA
-    ========================================= */
-
-    if(
-        isCanceledResi(resi)
-    ){
-
-        beep(
-            250,
-            .25
-        );
-
-
-        setStatus(
-            "red",
-            "RESI SUDAH DIBATALKAN"
-        );
-
-
-        showNotif(
-            "RESI SUDAH ADA DI DAFTAR BATAL",
-            "warning"
-        );
-
-
-        speak(
-            ROBOT_CONFIG.pesan.resiSudahDibatalkan
-        );
-
-
-        input.select();
-
-        return;
-
-    }
-
-
-    /* =========================================
-       MASUK DAFTAR BATAL
-    ========================================= */
-
-    canceledResi.unshift(
-        resi
-    );
-
-
-    saveData();
-
-    updateCanceledUI();
-
-    renderCanceled();
-
-
-    input.value =
-        "";
-
-
-    input.focus();
-
-
-    beep(
-        500,
-        .12
-    );
-
-
-    setStatus(
-        "red",
-        "RESI DIBATALKAN • " + resi
-    );
-
-
-    showNotif(
-        "RESI BERHASIL DIBATALKAN",
-        "success"
-    );
-
-
-    speak(
-        ROBOT_CONFIG.pesan.resiDibatalkanBerhasil
-    );
-
-}
-
-
-/* =========================================================
-   RENDER DIBATALKAN
-========================================================= */
-
-function renderCanceled(){
-
-    const list =
-        document.getElementById(
-            "canceledList"
-        );
-
-
-    if(!list){
-
-        return;
-
-    }
-
-
-    const search =
-        normalizeResi(
-            document.getElementById(
-                "canceledSearch"
-            )?.value || ""
-        );
-
-
-    list.innerHTML =
-        "";
-
-
-    let data =
-        canceledResi;
-
-
-    if(search){
-
-        data =
-            data.filter(
-                resi =>
-                    normalizeResi(
-                        resi
-                    ).includes(
-                        search
-                    )
-            );
-
-    }
-
-
-    if(
-        data.length===0
-    ){
-
-        list.innerHTML =
-            '<div class="empty">Belum ada resi dibatalkan</div>';
-
-        updateCanceledUI();
-
-        return;
-
-    }
-
-
-    data.forEach(
-        resi=>{
-
-            const div =
-                document.createElement(
-                    "div"
-                );
-
-
-            div.className =
-                "item";
-
-
-            div.innerHTML = `
-
-                <div class="item-main">
-
-                    <div class="item-resi">
-                        ${escapeHTML(resi)}
-                    </div>
-
-                    <div class="item-meta">
-                        DIBATALKAN • TERSIMPAN DI HP
-                    </div>
-
-                </div>
-
-
-                <button
-                    class="item-delete"
-                    onclick="deleteCanceled('${escapeJS(resi)}')"
-                >
-                    HAPUS
-                </button>
-
-            `;
-
-
-            list.appendChild(
-                div
-            );
-
-        }
-    );
-
-
-    updateCanceledUI();
-
-}
-
-
-/* =========================================================
-   HAPUS SATU RESI DIBATALKAN
-========================================================= */
-
-function deleteCanceled(
-    resi
-){
-
-    resi =
-        normalizeResi(
-            resi
-        );
-
-
-    if(!resi){
-
-        return;
-
-    }
-
-
-    const ok =
-        confirm(
-            "Hapus resi dari daftar DIBATALKAN?\n\n" +
-            resi
-        );
-
-
-    if(!ok){
-
-        return;
-
-    }
-
-
-    canceledResi =
-        canceledResi.filter(
-            x =>
-                normalizeResi(x) !==
-                resi
-        );
-
-
-    saveData();
-
-    updateCanceledUI();
-
-    renderCanceled();
-
-
-    showNotif(
-        "RESI DIBATALKAN DIHAPUS",
-        "success"
-    );
-
-}
-
-
-/* =========================================================
-   HAPUS SEMUA RESI DIBATALKAN
-========================================================= */
-
-function deleteAllCanceled(){
-
-    if(
-        canceledResi.length===0
-    ){
-
-        showNotif(
-            "DAFTAR BATAL SUDAH KOSONG",
-            "warning"
-        );
-
-        return;
-
-    }
-
-
-    const ok =
-        confirm(
-            "HAPUS SEMUA RESI DIBATALKAN?\n\n" +
-            "Daftar ini hanya tersimpan di HP."
-        );
-
-
-    if(!ok){
-
-        return;
-
-    }
-
-
-    canceledResi =
-        [];
-
-
-    saveData();
-
-    updateCanceledUI();
-
-    renderCanceled();
-
-
-    showNotif(
-        "SEMUA RESI BATAL DIHAPUS",
-        "success"
-    );
-
-}
-
-
-/* =========================================================
-   ENTER INPUT BATAL
-========================================================= */
-
-document.addEventListener(
-    "keydown",
-    e=>{
-
-        const input =
-            document.getElementById(
-                "canceledResiInput"
-            );
-
-
-        if(
-            e.key==="Enter" &&
-            document.activeElement===input
-        ){
-
-            e.preventDefault();
-
-            addCanceledResi();
-
-        }
-
     }
 );
 
