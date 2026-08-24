@@ -1527,15 +1527,13 @@ function speak(
    RESI
 ========================================================= */
 
-function normalizeResi(
-    resi
-){
+function normalizeResi(resi){
 
-    return String(
-        resi || ""
-    )
-    .trim()
-    .toUpperCase();
+    return String(resi || "")
+        .trim()
+        .toUpperCase()
+        .replace(/\s+/g, "")
+        .replace(/[^A-Z0-9]/g, "");
 
 }
 
