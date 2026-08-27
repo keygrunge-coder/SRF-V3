@@ -1,0 +1,1521 @@
+```html
+<!DOCTYPE html>
+<html lang="id">
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>SRF V3 • Upload Retur Lazada</title>
+
+<style>
+
+/* =========================================================
+   RESET
+========================================================= */
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+}
+
+html,
+body{
+    width:100%;
+    min-height:100%;
+    background:#f1f5f9;
+    color:#0f172a;
+}
+
+body{
+    padding:12px;
+}
+
+
+/* =========================================================
+   CONTAINER
+========================================================= */
+
+.container{
+    width:100%;
+    max-width:900px;
+    margin:auto;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.header{
+    background:#1e293b;
+    color:white;
+
+    border-radius:14px;
+
+    padding:16px;
+
+    margin-bottom:12px;
+
+    box-shadow:
+        0 5px 15px rgba(15,23,42,.12);
+}
+
+.header-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    gap:10px;
+}
+
+.header-title{
+    font-size:17px;
+    font-weight:900;
+}
+
+.header-subtitle{
+    color:#cbd5e1;
+
+    font-size:10px;
+
+    margin-top:4px;
+}
+
+.status-pill{
+    flex-shrink:0;
+
+    background:#334155;
+
+    color:#cbd5e1;
+
+    padding:6px 9px;
+
+    border-radius:20px;
+
+    font-size:9px;
+    font-weight:900;
+}
+
+.status-pill.online{
+    background:#166534;
+    color:#dcfce7;
+}
+
+.status-pill.error{
+    background:#991b1b;
+    color:#fee2e2;
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+.nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    gap:8px;
+
+    margin-bottom:12px;
+}
+
+.nav-right{
+    display:flex;
+    align-items:center;
+    gap:7px;
+}
+
+.nav-btn{
+    border:0;
+
+    padding:9px 11px;
+
+    border-radius:9px;
+
+    color:white;
+
+    font-size:10px;
+    font-weight:900;
+
+    text-decoration:none;
+    text-align:center;
+
+    cursor:pointer;
+
+    white-space:nowrap;
+}
+
+.nav-jnt{
+    background:#2563eb;
+}
+
+.nav-spx{
+    background:#7c3aed;
+}
+
+.nav-lazada{
+    background:#0f766e;
+}
+
+.nav-scan{
+    background:#0f766e;
+}
+
+.nav-home{
+    background:#475569;
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.card{
+    background:white;
+
+    border-radius:14px;
+
+    padding:14px;
+
+    margin-bottom:12px;
+
+    box-shadow:
+        0 4px 14px rgba(15,23,42,.07);
+}
+
+.card-title{
+    font-size:13px;
+    font-weight:900;
+
+    margin-bottom:5px;
+}
+
+.card-subtitle{
+    color:#64748b;
+
+    font-size:10px;
+
+    line-height:1.5;
+
+    margin-bottom:10px;
+}
+
+
+/* =========================================================
+   TEXTAREA
+========================================================= */
+
+textarea{
+    width:100%;
+
+    min-height:280px;
+
+    resize:vertical;
+
+    border:1px solid #cbd5e1;
+
+    border-radius:10px;
+
+    padding:11px;
+
+    background:#f8fafc;
+
+    color:#0f172a;
+
+    font-size:12px;
+
+    line-height:1.5;
+
+    outline:none;
+}
+
+textarea:focus{
+    border-color:#2563eb;
+
+    box-shadow:
+        0 0 0 3px rgba(37,99,235,.10);
+}
+
+textarea[readonly]{
+    min-height:150px;
+}
+
+
+/* =========================================================
+   ACTION
+========================================================= */
+
+.actions{
+    display:grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:8px;
+
+    margin-top:10px;
+}
+
+.btn{
+    border:0;
+
+    border-radius:10px;
+
+    padding:13px 10px;
+
+    color:white;
+
+    font-size:12px;
+    font-weight:900;
+
+    cursor:pointer;
+}
+
+.btn-upload{
+    background:#0f766e;
+}
+
+.btn-upload:disabled{
+    background:#94a3b8;
+
+    cursor:not-allowed;
+}
+
+.btn-clear{
+    background:#64748b;
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.loading{
+    display:none;
+
+    align-items:center;
+    gap:8px;
+
+    margin-top:10px;
+
+    padding:10px;
+
+    border-radius:9px;
+
+    background:#ecfeff;
+
+    color:#0f766e;
+
+    font-size:10px;
+    font-weight:900;
+}
+
+.loading.show{
+    display:flex;
+}
+
+.spinner{
+    width:15px;
+    height:15px;
+
+    border:2px solid #99f6e4;
+
+    border-top-color:#0f766e;
+
+    border-radius:50%;
+
+    animation:
+        spin .8s linear infinite;
+}
+
+@keyframes spin{
+
+    to{
+        transform:rotate(360deg);
+    }
+
+}
+
+
+/* =========================================================
+   RESULT SUMMARY
+========================================================= */
+
+.summary{
+    display:grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap:7px;
+}
+
+.summary-box{
+    background:#f8fafc;
+
+    border-radius:10px;
+
+    padding:11px 7px;
+
+    text-align:center;
+}
+
+.summary-label{
+    color:#64748b;
+
+    font-size:9px;
+    font-weight:800;
+}
+
+.summary-value{
+    margin-top:3px;
+
+    font-size:19px;
+    font-weight:900;
+}
+
+.summary-success{
+    color:#16a34a;
+}
+
+.summary-warning{
+    color:#d97706;
+}
+
+.summary-error{
+    color:#dc2626;
+}
+
+
+/* =========================================================
+   RESULT HEADER
+========================================================= */
+
+.result-header{
+    display:flex;
+
+    align-items:center;
+    justify-content:space-between;
+
+    margin-bottom:8px;
+}
+
+.result-title{
+    font-size:13px;
+    font-weight:900;
+}
+
+.result-count{
+    color:#64748b;
+
+    font-size:9px;
+    font-weight:800;
+}
+
+
+/* =========================================================
+   LIST
+========================================================= */
+
+.list-box{
+    width:100%;
+
+    min-height:80px;
+
+    border-radius:9px;
+
+    padding:9px;
+
+    background:#f8fafc;
+
+    border:1px solid #e2e8f0;
+
+    font-size:11px;
+
+    line-height:1.6;
+
+    white-space:pre-wrap;
+
+    word-break:break-word;
+}
+
+.list-success{
+    border-left:
+        4px solid #16a34a;
+}
+
+.list-warning{
+    border-left:
+        4px solid #f59e0b;
+}
+
+.list-error{
+    border-left:
+        4px solid #dc2626;
+}
+
+
+/* =========================================================
+   ERROR BOX
+========================================================= */
+
+.error-box{
+    display:none;
+
+    background:#fef2f2;
+
+    color:#991b1b;
+
+    border:
+        1px solid #fecaca;
+
+    border-radius:10px;
+
+    padding:11px;
+
+    font-size:10px;
+
+    line-height:1.5;
+
+    word-break:break-word;
+}
+
+.error-box.show{
+    display:block;
+}
+
+.error-box strong{
+    font-weight:900;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.footer{
+    text-align:center;
+
+    color:#94a3b8;
+
+    font-size:9px;
+
+    padding:6px 0 15px;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:380px){
+
+    body{
+        padding:8px;
+    }
+
+    .header-title{
+        font-size:15px;
+    }
+
+    .summary-value{
+        font-size:17px;
+    }
+
+    textarea{
+        min-height:240px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
+<div class="header">
+
+<div class="header-top">
+
+    <div>
+
+        <div class="header-title">
+            SRF V3 • Upload Retur Lazada
+        </div>
+
+        <div class="header-subtitle">
+            Upload data retur dari Seller Center Lazada ke RETUR_LAZADA
+        </div>
+
+    </div>
+
+    <div
+        id="connectionStatus"
+        class="status-pill">
+
+        CHECKING
+
+    </div>
+
+</div>
+
+</div>
+
+
+<!-- =========================================================
+     NAVIGATION
+========================================================= -->
+
+<div class="nav">
+
+<a
+    href="index.html"
+    class="nav-btn nav-home">
+
+    &lt; MENU
+
+</a>
+
+<div class="nav-right">
+
+<a
+    href="uploadjnt.html"
+    class="nav-btn nav-jnt">
+
+    UPLOAD JNT
+
+</a>
+
+<a
+    href="uploadspx.html"
+    class="nav-btn nav-spx">
+
+    UPLOAD SPX
+
+</a>
+
+<a
+    href="scanretur.html"
+    class="nav-btn nav-scan">
+
+    SCAN RETUR
+
+</a>
+
+</div>
+
+</div>
+
+
+<!-- =========================================================
+     INPUT
+========================================================= -->
+
+<div class="card">
+
+<div class="card-title">
+    DATA RETUR LAZADA
+</div>
+
+<div class="card-subtitle">
+
+    Tempel seluruh data mentah dari Seller Center Lazada.
+    Parser akan membaca Nomor Pesanan, SKU Penjual,
+    Warna, Ukuran, QTY dan TN/Resi.
+
+</div>
+
+
+<textarea
+    id="rawData"
+    placeholder="Paste data retur Lazada di sini..."></textarea>
+
+
+<div class="actions">
+
+<button
+    id="uploadButton"
+    class="btn btn-upload"
+    onclick="uploadReturLazada()">
+
+    UPLOAD KE SHEET
+
+</button>
+
+
+<button
+    class="btn btn-clear"
+    onclick="clearData()">
+
+    HAPUS
+
+</button>
+
+</div>
+
+
+<div
+    id="loading"
+    class="loading">
+
+    <div class="spinner"></div>
+
+    <span>
+        Memproses data retur Lazada...
+    </span>
+
+</div>
+
+</div>
+
+
+<!-- =========================================================
+     RINGKASAN
+========================================================= -->
+
+<div class="card">
+
+<div class="card-title">
+    HASIL UPLOAD
+</div>
+
+<div class="summary">
+
+<div class="summary-box">
+
+<div class="summary-label">
+    BERHASIL
+</div>
+
+<div
+    id="hasilBerhasil"
+    class="summary-value summary-success">
+
+    0
+
+</div>
+
+</div>
+
+
+<div class="summary-box">
+
+<div class="summary-label">
+    DUPLIKAT
+</div>
+
+<div
+    id="hasilDuplikat"
+    class="summary-value summary-warning">
+
+    0
+
+</div>
+
+</div>
+
+
+<div class="summary-box">
+
+<div class="summary-label">
+    TIDAK TERBACA
+</div>
+
+<div
+    id="hasilError"
+    class="summary-value summary-error">
+
+    0
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- =========================================================
+     BERHASIL
+========================================================= -->
+
+<div class="card">
+
+<div class="result-header">
+
+<div class="result-title">
+    RESI BERHASIL
+</div>
+
+<div
+    id="jumlahBerhasil"
+    class="result-count">
+
+    0 RESI
+
+</div>
+
+</div>
+
+
+<div
+    id="listBerhasil"
+    class="list-box list-success">
+
+    Belum ada data.
+
+</div>
+
+</div>
+
+
+<!-- =========================================================
+     DUPLIKAT
+========================================================= -->
+
+<div class="card">
+
+<div class="result-header">
+
+<div class="result-title">
+    RESI DUPLIKAT
+</div>
+
+<div
+    id="jumlahDuplikat"
+    class="result-count">
+
+    0 RESI
+
+</div>
+
+</div>
+
+
+<div
+    id="listDuplikat"
+    class="list-box list-warning">
+
+    Belum ada data.
+
+</div>
+
+</div>
+
+
+<!-- =========================================================
+     DATA TIDAK TERBACA
+========================================================= -->
+
+<div class="card">
+
+<div class="result-header">
+
+<div class="result-title">
+    DATA TIDAK TERBACA
+</div>
+
+<div
+    id="jumlahError"
+    class="result-count">
+
+    0 DATA
+
+</div>
+
+</div>
+
+
+<div
+    id="listError"
+    class="list-box list-error">
+
+    Tidak ada data bermasalah.
+
+</div>
+
+</div>
+
+
+<!-- =========================================================
+     ERROR SERVER
+========================================================= -->
+
+<div
+    id="errorBox"
+    class="error-box">
+
+</div>
+
+
+<div class="footer">
+
+SRF V3 • Upload Retur Lazada
+
+</div>
+
+</div>
+
+
+<!-- =========================================================
+     CONFIG
+========================================================= -->
+
+<script src="config.js"></script>
+
+<script>
+
+/* =========================================================
+   CONFIG
+========================================================= */
+
+function getAppUrl(){
+
+    try{
+
+        if(
+            typeof APP_URL !== "undefined" &&
+            APP_URL
+        ){
+
+            return String(APP_URL).trim();
+
+        }
+
+    }catch(e){
+
+        console.error(e);
+
+    }
+
+    return "";
+
+}
+
+
+/* =========================================================
+   ELEMENT
+========================================================= */
+
+const rawData =
+    document.getElementById("rawData");
+
+const uploadButton =
+    document.getElementById("uploadButton");
+
+const loading =
+    document.getElementById("loading");
+
+const connectionStatus =
+    document.getElementById("connectionStatus");
+
+
+/* =========================================================
+   INIT
+========================================================= */
+
+window.addEventListener(
+    "load",
+    function(){
+
+        const url = getAppUrl();
+
+        if(url){
+
+            connectionStatus.innerText =
+                "READY";
+
+            connectionStatus.classList.add(
+                "online"
+            );
+
+        }else{
+
+            connectionStatus.innerText =
+                "NO CONFIG";
+
+            connectionStatus.classList.add(
+                "error"
+            );
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   RESET HASIL
+========================================================= */
+
+function resetResult(){
+
+    document.getElementById(
+        "hasilBerhasil"
+    ).innerText = "0";
+
+    document.getElementById(
+        "hasilDuplikat"
+    ).innerText = "0";
+
+    document.getElementById(
+        "hasilError"
+    ).innerText = "0";
+
+    document.getElementById(
+        "jumlahBerhasil"
+    ).innerText = "0 RESI";
+
+    document.getElementById(
+        "jumlahDuplikat"
+    ).innerText = "0 RESI";
+
+    document.getElementById(
+        "jumlahError"
+    ).innerText = "0 DATA";
+
+    document.getElementById(
+        "listBerhasil"
+    ).innerText = "Belum ada data.";
+
+    document.getElementById(
+        "listDuplikat"
+    ).innerText = "Belum ada data.";
+
+    document.getElementById(
+        "listError"
+    ).innerText =
+        "Tidak ada data bermasalah.";
+
+    hideError();
+
+}
+
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+function showError(message){
+
+    const box =
+        document.getElementById("errorBox");
+
+    box.innerText =
+        message || "Terjadi kesalahan.";
+
+    box.classList.add("show");
+
+}
+
+
+function hideError(){
+
+    document.getElementById(
+        "errorBox"
+    ).classList.remove("show");
+
+}
+
+
+/* =========================================================
+   CLEAR
+========================================================= */
+
+function clearData(){
+
+    rawData.value = "";
+
+    resetResult();
+
+    rawData.focus();
+
+}
+
+
+/* =========================================================
+   SERVER RESPONSE
+========================================================= */
+
+async function readServerResponse(response){
+
+    const text =
+        await response.text();
+
+    console.log(
+        "RAW LAZADA SERVER RESPONSE:",
+        text
+    );
+
+    if(!text){
+
+        throw new Error(
+            "Server mengembalikan response kosong."
+        );
+
+    }
+
+    try{
+
+        return JSON.parse(text);
+
+    }catch(e){
+
+        throw new Error(
+            "Response server bukan JSON: " +
+            text.substring(0,300)
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   CEK DATA
+========================================================= */
+
+function cekDataMentah(text){
+
+    const lines =
+        text
+        .split(/\r?\n/)
+        .map(
+            line => line.trim()
+        )
+        .filter(Boolean);
+
+    if(lines.length === 0){
+
+        return {
+            valid:false,
+            message:"Data kosong."
+        };
+
+    }
+
+    return {
+        valid:true,
+        lines:lines
+    };
+
+}
+
+
+/* =========================================================
+   UPLOAD RETUR LAZADA
+========================================================= */
+
+async function uploadReturLazada(){
+
+    hideError();
+
+    const text =
+        rawData.value.trim();
+
+
+    if(!text){
+
+        showError(
+            "Data retur Lazada masih kosong. Paste data terlebih dahulu."
+        );
+
+        rawData.focus();
+
+        return;
+
+    }
+
+
+    const check =
+        cekDataMentah(text);
+
+
+    if(!check.valid){
+
+        showError(check.message);
+
+        return;
+
+    }
+
+
+    const url =
+        getAppUrl();
+
+
+    if(!url){
+
+        connectionStatus.innerText =
+            "NO CONFIG";
+
+        connectionStatus.classList.add(
+            "error"
+        );
+
+        showError(
+            "APP_URL tidak ditemukan. Pastikan config.js berada satu folder dengan uploadlazada.html."
+        );
+
+        return;
+
+    }
+
+
+    uploadButton.disabled =
+        true;
+
+    loading.classList.add(
+        "show"
+    );
+
+
+    connectionStatus.innerText =
+        "UPLOADING";
+
+    connectionStatus.classList.remove(
+        "online",
+        "error"
+    );
+
+
+    resetResult();
+
+
+    document.getElementById(
+        "listBerhasil"
+    ).innerText =
+        "Sedang memproses...";
+
+    document.getElementById(
+        "listDuplikat"
+    ).innerText =
+        "Sedang memproses...";
+
+    document.getElementById(
+        "listError"
+    ).innerText =
+        "Sedang memproses...";
+
+
+    try{
+
+        /* =====================================================
+           PAYLOAD KHUSUS LAZADA
+
+           Backend akan menggunakan:
+           source = uploadReturLazada
+
+           Sehingga tidak mengganggu:
+           uploadRetur JNT
+           uploadRetur SPX
+        ===================================================== */
+
+        const payload =
+            JSON.stringify({
+
+                source:"uploadReturLazada",
+
+                text:text
+
+            });
+
+
+        const response =
+            await fetch(
+                url,
+                {
+                    method:"POST",
+
+                    mode:"cors",
+
+                    redirect:"follow",
+
+                    headers:{
+                        "Content-Type":
+                            "text/plain;charset=UTF-8"
+                    },
+
+                    body:payload
+
+                }
+            );
+
+
+        if(!response.ok){
+
+            throw new Error(
+                "HTTP Error " +
+                response.status
+            );
+
+        }
+
+
+        const json =
+            await readServerResponse(
+                response
+            );
+
+
+        console.log(
+            "UPLOAD RETUR LAZADA RESPONSE:",
+            json
+        );
+
+
+        /* =====================================================
+           HASIL BACKEND
+        ===================================================== */
+
+        const berhasil =
+            Array.isArray(
+                json.listBerhasil
+            )
+            ? json.listBerhasil
+            : [];
+
+
+        const duplikat =
+            Array.isArray(
+                json.listDuplikat
+            )
+            ? json.listDuplikat
+            : [];
+
+
+        const errorList =
+            Array.isArray(
+                json.listError
+            )
+            ? json.listError
+            : [];
+
+
+        /* =====================================================
+           HASIL SUMMARY
+        ===================================================== */
+
+        document.getElementById(
+            "hasilBerhasil"
+        ).innerText =
+            berhasil.length;
+
+
+        document.getElementById(
+            "hasilDuplikat"
+        ).innerText =
+            duplikat.length;
+
+
+        document.getElementById(
+            "hasilError"
+        ).innerText =
+            errorList.length;
+
+
+        document.getElementById(
+            "jumlahBerhasil"
+        ).innerText =
+            berhasil.length +
+            " RESI";
+
+
+        document.getElementById(
+            "jumlahDuplikat"
+        ).innerText =
+            duplikat.length +
+            " RESI";
+
+
+        document.getElementById(
+            "jumlahError"
+        ).innerText =
+            errorList.length +
+            " DATA";
+
+
+        /* =====================================================
+           LIST BERHASIL
+        ===================================================== */
+
+        document.getElementById(
+            "listBerhasil"
+        ).innerText =
+
+            berhasil.length
+
+            ? berhasil.join("\n")
+
+            : "Tidak ada resi berhasil.";
+
+
+        /* =====================================================
+           LIST DUPLIKAT
+        ===================================================== */
+
+        document.getElementById(
+            "listDuplikat"
+        ).innerText =
+
+            duplikat.length
+
+            ? duplikat.join("\n")
+
+            : "Tidak ada resi duplikat.";
+
+
+        /* =====================================================
+           LIST ERROR
+        ===================================================== */
+
+        document.getElementById(
+            "listError"
+        ).innerText =
+
+            errorList.length
+
+            ? errorList.join("\n")
+
+            : "Tidak ada data bermasalah.";
+
+
+        /* =====================================================
+           STATUS
+        ===================================================== */
+
+        connectionStatus.innerText =
+            "ONLINE";
+
+        connectionStatus.classList.remove(
+            "error"
+        );
+
+        connectionStatus.classList.add(
+            "online"
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "UPLOAD RETUR LAZADA ERROR:",
+            error
+        );
+
+
+        connectionStatus.innerText =
+            "ERROR";
+
+
+        connectionStatus.classList.remove(
+            "online"
+        );
+
+        connectionStatus.classList.add(
+            "error"
+        );
+
+
+        showError(
+            "Gagal memproses upload Lazada: " +
+            error.message
+        );
+
+
+        document.getElementById(
+            "listBerhasil"
+        ).innerText =
+            "Upload gagal.";
+
+
+        document.getElementById(
+            "listDuplikat"
+        ).innerText =
+            "Upload gagal.";
+
+
+        document.getElementById(
+            "listError"
+        ).innerText =
+            "Upload gagal.";
+
+
+    }finally{
+
+        uploadButton.disabled =
+            false;
+
+        loading.classList.remove(
+            "show"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   CTRL + ENTER
+========================================================= */
+
+rawData.addEventListener(
+    "keydown",
+    function(event){
+
+        if(
+            event.ctrlKey &&
+            event.key === "Enter"
+        ){
+
+            event.preventDefault();
+
+            uploadReturLazada();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   AUTO FOCUS
+========================================================= */
+
+window.addEventListener(
+    "load",
+    function(){
+
+        rawData.focus();
+
+    }
+);
+
+</script>
+
+</body>
+</html>
+```
