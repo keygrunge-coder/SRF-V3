@@ -1,4 +1,4 @@
-```html
+
 <!DOCTYPE html>
 <html lang="id">
 
@@ -17,6 +17,7 @@ user-scalable=no">
 <title>SRF V3</title>
 
 <link rel="manifest" href="manifest.json">
+
 
 <style>
 
@@ -40,27 +41,47 @@ user-scalable=no">
     sans-serif;
 }
 
+
 html,
 body{
+
     width:100%;
     min-height:100%;
 
     background:#f1f5f9;
+
     color:#0f172a;
 }
 
+
 body{
-    padding-bottom:25px;
+
+    padding-bottom:30px;
+
+    overflow-x:hidden;
 }
 
 
 /* =====================================================
-   HEADER
+   PAGE WRAPPER
+===================================================== */
+
+.page{
+
+    width:100%;
+    min-height:100vh;
+}
+
+
+/* =====================================================
+   TOP HEADER
 ===================================================== */
 
 .top{
 
     position:relative;
+
+    width:100%;
 
     padding:
     20px
@@ -74,6 +95,9 @@ body{
     overflow:hidden;
 }
 
+
+/* Decorative circle */
+
 .top::before{
 
     content:"";
@@ -83,7 +107,7 @@ body{
     width:300px;
     height:300px;
 
-    right:-130px;
+    right:-140px;
     top:-170px;
 
     border-radius:50%;
@@ -92,17 +116,18 @@ body{
     rgba(59,130,246,.22);
 }
 
+
 .top::after{
 
     content:"";
 
     position:absolute;
 
-    width:210px;
-    height:210px;
+    width:220px;
+    height:220px;
 
-    left:-140px;
-    bottom:-145px;
+    left:-145px;
+    bottom:-150px;
 
     border-radius:50%;
 
@@ -112,19 +137,32 @@ body{
 
 
 /* =====================================================
+   TOP CONTENT
+===================================================== */
+
+.top-content{
+
+    position:relative;
+
+    z-index:2;
+
+    width:100%;
+}
+
+
+/* =====================================================
    TOP BAR
 ===================================================== */
 
 .topbar{
 
-    position:relative;
-    z-index:2;
-
     display:flex;
 
     align-items:center;
+
     justify-content:space-between;
 }
+
 
 .logo{
 
@@ -134,6 +172,7 @@ body{
 
     gap:10px;
 }
+
 
 .logo-box{
 
@@ -163,6 +202,7 @@ body{
     rgba(37,99,235,.3);
 }
 
+
 .logo-sub{
 
     color:#94a3b8;
@@ -173,6 +213,7 @@ body{
 
     letter-spacing:1.2px;
 }
+
 
 .logo-name{
 
@@ -211,6 +252,7 @@ body{
     font-weight:900;
 }
 
+
 .online-dot{
 
     width:7px;
@@ -232,14 +274,11 @@ body{
 
 .greeting{
 
-    position:relative;
-
-    z-index:2;
-
-    margin-top:27px;
+    margin-top:28px;
 
     text-align:center;
 }
+
 
 .greeting-small{
 
@@ -251,6 +290,7 @@ body{
 
     letter-spacing:1px;
 }
+
 
 .greeting-title{
 
@@ -264,6 +304,7 @@ body{
 
     letter-spacing:-1.2px;
 }
+
 
 .greeting-desc{
 
@@ -283,11 +324,13 @@ body{
 
     position:relative;
 
+    width:100%;
+
     margin-top:-48px;
 
     padding:
     0 15px
-    30px;
+    35px;
 
     z-index:5;
 }
@@ -303,7 +346,7 @@ body{
 
     display:block;
 
-    min-height:154px;
+    min-height:155px;
 
     padding:20px;
 
@@ -327,6 +370,7 @@ body{
     rgba(37,99,235,.25);
 }
 
+
 .main-action::before{
 
     content:"";
@@ -345,23 +389,25 @@ body{
     rgba(255,255,255,.10);
 }
 
+
 .main-action::after{
 
     content:"";
 
     position:absolute;
 
-    width:130px;
-    height:130px;
+    width:135px;
+    height:135px;
 
     right:-50px;
-    bottom:-70px;
+    bottom:-75px;
 
     border-radius:50%;
 
     background:
     rgba(255,255,255,.07);
 }
+
 
 .action-label{
 
@@ -377,6 +423,7 @@ body{
 
     letter-spacing:1.2px;
 }
+
 
 .action-icon{
 
@@ -403,6 +450,7 @@ body{
     z-index:2;
 }
 
+
 .action-title{
 
     position:relative;
@@ -416,13 +464,14 @@ body{
     font-weight:950;
 }
 
+
 .action-desc{
 
     position:relative;
 
     z-index:2;
 
-    max-width:225px;
+    max-width:235px;
 
     margin-top:6px;
 
@@ -432,6 +481,7 @@ body{
 
     line-height:1.5;
 }
+
 
 .action-button{
 
@@ -457,13 +507,14 @@ body{
 
 
 /* =====================================================
-   GROUP SECTION
+   GROUP
 ===================================================== */
 
 .group{
 
-    margin-top:25px;
+    margin-top:27px;
 }
+
 
 .group-head{
 
@@ -479,6 +530,7 @@ body{
     0 2px;
 }
 
+
 .group-left{
 
     display:flex;
@@ -488,24 +540,25 @@ body{
     gap:9px;
 }
 
+
 .group-mark{
 
     width:4px;
     height:17px;
 
-    border-radius:10px;
+    border-radius:20px;
 
     background:#2563eb;
 }
+
 
 .group-title{
 
     font-size:12px;
 
     font-weight:950;
-
-    letter-spacing:.1px;
 }
+
 
 .group-count{
 
@@ -518,17 +571,19 @@ body{
 
 
 /* =====================================================
-   GROUP CONTAINER
+   GROUP BOX
 ===================================================== */
 
 .group-box{
+
+    width:100%;
 
     padding:10px;
 
     border-radius:21px;
 
     background:
-    rgba(255,255,255,.72);
+    rgba(255,255,255,.75);
 
     border:
     1px solid
@@ -541,7 +596,7 @@ body{
 
 
 /* =====================================================
-   TOOLS GRID
+   TOOLS
 ===================================================== */
 
 .tools{
@@ -556,7 +611,7 @@ body{
 
 
 /* =====================================================
-   TOOL
+   TOOL CARD
 ===================================================== */
 
 .tool{
@@ -594,6 +649,7 @@ body{
     box-shadow .12s ease;
 }
 
+
 .tool:active{
 
     transform:scale(.96);
@@ -602,6 +658,7 @@ body{
     0 2px 5px
     rgba(15,23,42,.08);
 }
+
 
 .tool-icon{
 
@@ -620,6 +677,7 @@ body{
     margin-bottom:10px;
 }
 
+
 .tool-name{
 
     font-size:9px;
@@ -628,6 +686,7 @@ body{
 
     line-height:1.25;
 }
+
 
 .tool-desc{
 
@@ -642,7 +701,7 @@ body{
 
 
 /* =====================================================
-   ICON COLORS
+   COLORS
 ===================================================== */
 
 .blue{
@@ -650,30 +709,36 @@ body{
     color:#2563eb;
 }
 
+
 .purple{
     background:#f5f3ff;
     color:#7c3aed;
 }
+
 
 .orange{
     background:#fff7ed;
     color:#ea580c;
 }
 
+
 .green{
     background:#f0fdf4;
     color:#16a34a;
 }
+
 
 .cyan{
     background:#ecfeff;
     color:#0891b2;
 }
 
+
 .pink{
     background:#fdf2f8;
     color:#db2777;
 }
+
 
 .indigo{
     background:#eef2ff;
@@ -682,20 +747,23 @@ body{
 
 
 /* =====================================================
-   GROUP COLORS
+   GROUP ACCENT
 ===================================================== */
 
 .group.operasional .group-mark{
     background:#2563eb;
 }
 
+
 .group.upload .group-mark{
     background:#ea580c;
 }
 
+
 .group.bisnis .group-mark{
     background:#0891b2;
 }
+
 
 .group.kreatif .group-mark{
     background:#7c3aed;
@@ -703,7 +771,7 @@ body{
 
 
 /* =====================================================
-   SYSTEM
+   SYSTEM CARD
 ===================================================== */
 
 .system{
@@ -714,7 +782,7 @@ body{
 
     gap:11px;
 
-    margin-top:20px;
+    margin-top:22px;
 
     padding:14px;
 
@@ -731,6 +799,7 @@ body{
     rgba(15,23,42,.035);
 }
 
+
 .system-icon{
 
     width:37px;
@@ -740,6 +809,8 @@ body{
 
     align-items:center;
     justify-content:center;
+
+    flex-shrink:0;
 
     border-radius:12px;
 
@@ -752,12 +823,20 @@ body{
     font-weight:950;
 }
 
+
+.system-info{
+
+    min-width:0;
+}
+
+
 .system-title{
 
     font-size:10px;
 
     font-weight:950;
 }
+
 
 .system-desc{
 
@@ -768,9 +847,12 @@ body{
     font-size:8px;
 }
 
+
 .system-status{
 
     margin-left:auto;
+
+    flex-shrink:0;
 
     padding:
     5px 8px;
@@ -811,38 +893,384 @@ body{
 
 @media(max-width:360px){
 
+    .main{
+        padding-left:12px;
+        padding-right:12px;
+    }
+
     .tools{
-        grid-template-columns:
-        repeat(2,1fr);
+        gap:7px;
     }
 
     .tool{
-        min-height:112px;
+        min-height:110px;
+        padding:11px;
+    }
+
+    .tool-name{
+        font-size:8px;
     }
 
 }
 
 
 /* =====================================================
-   TABLET / DESKTOP
+   TABLET
 ===================================================== */
 
-@media(min-width:700px){
+@media(min-width:600px){
 
-    body{
-        display:flex;
-        justify-content:center;
+    .top{
+
+        padding:
+        25px
+        25px
+        95px;
     }
 
-    .top,
     .main{
-        width:100%;
-        max-width:700px;
+
+        padding-left:25px;
+        padding-right:25px;
     }
 
     .tools{
+
         grid-template-columns:
         repeat(3,1fr);
+
+        gap:11px;
+    }
+
+}
+
+
+/* =====================================================
+   DESKTOP
+===================================================== */
+
+@media(min-width:900px){
+
+    html,
+    body{
+
+        background:#e2e8f0;
+    }
+
+
+    body{
+
+        overflow-x:hidden;
+    }
+
+
+    .page{
+
+        width:100%;
+    }
+
+
+    /* ================================================
+       HEADER DESKTOP
+    ================================================ */
+
+    .top{
+
+        width:100%;
+
+        max-width:1000px;
+
+        margin:
+        30px
+        auto
+        0;
+
+        padding:
+        30px
+        35px
+        105px;
+
+        border-radius:
+        28px
+        28px
+        0
+        0;
+    }
+
+
+    .logo-box{
+
+        width:48px;
+        height:48px;
+
+        border-radius:15px;
+    }
+
+
+    .logo-name{
+
+        font-size:21px;
+    }
+
+
+    .greeting{
+
+        margin-top:38px;
+    }
+
+
+    .greeting-title{
+
+        font-size:40px;
+    }
+
+
+    .greeting-desc{
+
+        font-size:11px;
+    }
+
+
+    /* ================================================
+       MAIN DESKTOP
+    ================================================ */
+
+    .main{
+
+        width:100%;
+
+        max-width:1000px;
+
+        margin:
+        -58px
+        auto
+        0;
+
+        padding:
+        0
+        35px
+        45px;
+
+        background:#f8fafc;
+
+        border-radius:
+        28px
+        28px
+        0
+        0;
+    }
+
+
+    /* ================================================
+       MAIN ACTION
+    ================================================ */
+
+    .main-action{
+
+        min-height:180px;
+
+        padding:25px;
+
+        border-radius:25px;
+    }
+
+
+    .action-label{
+
+        font-size:9px;
+    }
+
+
+    .action-icon{
+
+        width:55px;
+        height:55px;
+
+        right:25px;
+        top:25px;
+
+        border-radius:17px;
+
+        font-size:25px;
+    }
+
+
+    .action-title{
+
+        margin-top:9px;
+
+        font-size:28px;
+    }
+
+
+    .action-desc{
+
+        max-width:430px;
+
+        font-size:10px;
+    }
+
+
+    .action-button{
+
+        left:25px;
+        bottom:20px;
+
+        padding:
+        8px 13px;
+
+        font-size:8px;
+    }
+
+
+    /* ================================================
+       GROUP
+    ================================================ */
+
+    .group{
+
+        margin-top:32px;
+    }
+
+
+    .group-head{
+
+        margin-bottom:13px;
+    }
+
+
+    .group-title{
+
+        font-size:14px;
+    }
+
+
+    .group-count{
+
+        font-size:9px;
+    }
+
+
+    .group-box{
+
+        padding:12px;
+
+        border-radius:22px;
+    }
+
+
+    /* ================================================
+       TOOLS DESKTOP
+    ================================================ */
+
+    .tools{
+
+        grid-template-columns:
+        repeat(4,1fr);
+
+        gap:12px;
+    }
+
+
+    .tool{
+
+        min-height:130px;
+
+        padding:15px;
+
+        border-radius:17px;
+    }
+
+
+    .tool-icon{
+
+        width:43px;
+        height:43px;
+
+        border-radius:13px;
+
+        font-size:19px;
+
+        margin-bottom:11px;
+    }
+
+
+    .tool-name{
+
+        font-size:10px;
+    }
+
+
+    .tool-desc{
+
+        font-size:8px;
+
+        line-height:1.4;
+    }
+
+
+    /* ================================================
+       SYSTEM
+    ================================================ */
+
+    .system{
+
+        margin-top:27px;
+
+        padding:16px;
+
+        border-radius:19px;
+    }
+
+
+    .system-title{
+
+        font-size:11px;
+    }
+
+
+    .system-desc{
+
+        font-size:9px;
+    }
+
+
+    .system-status{
+
+        font-size:8px;
+    }
+
+
+    .footer{
+
+        padding-bottom:10px;
+    }
+
+}
+
+
+/* =====================================================
+   LARGE MONITOR
+===================================================== */
+
+@media(min-width:1200px){
+
+    .top{
+
+        max-width:1050px;
+    }
+
+
+    .main{
+
+        max-width:1050px;
+    }
+
+
+    .tools{
+
+        grid-template-columns:
+        repeat(4,1fr);
     }
 
 }
@@ -855,59 +1283,74 @@ body{
 <body>
 
 
+<div class="page">
+
+
 <!-- =====================================================
      HEADER
 ===================================================== -->
 
 <header class="top">
 
-    <div class="topbar">
+    <div class="top-content">
 
-        <div class="logo">
 
-            <div class="logo-box">
-                SR
-            </div>
+        <div class="topbar">
 
-            <div>
 
-                <div class="logo-sub">
-                    SISTEM OPERASIONAL
+            <div class="logo">
+
+
+                <div class="logo-box">
+                    SR
                 </div>
 
-                <div class="logo-name">
-                    SRF V3
+
+                <div>
+
+                    <div class="logo-sub">
+                        SISTEM OPERASIONAL
+                    </div>
+
+                    <div class="logo-name">
+                        SRF V3
+                    </div>
+
                 </div>
 
+
+            </div>
+
+
+            <div class="online">
+
+                <span class="online-dot"></span>
+
+                ONLINE
+
+            </div>
+
+
+        </div>
+
+
+
+        <div class="greeting">
+
+            <div class="greeting-small">
+                SELAMAT DATANG
+            </div>
+
+            <div class="greeting-title">
+                Dashboard
+            </div>
+
+            <div class="greeting-desc">
+                Operasional toko dengan lebih cepat.
             </div>
 
         </div>
 
-
-        <div class="online">
-
-            <span class="online-dot"></span>
-
-            ONLINE
-
-        </div>
-
-    </div>
-
-
-    <div class="greeting">
-
-        <div class="greeting-small">
-            SELAMAT DATANG
-        </div>
-
-        <div class="greeting-title">
-            Dashboard
-        </div>
-
-        <div class="greeting-desc">
-            Operasional toko dengan lebih cepat.
-        </div>
 
     </div>
 
@@ -923,34 +1366,42 @@ body{
 
 
     <!-- =================================================
-         OPERASIONAL UTAMA
+         PENGIRIMAN UTAMA
     ================================================== -->
 
     <a
         href="pengiriman.html"
         class="main-action">
 
+
         <div class="action-label">
             OPERASIONAL UTAMA
         </div>
+
 
         <div class="action-icon">
             📦
         </div>
 
+
         <div class="action-title">
             Pengiriman
         </div>
 
+
         <div class="action-desc">
+
             Scan resi dan proses pengiriman
             barang yang akan diserahkan
             ke ekspedisi.
+
         </div>
+
 
         <div class="action-button">
             BUKA SCANNER →
         </div>
+
 
     </a>
 
@@ -962,7 +1413,9 @@ body{
 
     <section class="group operasional">
 
+
         <div class="group-head">
+
 
             <div class="group-left">
 
@@ -974,59 +1427,50 @@ body{
 
             </div>
 
+
             <div class="group-count">
-                2 TOOLS
+                1 TOOL
             </div>
+
 
         </div>
 
 
+
         <div class="group-box">
 
+
             <div class="tools">
-
-
-                <a
-                    href="pengiriman.html"
-                    class="tool">
-
-                    <div class="tool-icon blue">
-                        📦
-                    </div>
-
-                    <div class="tool-name">
-                        Pengiriman
-                    </div>
-
-                    <div class="tool-desc">
-                        Scan dan proses pengiriman
-                    </div>
-
-                </a>
 
 
                 <a
                     href="scanretur.html"
                     class="tool">
 
+
                     <div class="tool-icon purple">
                         ↩
                     </div>
+
 
                     <div class="tool-name">
                         Scan Retur
                     </div>
 
+
                     <div class="tool-desc">
                         Scan barang kembali
                     </div>
+
 
                 </a>
 
 
             </div>
 
+
         </div>
+
 
     </section>
 
@@ -1038,7 +1482,9 @@ body{
 
     <section class="group upload">
 
+
         <div class="group-head">
+
 
             <div class="group-left">
 
@@ -1050,78 +1496,104 @@ body{
 
             </div>
 
+
             <div class="group-count">
                 3 TOOLS
             </div>
 
+
         </div>
+
 
 
         <div class="group-box">
 
+
             <div class="tools">
 
+
+                <!-- TIKTOK / TOKOPEDIA -->
 
                 <a
                     href="uploadjnt.html"
                     class="tool">
 
+
                     <div class="tool-icon orange">
                         🚚
                     </div>
+
 
                     <div class="tool-name">
                         Retur TikTok Tokopedia
                     </div>
 
+
                     <div class="tool-desc">
                         Upload data gagal kirim
                     </div>
 
+
                 </a>
 
+
+
+                <!-- LAZADA -->
 
                 <a
                     href="uploadlazada.html"
                     class="tool">
 
+
                     <div class="tool-icon purple">
                         📦
                     </div>
+
 
                     <div class="tool-name">
                         Retur Lazada
                     </div>
 
+
                     <div class="tool-desc">
                         Upload data gagal kirim
                     </div>
 
+
                 </a>
 
+
+
+                <!-- SHOPEE -->
 
                 <a
                     href="uploadspx.html"
                     class="tool">
 
+
                     <div class="tool-icon green">
                         🚛
                     </div>
+
 
                     <div class="tool-name">
                         Retur Shopee
                     </div>
 
+
                     <div class="tool-desc">
                         Upload data gagal kirim SPX
                     </div>
+
 
                 </a>
 
 
             </div>
 
+
         </div>
+
 
     </section>
 
@@ -1133,7 +1605,9 @@ body{
 
     <section class="group bisnis">
 
+
         <div class="group-head">
+
 
             <div class="group-left">
 
@@ -1145,59 +1619,78 @@ body{
 
             </div>
 
+
             <div class="group-count">
                 2 TOOLS
             </div>
 
+
         </div>
+
 
 
         <div class="group-box">
 
+
             <div class="tools">
 
+
+                <!-- KALKULATOR -->
 
                 <a
                     href="kalkulator.html"
                     class="tool">
 
+
                     <div class="tool-icon cyan">
                         🧮
                     </div>
+
 
                     <div class="tool-name">
                         Kalkulator
                     </div>
 
+
                     <div class="tool-desc">
                         Hitung harga & profit
                     </div>
 
+
                 </a>
 
+
+
+                <!-- SEO -->
 
                 <a
                     href="seojudulspx.html"
                     class="tool">
 
+
                     <div class="tool-icon pink">
                         ✍
                     </div>
+
 
                     <div class="tool-name">
                         SEO Judul
                     </div>
 
+
                     <div class="tool-desc">
                         Optimasi judul produk
                     </div>
+
 
                 </a>
 
 
             </div>
 
+
         </div>
+
 
     </section>
 
@@ -1209,7 +1702,9 @@ body{
 
     <section class="group kreatif">
 
+
         <div class="group-head">
+
 
             <div class="group-left">
 
@@ -1221,75 +1716,96 @@ body{
 
             </div>
 
+
             <div class="group-count">
                 2 TOOLS
             </div>
 
+
         </div>
+
 
 
         <div class="group-box">
 
+
             <div class="tools">
 
+
+                <!-- PROMPT AI -->
 
                 <a
                     href="prompt.html"
                     class="tool">
 
+
                     <div class="tool-icon pink">
                         ✨
                     </div>
+
 
                     <div class="tool-name">
                         Prompt AI
                     </div>
 
+
                     <div class="tool-desc">
                         Buat prompt AI
                     </div>
 
+
                 </a>
 
+
+
+                <!-- PHOTO EDITOR -->
 
                 <a
                     href="photoeditor.html"
                     class="tool">
 
+
                     <div class="tool-icon indigo">
                         🖼
                     </div>
+
 
                     <div class="tool-name">
                         Photo Editor
                     </div>
 
+
                     <div class="tool-desc">
                         Edit foto produk
                     </div>
+
 
                 </a>
 
 
             </div>
 
+
         </div>
+
 
     </section>
 
 
 
     <!-- =================================================
-         SYSTEM
+         SYSTEM STATUS
     ================================================== -->
 
     <div class="system">
+
 
         <div class="system-icon">
             ✓
         </div>
 
-        <div>
+
+        <div class="system-info">
 
             <div class="system-title">
                 Sistem SRF V3
@@ -1301,12 +1817,19 @@ body{
 
         </div>
 
+
         <div class="system-status">
             READY
         </div>
 
+
     </div>
 
+
+
+    <!-- =================================================
+         FOOTER
+    ================================================== -->
 
     <div class="footer">
         SRF V3 • Sistem Operasional
@@ -1314,6 +1837,9 @@ body{
 
 
 </main>
+
+
+</div>
 
 
 
@@ -1331,6 +1857,7 @@ if("serviceWorker" in navigator){
 
             navigator.serviceWorker
                 .register("sw.js")
+
                 .then(function(){
 
                     console.log(
@@ -1338,6 +1865,7 @@ if("serviceWorker" in navigator){
                     );
 
                 })
+
                 .catch(function(error){
 
                     console.error(
@@ -1372,8 +1900,10 @@ function updateStatus(){
 
         online.innerHTML =
         '<span class="online-dot" ' +
-        'style="background:#f59e0b;' +
-        'box-shadow:none"></span> OFFLINE';
+        'style="' +
+        'background:#f59e0b;' +
+        'box-shadow:none' +
+        '"></span> OFFLINE';
 
     }
 
@@ -1400,4 +1930,4 @@ updateStatus();
 </body>
 
 </html>
-```
+
