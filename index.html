@@ -1,4 +1,4 @@
-
+```html
 <!DOCTYPE html>
 <html lang="id">
 
@@ -17,7 +17,6 @@ user-scalable=no">
 <title>SRF V3</title>
 
 <link rel="manifest" href="manifest.json">
-
 
 <style>
 
@@ -46,18 +45,17 @@ body{
     width:100%;
     min-height:100%;
 
-    background:#f8fafc;
-
+    background:#f1f5f9;
     color:#0f172a;
 }
 
 body{
-    padding-bottom:20px;
+    padding-bottom:25px;
 }
 
 
 /* =====================================================
-   TOP AREA
+   HEADER
 ===================================================== */
 
 .top{
@@ -67,19 +65,14 @@ body{
     padding:
     20px
     17px
-    75px;
+    82px;
 
-    background:
-    #0f172a;
+    background:#0f172a;
 
     color:white;
 
     overflow:hidden;
-
 }
-
-
-/* decorative circle */
 
 .top::before{
 
@@ -87,17 +80,16 @@ body{
 
     position:absolute;
 
-    width:260px;
-    height:260px;
+    width:300px;
+    height:300px;
 
-    right:-120px;
-    top:-150px;
+    right:-130px;
+    top:-170px;
 
     border-radius:50%;
 
     background:
     rgba(59,130,246,.22);
-
 }
 
 .top::after{
@@ -106,17 +98,16 @@ body{
 
     position:absolute;
 
-    width:180px;
-    height:180px;
+    width:210px;
+    height:210px;
 
-    left:-120px;
-    bottom:-120px;
+    left:-140px;
+    bottom:-145px;
 
     border-radius:50%;
 
     background:
-    rgba(99,102,241,.12);
-
+    rgba(99,102,241,.14);
 }
 
 
@@ -127,17 +118,13 @@ body{
 .topbar{
 
     position:relative;
-
     z-index:2;
 
     display:flex;
 
     align-items:center;
-
     justify-content:space-between;
-
 }
-
 
 .logo{
 
@@ -146,21 +133,19 @@ body{
     align-items:center;
 
     gap:10px;
-
 }
-
 
 .logo-box{
 
-    width:43px;
-    height:43px;
+    width:44px;
+    height:44px;
 
     display:flex;
 
     align-items:center;
     justify-content:center;
 
-    border-radius:13px;
+    border-radius:14px;
 
     background:
     linear-gradient(
@@ -169,16 +154,14 @@ body{
         #4f46e5
     );
 
-    font-size:15px;
+    font-size:14px;
 
     font-weight:950;
 
     box-shadow:
-    0 8px 20px
+    0 8px 25px
     rgba(37,99,235,.3);
-
 }
-
 
 .logo-sub{
 
@@ -188,9 +171,8 @@ body{
 
     font-weight:800;
 
-    letter-spacing:1px;
+    letter-spacing:1.2px;
 }
-
 
 .logo-name{
 
@@ -227,9 +209,7 @@ body{
     font-size:8px;
 
     font-weight:900;
-
 }
-
 
 .online-dot{
 
@@ -243,7 +223,6 @@ body{
     box-shadow:
     0 0 8px
     rgba(34,197,94,.8);
-
 }
 
 
@@ -257,14 +236,12 @@ body{
 
     z-index:2;
 
-    margin-top:25px;
+    margin-top:27px;
 
+    text-align:center;
 }
 
-
 .greeting-small{
-
-    color:#64748b;
 
     color:#94a3b8;
 
@@ -272,27 +249,25 @@ body{
 
     font-weight:800;
 
-    letter-spacing:.8px;
+    letter-spacing:1px;
 }
-
 
 .greeting-title{
 
-    margin-top:3px;
+    margin-top:5px;
 
-    font-size:30px;
+    font-size:31px;
 
     line-height:1;
 
     font-weight:950;
 
-    letter-spacing:-1px;
+    letter-spacing:-1.2px;
 }
-
 
 .greeting-desc{
 
-    margin-top:7px;
+    margin-top:8px;
 
     color:#94a3b8;
 
@@ -308,7 +283,7 @@ body{
 
     position:relative;
 
-    margin-top:-43px;
+    margin-top:-48px;
 
     padding:
     0 15px
@@ -328,11 +303,11 @@ body{
 
     display:block;
 
-    min-height:150px;
+    min-height:154px;
 
-    padding:19px;
+    padding:20px;
 
-    border-radius:23px;
+    border-radius:24px;
 
     color:white;
 
@@ -348,11 +323,9 @@ body{
     );
 
     box-shadow:
-    0 15px 35px
+    0 18px 40px
     rgba(37,99,235,.25);
-
 }
-
 
 .main-action::before{
 
@@ -360,19 +333,17 @@ body{
 
     position:absolute;
 
-    width:190px;
-    height:190px;
+    width:210px;
+    height:210px;
 
-    right:-80px;
-    top:-90px;
+    right:-90px;
+    top:-100px;
 
     border-radius:50%;
 
     background:
-    rgba(255,255,255,.1);
-
+    rgba(255,255,255,.10);
 }
-
 
 .main-action::after{
 
@@ -380,19 +351,17 @@ body{
 
     position:absolute;
 
-    width:120px;
-    height:120px;
+    width:130px;
+    height:130px;
 
-    right:-45px;
-    bottom:-65px;
+    right:-50px;
+    bottom:-70px;
 
     border-radius:50%;
 
     background:
     rgba(255,255,255,.07);
-
 }
-
 
 .action-label{
 
@@ -406,9 +375,8 @@ body{
 
     font-weight:950;
 
-    letter-spacing:1px;
+    letter-spacing:1.2px;
 }
-
 
 .action-icon{
 
@@ -417,24 +385,23 @@ body{
     right:20px;
     top:20px;
 
-    width:48px;
-    height:48px;
+    width:50px;
+    height:50px;
 
     display:flex;
 
     align-items:center;
     justify-content:center;
 
-    border-radius:15px;
+    border-radius:16px;
 
     background:
     rgba(255,255,255,.13);
 
-    font-size:22px;
+    font-size:23px;
 
     z-index:2;
 }
-
 
 .action-title{
 
@@ -442,13 +409,12 @@ body{
 
     z-index:2;
 
-    margin-top:7px;
+    margin-top:8px;
 
-    font-size:22px;
+    font-size:23px;
 
     font-weight:950;
 }
-
 
 .action-desc{
 
@@ -456,31 +422,30 @@ body{
 
     z-index:2;
 
-    max-width:220px;
+    max-width:225px;
 
-    margin-top:5px;
+    margin-top:6px;
 
     color:#dbeafe;
 
     font-size:9px;
 
-    line-height:1.45;
+    line-height:1.5;
 }
-
 
 .action-button{
 
     position:absolute;
 
-    left:19px;
+    left:20px;
     bottom:17px;
 
     z-index:3;
 
     padding:
-    7px 11px;
+    8px 12px;
 
-    border-radius:9px;
+    border-radius:10px;
 
     background:
     rgba(255,255,255,.14);
@@ -492,17 +457,15 @@ body{
 
 
 /* =====================================================
-   SECTION
+   GROUP SECTION
 ===================================================== */
 
-.section{
+.group{
 
-    margin-top:24px;
-
+    margin-top:25px;
 }
 
-
-.section-head{
+.group-head{
 
     display:flex;
 
@@ -512,25 +475,68 @@ body{
 
     margin-bottom:11px;
 
+    padding:
+    0 2px;
 }
 
+.group-left{
 
-.section-title{
+    display:flex;
+
+    align-items:center;
+
+    gap:9px;
+}
+
+.group-mark{
+
+    width:4px;
+    height:17px;
+
+    border-radius:10px;
+
+    background:#2563eb;
+}
+
+.group-title{
 
     font-size:12px;
 
     font-weight:950;
 
+    letter-spacing:.1px;
 }
 
-
-.section-count{
+.group-count{
 
     color:#94a3b8;
 
     font-size:8px;
 
     font-weight:900;
+}
+
+
+/* =====================================================
+   GROUP CONTAINER
+===================================================== */
+
+.group-box{
+
+    padding:10px;
+
+    border-radius:21px;
+
+    background:
+    rgba(255,255,255,.72);
+
+    border:
+    1px solid
+    #e2e8f0;
+
+    box-shadow:
+    0 5px 18px
+    rgba(15,23,42,.035);
 }
 
 
@@ -543,10 +549,9 @@ body{
     display:grid;
 
     grid-template-columns:
-    repeat(3,1fr);
+    repeat(2,1fr);
 
     gap:9px;
-
 }
 
 
@@ -556,17 +561,19 @@ body{
 
 .tool{
 
+    position:relative;
+
     display:flex;
 
     flex-direction:column;
 
     align-items:flex-start;
 
-    min-height:106px;
+    min-height:116px;
 
-    padding:12px;
+    padding:13px;
 
-    border-radius:17px;
+    border-radius:16px;
 
     background:white;
 
@@ -579,38 +586,39 @@ body{
     text-decoration:none;
 
     box-shadow:
-    0 4px 12px
-    rgba(15,23,42,.035);
+    0 3px 10px
+    rgba(15,23,42,.025);
 
     transition:
-    transform .12s ease;
+    transform .12s ease,
+    box-shadow .12s ease;
 }
-
 
 .tool:active{
 
-    transform:scale(.95);
+    transform:scale(.96);
 
+    box-shadow:
+    0 2px 5px
+    rgba(15,23,42,.08);
 }
-
 
 .tool-icon{
 
-    width:35px;
-    height:35px;
+    width:38px;
+    height:38px;
 
     display:flex;
 
     align-items:center;
     justify-content:center;
 
-    border-radius:11px;
+    border-radius:12px;
 
-    font-size:16px;
+    font-size:17px;
 
-    margin-bottom:9px;
+    margin-bottom:10px;
 }
-
 
 .tool-name{
 
@@ -618,24 +626,23 @@ body{
 
     font-weight:950;
 
-    line-height:1.2;
+    line-height:1.25;
 }
-
 
 .tool-desc{
 
-    margin-top:3px;
+    margin-top:4px;
 
     color:#94a3b8;
 
     font-size:7px;
 
-    line-height:1.3;
+    line-height:1.35;
 }
 
 
 /* =====================================================
-   COLORS
+   ICON COLORS
 ===================================================== */
 
 .blue{
@@ -675,7 +682,28 @@ body{
 
 
 /* =====================================================
-   SYSTEM CARD
+   GROUP COLORS
+===================================================== */
+
+.group.operasional .group-mark{
+    background:#2563eb;
+}
+
+.group.upload .group-mark{
+    background:#ea580c;
+}
+
+.group.bisnis .group-mark{
+    background:#0891b2;
+}
+
+.group.kreatif .group-mark{
+    background:#7c3aed;
+}
+
+
+/* =====================================================
+   SYSTEM
 ===================================================== */
 
 .system{
@@ -686,39 +714,43 @@ body{
 
     gap:11px;
 
-    margin-top:18px;
+    margin-top:20px;
 
-    padding:13px;
+    padding:14px;
 
-    border-radius:17px;
+    border-radius:18px;
 
     background:white;
 
     border:
     1px solid
     #e2e8f0;
-}
 
+    box-shadow:
+    0 4px 14px
+    rgba(15,23,42,.035);
+}
 
 .system-icon{
 
-    width:36px;
-    height:36px;
+    width:37px;
+    height:37px;
 
     display:flex;
 
     align-items:center;
     justify-content:center;
 
-    border-radius:11px;
+    border-radius:12px;
 
     background:#f0fdf4;
 
     color:#16a34a;
 
     font-size:15px;
-}
 
+    font-weight:950;
+}
 
 .system-title{
 
@@ -726,7 +758,6 @@ body{
 
     font-weight:950;
 }
-
 
 .system-desc{
 
@@ -737,14 +768,20 @@ body{
     font-size:8px;
 }
 
-
 .system-status{
 
     margin-left:auto;
 
+    padding:
+    5px 8px;
+
+    border-radius:8px;
+
+    background:#f0fdf4;
+
     color:#16a34a;
 
-    font-size:8px;
+    font-size:7px;
 
     font-weight:950;
 }
@@ -769,7 +806,7 @@ body{
 
 
 /* =====================================================
-   MOBILE
+   MOBILE KECIL
 ===================================================== */
 
 @media(max-width:360px){
@@ -785,6 +822,31 @@ body{
 
 }
 
+
+/* =====================================================
+   TABLET / DESKTOP
+===================================================== */
+
+@media(min-width:700px){
+
+    body{
+        display:flex;
+        justify-content:center;
+    }
+
+    .top,
+    .main{
+        width:100%;
+        max-width:700px;
+    }
+
+    .tools{
+        grid-template-columns:
+        repeat(3,1fr);
+    }
+
+}
+
 </style>
 
 </head>
@@ -794,14 +856,12 @@ body{
 
 
 <!-- =====================================================
-     TOP
+     HEADER
 ===================================================== -->
 
 <header class="top">
 
-
     <div class="topbar">
-
 
         <div class="logo">
 
@@ -832,11 +892,10 @@ body{
 
         </div>
 
-
     </div>
 
 
-  <center>  <div class="greeting">
+    <div class="greeting">
 
         <div class="greeting-small">
             SELAMAT DATANG
@@ -847,12 +906,11 @@ body{
         </div>
 
         <div class="greeting-desc">
-             operasional toko dengan lebih cepat.
+            Operasional toko dengan lebih cepat.
         </div>
 
     </div>
 
-</center>
 </header>
 
 
@@ -865,28 +923,24 @@ body{
 
 
     <!-- =================================================
-         MAIN ACTION
+         OPERASIONAL UTAMA
     ================================================== -->
 
     <a
         href="pengiriman.html"
         class="main-action">
 
-
         <div class="action-label">
             OPERASIONAL UTAMA
         </div>
-
 
         <div class="action-icon">
             📦
         </div>
 
-
         <div class="action-title">
             Pengiriman
         </div>
-
 
         <div class="action-desc">
             Scan resi dan proses pengiriman
@@ -894,203 +948,330 @@ body{
             ke ekspedisi.
         </div>
 
-
         <div class="action-button">
             BUKA SCANNER →
         </div>
-
 
     </a>
 
 
 
     <!-- =================================================
-         TOOLS
+         OPERASIONAL
     ================================================== -->
 
-    <section class="section">
+    <section class="group operasional">
 
+        <div class="group-head">
 
-        <div class="section-head">
+            <div class="group-left">
 
-            <div class="section-title">
-                Tools Operasional
+                <div class="group-mark"></div>
+
+                <div class="group-title">
+                    Operasional
+                </div>
+
             </div>
 
-            <div class="section-count">
-                9 TOOLS
+            <div class="group-count">
+                2 TOOLS
             </div>
 
         </div>
 
-               <!-- RETUR -->
 
-            <a
-                href="scanretur.html"
-                class="tool">
+        <div class="group-box">
 
-                <div class="tool-icon purple">
-                    ↩
+            <div class="tools">
+
+
+                <a
+                    href="pengiriman.html"
+                    class="tool">
+
+                    <div class="tool-icon blue">
+                        📦
+                    </div>
+
+                    <div class="tool-name">
+                        Pengiriman
+                    </div>
+
+                    <div class="tool-desc">
+                        Scan dan proses pengiriman
+                    </div>
+
+                </a>
+
+
+                <a
+                    href="scanretur.html"
+                    class="tool">
+
+                    <div class="tool-icon purple">
+                        ↩
+                    </div>
+
+                    <div class="tool-name">
+                        Scan Retur
+                    </div>
+
+                    <div class="tool-desc">
+                        Scan barang kembali
+                    </div>
+
+                </a>
+
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         UPLOAD DATA
+    ================================================== -->
+
+    <section class="group upload">
+
+        <div class="group-head">
+
+            <div class="group-left">
+
+                <div class="group-mark"></div>
+
+                <div class="group-title">
+                    Upload Data
                 </div>
 
-                <div class="tool-name">
-                    Scan Retur
+            </div>
+
+            <div class="group-count">
+                3 TOOLS
+            </div>
+
+        </div>
+
+
+        <div class="group-box">
+
+            <div class="tools">
+
+
+                <a
+                    href="uploadjnt.html"
+                    class="tool">
+
+                    <div class="tool-icon orange">
+                        🚚
+                    </div>
+
+                    <div class="tool-name">
+                        Retur TikTok Tokopedia
+                    </div>
+
+                    <div class="tool-desc">
+                        Upload data gagal kirim
+                    </div>
+
+                </a>
+
+
+                <a
+                    href="uploadlazada.html"
+                    class="tool">
+
+                    <div class="tool-icon purple">
+                        📦
+                    </div>
+
+                    <div class="tool-name">
+                        Retur Lazada
+                    </div>
+
+                    <div class="tool-desc">
+                        Upload data gagal kirim
+                    </div>
+
+                </a>
+
+
+                <a
+                    href="uploadspx.html"
+                    class="tool">
+
+                    <div class="tool-icon green">
+                        🚛
+                    </div>
+
+                    <div class="tool-name">
+                        Retur Shopee
+                    </div>
+
+                    <div class="tool-desc">
+                        Upload data gagal kirim SPX
+                    </div>
+
+                </a>
+
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         TOOLS BISNIS
+    ================================================== -->
+
+    <section class="group bisnis">
+
+        <div class="group-head">
+
+            <div class="group-left">
+
+                <div class="group-mark"></div>
+
+                <div class="group-title">
+                    Tools Bisnis
                 </div>
 
-                <div class="tool-desc">
-                    Scan barang kembali
+            </div>
+
+            <div class="group-count">
+                2 TOOLS
+            </div>
+
+        </div>
+
+
+        <div class="group-box">
+
+            <div class="tools">
+
+
+                <a
+                    href="kalkulator.html"
+                    class="tool">
+
+                    <div class="tool-icon cyan">
+                        🧮
+                    </div>
+
+                    <div class="tool-name">
+                        Kalkulator
+                    </div>
+
+                    <div class="tool-desc">
+                        Hitung harga & profit
+                    </div>
+
+                </a>
+
+
+                <a
+                    href="seojudulspx.html"
+                    class="tool">
+
+                    <div class="tool-icon pink">
+                        ✍
+                    </div>
+
+                    <div class="tool-name">
+                        SEO Judul
+                    </div>
+
+                    <div class="tool-desc">
+                        Optimasi judul produk
+                    </div>
+
+                </a>
+
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         KREATIF
+    ================================================== -->
+
+    <section class="group kreatif">
+
+        <div class="group-head">
+
+            <div class="group-left">
+
+                <div class="group-mark"></div>
+
+                <div class="group-title">
+                    Kreatif
                 </div>
 
-            </a>
+            </div>
 
-                   <!-- JNT -->
+            <div class="group-count">
+                2 TOOLS
+            </div>
 
-            <a
-                href="uploadjnt.html"
-                class="tool">
-
-                <div class="tool-icon orange">
-                    🚚
-                </div>
-
-                <div class="tool-name">
-                    Retur Tiktok Tokopedia
-                </div>
-
-                <div class="tool-desc">
-                  UPLOAD DATA GAGAL KIRIM TIKTOK
-                </div>
-
-            </a>
- <div class="tools">
-               <!-- upload lazada -->
-
-            <a
-                href="uploadlazada.html"
-                class="tool">
-
-                <div class="tool-icon purple">
-                    📦
-                </div>
-
-                <div class="tool-name">
-                     Retur Lazada
-                </div>
-
-                <div class="tool-desc">
-                  UPLOAD DATA GAGAL KIRIM LAZADA
-                </div>
-
-            </a>
+        </div>
 
 
-            <!-- SPX -->
+        <div class="group-box">
 
-            <a
-                href="uploadspx.html"
-                class="tool">
-
-                <div class="tool-icon green">
-                    🚛
-                </div>
-
-                <div class="tool-name">
-                    Retur Shopee
-                </div>
-
-                <div class="tool-desc">
-                  UPLOAD DATA GAGAL KIRIM SPX
-                </div>
-
-         
+            <div class="tools">
 
 
-            <!-- KALKULATOR -->
+                <a
+                    href="prompt.html"
+                    class="tool">
 
-            <a
-                href="kalkulator.html"
-                class="tool">
+                    <div class="tool-icon pink">
+                        ✨
+                    </div>
 
-                <div class="tool-icon cyan">
-                    🧮
-                </div>
+                    <div class="tool-name">
+                        Prompt AI
+                    </div>
 
-                <div class="tool-name">
-                    Kalkulator
-                </div>
+                    <div class="tool-desc">
+                        Buat prompt AI
+                    </div>
 
-                <div class="tool-desc">
-                    Harga & profit
-                </div>
-
-            </a>
+                </a>
 
 
+                <a
+                    href="photoeditor.html"
+                    class="tool">
 
-            <!-- PROMPT -->
+                    <div class="tool-icon indigo">
+                        🖼
+                    </div>
 
-            <a
-                href="prompt.html"
-                class="tool">
+                    <div class="tool-name">
+                        Photo Editor
+                    </div>
 
-                <div class="tool-icon pink">
-                    ✨
-                </div>
+                    <div class="tool-desc">
+                        Edit foto produk
+                    </div>
 
-                <div class="tool-name">
-                    Prompt AI
-                </div>
-
-                <div class="tool-desc">
-                    Buat prompt AI
-                </div>
-
-            </a>
+                </a>
 
 
-
-            <!-- SEO -->
-
-            <a
-                href="seojudulspx.html"
-                class="tool">
-
-                <div class="tool-icon pink">
-                    ✍
-                </div>
-
-                <div class="tool-name">
-                    SEO Judul
-                </div>
-
-                <div class="tool-desc">
-                    Judul produk
-                </div>
-
-            </a>
-
-
-
-            <!-- PHOTO -->
-
-            <a
-                href="photoeditor.html"
-                class="tool">
-
-                <div class="tool-icon indigo">
-                    🖼
-                </div>
-
-                <div class="tool-name">
-                    Photo Editor
-                </div>
-
-                <div class="tool-desc">
-                    Edit foto produk
-                </div>
-
-            </a>
-
+            </div>
 
         </div>
 
@@ -1219,3 +1400,4 @@ updateStatus();
 </body>
 
 </html>
+```
