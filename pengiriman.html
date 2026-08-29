@@ -8,6 +8,7 @@
 <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
 <style>
+
 *{
     box-sizing:border-box;
     margin:0;
@@ -84,6 +85,19 @@ button{
 
 .camera-off{
     background:#dc2626
+}
+
+
+/* =========================================================
+   FLASH
+========================================================= */
+
+.flash-on{
+    background:#f59e0b;
+}
+
+.flash-off{
+    background:#475569;
 }
 
 
@@ -260,7 +274,6 @@ button{
     grid-template-columns:1fr 1fr 1fr 1fr;
     gap:7px
 }
-
 
 .bottom-btn{
     height:50px;
@@ -591,7 +604,9 @@ button{
         height:47px;
         font-size:10px
     }
+
 }
+
 </style>
 </head>
 
@@ -617,6 +632,17 @@ button{
             onclick="toggleCamera()"
         >
             KAMERA OFF
+        </button>
+
+        <!-- TAMBAHAN FLASH -->
+
+        <button
+            id="flashToggle"
+            class="header-btn flash-off"
+            onclick="toggleFlash()"
+            disabled
+        >
+            FLASH OFF
         </button>
 
         <button
@@ -707,8 +733,7 @@ button{
             class="bottom-btn sync"
             onclick="syncKeServer()"
         >
-      
-              SYNC
+            SYNC
             <span
                 id="syncCount"
                 class="count"
@@ -731,18 +756,20 @@ button{
             </span>
         </button>
 
-<button
-    class="bottom-btn canceled"
-    onclick="openCanceled()"
->
-    BATAL
-    <span
-        id="canceledButtonCount"
-        class="count"
-    >
-        0
-    </span>
-</button>
+
+        <button
+            class="bottom-btn canceled"
+            onclick="openCanceled()"
+        >
+            BATAL
+            <span
+                id="canceledButtonCount"
+                class="count"
+            >
+                0
+            </span>
+        </button>
+
 
         <button
             class="bottom-btn history"
@@ -871,7 +898,6 @@ button{
 
         <div class="sheet-body">
 
-
             <div
                 id="deleteOneBox"
                 class="form-box"
@@ -919,6 +945,8 @@ button{
     </div>
 
 </div>
+
+
 <!-- =======================================================
      DIBATALKAN MODAL
 ======================================================= -->
@@ -1012,9 +1040,11 @@ button{
 
 </div>
 
+
 <script src="config.js"></script>
 
 <script>
+
 
 /* =========================================================
    ROBOT CONFIG
@@ -1035,13 +1065,13 @@ const ROBOT_CONFIG = {
     pesan:{
 
         resiDibatalkan:
-    "Paket di batalkan",
+            "Paket di batalkan",
 
-resiDibatalkanBerhasil:
-    "Resi berhasil dimasukkan ke daftar dibatalkan",
+        resiDibatalkanBerhasil:
+            "Resi berhasil dimasukkan ke daftar dibatalkan",
 
-resiSudahDibatalkan:
-    "Paket ini sudah di batalkan",
+        resiSudahDibatalkan:
+            "Paket ini sudah di batalkan",
 
         jntBerhasil:" Je en Te ",
 
@@ -1120,9 +1150,9 @@ const STORAGE_DATA =
 const STORAGE_HISTORY =
     "srf_pengiriman_history_v3";
 
-
 const STORAGE_CANCELED =
     "srf_pengiriman_canceled_v3";
+
 
 /* =========================================================
    STATE
@@ -1133,7 +1163,6 @@ let localData =
         STORAGE_DATA,
         []
     );
-
 
 let scanHistory =
     loadJSON(
@@ -1150,18 +1179,32 @@ let canceledResi =
 let html5QrCode =
     null;
 
-
 let cameraRunning =
     false;
 
+
+/* =========================================================
+   TAMBAHAN STATE FLASH
+========================================================= */
+
+let flashOn =
+    false;
+
+let cameraTrack =
+    null;
+
+
+/* =========================================================
+   PROCESSING
+========================================================= */
 
 let processing =
     false;
 
 
-/*
- * ANTI DOUBLE SYNC
- */
+/* =========================================================
+   ANTI DOUBLE SYNC
+========================================================= */
 
 let syncSedangBerjalan =
     false;
@@ -1187,7 +1230,6 @@ function loadJSON(
                     fallback
                 )
             );
-
 
         return Array.isArray(x)
             ? x
@@ -1216,14 +1258,12 @@ function saveData(){
         )
     );
 
-
     localStorage.setItem(
         STORAGE_HISTORY,
         JSON.stringify(
             scanHistory
         )
     );
-
 
     localStorage.setItem(
         STORAGE_CANCELED,
@@ -1270,7 +1310,6 @@ function getTargetUrl(){
     }
     catch(e){}
 
-
     return "";
 
 }
@@ -1284,17 +1323,19 @@ window.addEventListener(
     "load",
     ()=>{
 
-       updateUI();
+        updateUI();
 
-       renderQueue();
+        renderQueue();
 
-       renderHistory();
+        renderHistory();
 
-       renderCanceled();
+        renderCanceled();
 
-       updateCanceledUI();
+        updateCanceledUI();
 
         loadDashboard();
+
+        updateFlashButton();
 
         setStatus(
             "yellow",
@@ -1314,18 +1355,15 @@ function updateUI(){
     const n =
         localData.length;
 
-
     document.getElementById(
         "syncCount"
     ).innerText =
         n;
 
-
     document.getElementById(
         "queueCount"
     ).innerText =
         n;
-
 
     document.getElementById(
         "queueButtonCount"
@@ -1349,16 +1387,13 @@ function setStatus(
             "lamp"
         );
 
-
     const status =
         document.getElementById(
             "statusText"
         );
 
-
     status.innerText =
         text;
-
 
     const color =
         type==="green"
@@ -1367,10 +1402,8 @@ function setStatus(
                 ? "#ef4444"
                 : "#facc15";
 
-
     lamp.style.background =
         color;
-
 
     lamp.style.color =
         color;
@@ -1392,24 +1425,19 @@ function showNotif(
             "notif"
         );
 
-
     el.innerText =
         text;
-
 
     el.className =
         "notif " +
         type;
 
-
     el.style.display =
         "block";
-
 
     clearTimeout(
         window.notifTimer
     );
-
 
     window.notifTimer =
         setTimeout(
@@ -1438,26 +1466,20 @@ function beep(
             window.AudioContext ||
             window.webkitAudioContext;
 
-
         const ctx =
             new C();
-
 
         const osc =
             ctx.createOscillator();
 
-
         osc.frequency.value =
             freq;
-
 
         osc.connect(
             ctx.destination
         );
 
-
         osc.start();
-
 
         osc.stop(
             ctx.currentTime +
@@ -1487,33 +1509,26 @@ function speak(
 
     }
 
-
     try{
 
         speechSynthesis.cancel();
-
 
         const v =
             new SpeechSynthesisUtterance(
                 text
             );
 
-
         v.lang =
             ROBOT_CONFIG.bahasa;
-
 
         v.rate =
             ROBOT_CONFIG.rate;
 
-
         v.pitch =
             ROBOT_CONFIG.pitch;
 
-
         v.volume =
             ROBOT_CONFIG.volume;
-
 
         speechSynthesis.speak(v);
 
@@ -1551,7 +1566,6 @@ function getEkspedisi(
             resi
         );
 
-
     if(
         r.startsWith("SPX")
     ){
@@ -1560,16 +1574,13 @@ function getEkspedisi(
 
     }
 
-
     if(
-       
         r.startsWith("J")
     ){
 
         return "J&T";
 
     }
-
 
     return null;
 
@@ -1589,7 +1600,6 @@ function formatDateTime(
             iso
         );
 
-
     if(
         Number.isNaN(
             d.getTime()
@@ -1599,7 +1609,6 @@ function formatDateTime(
         return "-";
 
     }
-
 
     return d.toLocaleString(
         "id-ID",
@@ -1628,7 +1637,6 @@ function spokenDateTime(
             iso
         );
 
-
     if(
         Number.isNaN(
             d.getTime()
@@ -1639,10 +1647,8 @@ function spokenDateTime(
 
     }
 
-
     const now =
         new Date();
-
 
     const day =
         d.toLocaleDateString(
@@ -1654,7 +1660,6 @@ function spokenDateTime(
             }
         );
 
-
     const time =
         d.toLocaleTimeString(
             "id-ID",
@@ -1664,27 +1669,22 @@ function spokenDateTime(
             }
         );
 
-
     const today =
         d.toDateString() ===
         now.toDateString();
-
 
     const yesterday =
         new Date(
             now
         );
 
-
     yesterday.setDate(
         now.getDate()-1
     );
 
-
     const isYesterday =
         d.toDateString() ===
         yesterday.toDateString();
-
 
     if(today){
 
@@ -1692,13 +1692,11 @@ function spokenDateTime(
 
     }
 
-
     if(isYesterday){
 
         return `kemarin pukul ${time}`;
 
     }
-
 
     return `tanggal ${day} pukul ${time}`;
 
@@ -1742,6 +1740,7 @@ function findHistory(
 
 }
 
+
 /* =========================================================
    CEK RESI DIBATALKAN
 ========================================================= */
@@ -1759,6 +1758,7 @@ function isCanceledResi(resi){
     );
 
 }
+
 
 /* =========================================================
    DOUBLE ALERT
@@ -1780,18 +1780,15 @@ function doubleAlert(
 
     }
 
-
     setStatus(
         "red",
         message
     );
 
-
     showNotif(
         message,
         "error"
     );
-
 
     speak(
         robotText
@@ -1813,55 +1810,49 @@ function simpanLokal(
             resi
         );
 
-
     if(!resi){
 
         return false;
 
     }
 
+
     /* =========================================
-   CEK DIBATALKAN
-   WAJIB SEBELUM CEK EKSPEDISI
-========================================= */
+       CEK DIBATALKAN
+    ========================================= */
 
-if(
-    isCanceledResi(resi)
-){
+    if(
+        isCanceledResi(resi)
+    ){
 
-    beep(
-        220,
-        .45
-    );
+        beep(
+            220,
+            .45
+        );
 
+        setStatus(
+            "red",
+            "PAKET DIBATALKAN • " + resi
+        );
 
-    setStatus(
-        "red",
-        "PAKET DIBATALKAN • " + resi
-    );
+        showNotif(
+            "PAKET DI BATALKAN",
+            "error"
+        );
 
+        speak(
+            ROBOT_CONFIG.pesan.resiDibatalkan
+        );
 
-    showNotif(
-        "PAKET DI BATALKAN",
-        "error"
-    );
+        return false;
 
-
-    speak(
-        ROBOT_CONFIG.pesan.resiDibatalkan
-    );
-
-
-    return false;
-
-}
+    }
 
 
     const ekspedisi =
         getEkspedisi(
             resi
         );
-
 
     if(!ekspedisi){
 
@@ -1876,23 +1867,19 @@ if(
 
         }
 
-
         setStatus(
             "red",
             ROBOT_CONFIG.pesan.resiTidakDikenal
         );
-
 
         showNotif(
             "RESI TIDAK DIKENAL",
             "error"
         );
 
-
         speak(
             ROBOT_CONFIG.pesan.resiTidakDikenal
         );
-
 
         return false;
 
@@ -1926,7 +1913,6 @@ if(
             resi
         );
 
-
     if(old){
 
         const when =
@@ -1934,12 +1920,10 @@ if(
                 old.waktu
             );
 
-
         doubleAlert(
             "RESI SUDAH PERNAH DI-SCAN",
             `${ROBOT_CONFIG.pesan.doubleHistory} ${when}`
         );
-
 
         return false;
 
@@ -1953,11 +1937,9 @@ if(
     const waktu =
         new Date().toISOString();
 
-
     localData.push(
         resi
     );
-
 
     scanHistory.unshift({
 
@@ -1975,13 +1957,11 @@ if(
 
     });
 
-
     scanHistory =
         scanHistory.slice(
             0,
             5000
         );
-
 
     saveData();
 
@@ -1990,7 +1970,6 @@ if(
     renderQueue();
 
     renderHistory();
-
 
     if(
         SCAN_CONFIG.beepSuccess
@@ -2003,25 +1982,21 @@ if(
 
     }
 
-
     setStatus(
         "green",
         `${ekspedisi} • berhasil • masuk antrean`
     );
-
 
     showNotif(
         "RESI MASUK ANTREAN",
         "success"
     );
 
-
     speak(
         ekspedisi==="SPX"
             ? "S P X"
             : "J EN T"
     );
-
 
     return true;
 
@@ -2060,28 +2035,23 @@ async function startCamera(){
 
     }
 
-
     const btn =
         document.getElementById(
             "cameraToggle"
         );
-
 
     const overlay =
         document.getElementById(
             "cameraOverlay"
         );
 
-
     setStatus(
         "yellow",
         "Menyalakan kamera..."
     );
 
-
     btn.disabled =
         true;
-
 
     try{
 
@@ -2093,7 +2063,6 @@ async function startCamera(){
                 );
 
         }
-
 
         await html5QrCode.start(
 
@@ -2123,15 +2092,12 @@ async function startCamera(){
 
                 }
 
-
                 processing =
                     true;
-
 
                 simpanLokal(
                     decodedText
                 );
-
 
                 setTimeout(
                     ()=>{
@@ -2150,27 +2116,71 @@ async function startCamera(){
             true;
 
 
-        btn.disabled =
+        /* =================================================
+           AMBIL TRACK KAMERA UNTUK FLASH
+        ================================================= */
+
+        try{
+
+            const video =
+                document.querySelector(
+                    "#reader video"
+                );
+
+            if(video){
+
+                const stream =
+                    video.srcObject;
+
+                if(stream){
+
+                    const tracks =
+                        stream.getVideoTracks();
+
+                    if(tracks.length){
+
+                        cameraTrack =
+                            tracks[0];
+
+                    }
+
+                }
+
+            }
+
+        }
+        catch(e){
+
+            console.log(
+                "Camera track tidak ditemukan",
+                e
+            );
+
+        }
+
+
+        flashOn =
             false;
 
+        updateFlashButton();
+
+
+        btn.disabled =
+            false;
 
         btn.className =
             "header-btn camera-on";
 
-
         btn.innerText =
             "KAMERA ON";
 
-
         overlay.style.display =
             "none";
-
 
         setStatus(
             "green",
             ROBOT_CONFIG.pesan.kameraAktif
         );
-
 
         speak(
             ROBOT_CONFIG.pesan.kameraAktif
@@ -2184,38 +2194,38 @@ async function startCamera(){
             error
         );
 
-
         cameraRunning =
             false;
 
+        cameraTrack =
+            null;
+
+        flashOn =
+            false;
+
+        updateFlashButton();
 
         btn.disabled =
             false;
 
-
         btn.className =
             "header-btn camera-off";
-
 
         btn.innerText =
             "KAMERA OFF";
 
-
         overlay.style.display =
             "flex";
-
 
         setStatus(
             "red",
             ROBOT_CONFIG.pesan.kameraGagal
         );
 
-
         showNotif(
             "IZINKAN AKSES KAMERA",
             "error"
         );
-
 
         speak(
             ROBOT_CONFIG.pesan.kameraGagal
@@ -2238,9 +2248,41 @@ async function stopCamera(){
 
     }
 
-
     cameraRunning =
         false;
+
+
+    /* =====================================================
+       MATIKAN FLASH SEBELUM KAMERA BERHENTI
+    ===================================================== */
+
+    try{
+
+        if(cameraTrack){
+
+            await cameraTrack.applyConstraints({
+
+                advanced:[
+                    {
+                        torch:false
+                    }
+                ]
+
+            });
+
+        }
+
+    }
+    catch(e){}
+
+
+    flashOn =
+        false;
+
+    cameraTrack =
+        null;
+
+    updateFlashButton();
 
 
     const btn =
@@ -2248,12 +2290,10 @@ async function stopCamera(){
             "cameraToggle"
         );
 
-
     const overlay =
         document.getElementById(
             "cameraOverlay"
         );
-
 
     try{
 
@@ -2270,19 +2310,225 @@ async function stopCamera(){
     btn.className =
         "header-btn camera-off";
 
-
     btn.innerText =
         "KAMERA OFF";
 
-
     overlay.style.display =
         "flex";
-
 
     setStatus(
         "yellow",
         ROBOT_CONFIG.pesan.kameraBerhenti
     );
+
+}
+
+
+/* =========================================================
+   FLASH / TORCH
+========================================================= */
+
+async function toggleFlash(){
+
+    if(!cameraRunning){
+
+        showNotif(
+            "KAMERA BELUM AKTIF",
+            "warning"
+        );
+
+        return;
+
+    }
+
+
+    /* =====================================================
+       PASTIKAN TRACK TERSEDIA
+    ===================================================== */
+
+    if(!cameraTrack){
+
+        try{
+
+            const video =
+                document.querySelector(
+                    "#reader video"
+                );
+
+            if(video && video.srcObject){
+
+                const tracks =
+                    video.srcObject.getVideoTracks();
+
+                if(tracks.length){
+
+                    cameraTrack =
+                        tracks[0];
+
+                }
+
+            }
+
+        }
+        catch(e){}
+
+    }
+
+
+    if(!cameraTrack){
+
+        showNotif(
+            "KAMERA TIDAK TERDETEKSI",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    try{
+
+        const capabilities =
+            cameraTrack.getCapabilities
+                ? cameraTrack.getCapabilities()
+                : {};
+
+
+        /* =================================================
+           CEK APAKAH HP/BROWSER SUPPORT TORCH
+        ================================================= */
+
+        if(!capabilities.torch){
+
+            showNotif(
+                "FLASH TIDAK DIDUKUNG HP INI",
+                "warning"
+            );
+
+            speak(
+                "Flash tidak didukung"
+            );
+
+            return;
+
+        }
+
+
+        flashOn =
+            !flashOn;
+
+
+        await cameraTrack.applyConstraints({
+
+            advanced:[
+                {
+                    torch:
+                        flashOn
+                }
+            ]
+
+        });
+
+
+        updateFlashButton();
+
+
+        if(flashOn){
+
+            beep(
+                850,
+                .08
+            );
+
+            setStatus(
+                "green",
+                "FLASH ON • KAMERA AKTIF"
+            );
+
+            showNotif(
+                "FLASH ON",
+                "success"
+            );
+
+        }
+        else{
+
+            setStatus(
+                "green",
+                "FLASH OFF • KAMERA AKTIF"
+            );
+
+            showNotif(
+                "FLASH OFF",
+                "warning"
+            );
+
+        }
+
+    }
+    catch(error){
+
+        console.error(
+            "FLASH ERROR:",
+            error
+        );
+
+        flashOn =
+            false;
+
+        updateFlashButton();
+
+        showNotif(
+            "FLASH TIDAK BISA DIGUNAKAN",
+            "error"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   UPDATE TOMBOL FLASH
+========================================================= */
+
+function updateFlashButton(){
+
+    const btn =
+        document.getElementById(
+            "flashToggle"
+        );
+
+    if(!btn){
+
+        return;
+
+    }
+
+
+    btn.disabled =
+        !cameraRunning;
+
+
+    if(flashOn){
+
+        btn.className =
+            "header-btn flash-on";
+
+        btn.innerText =
+            "FLASH ON";
+
+    }
+    else{
+
+        btn.className =
+            "header-btn flash-off";
+
+        btn.innerText =
+            "FLASH OFF";
+
+    }
 
 }
 
@@ -2311,10 +2557,8 @@ function renderQueue(){
             "queueList"
         );
 
-
     list.innerHTML =
         "";
-
 
     if(
         localData.length===0
@@ -2327,7 +2571,6 @@ function renderQueue(){
 
     }
 
-
     localData.forEach(
         (resi,i)=>{
 
@@ -2337,16 +2580,13 @@ function renderQueue(){
                 ) ||
                 "-";
 
-
             const div =
                 document.createElement(
                     "div"
                 );
 
-
             div.className =
                 "item";
-
 
             div.innerHTML = `
 
@@ -2364,7 +2604,6 @@ function renderQueue(){
                 </div>
 
             `;
-
 
             list.appendChild(
                 div
@@ -2388,12 +2627,10 @@ function openHistory(){
         "open"
     );
 
-
     document.getElementById(
         "historyMenu"
     ).style.display =
         "none";
-
 
     renderHistory();
 
@@ -2407,7 +2644,6 @@ function renderHistory(){
             "historyList"
         );
 
-
     const search =
         normalizeResi(
             document.getElementById(
@@ -2415,14 +2651,11 @@ function renderHistory(){
             )?.value || ""
         );
 
-
     list.innerHTML =
         "";
 
-
     let data =
         scanHistory;
-
 
     if(search){
 
@@ -2438,7 +2671,6 @@ function renderHistory(){
 
     }
 
-
     if(
         data.length===0
     ){
@@ -2450,7 +2682,6 @@ function renderHistory(){
 
     }
 
-
     data.forEach(
         item=>{
 
@@ -2459,16 +2690,13 @@ function renderHistory(){
                     "div"
                 );
 
-
             div.className =
                 "item";
-
 
             const status =
                 item.status
                     ? ` • ${item.status}`
                     : "";
-
 
             div.innerHTML = `
 
@@ -2498,7 +2726,6 @@ function renderHistory(){
 
             `;
 
-
             list.appendChild(
                 div
             );
@@ -2517,12 +2744,10 @@ function toggleHistoryMenu(e){
 
     e.stopPropagation();
 
-
     const m =
         document.getElementById(
             "historyMenu"
         );
-
 
     m.style.display =
         m.style.display==="block"
@@ -2536,19 +2761,16 @@ function showDeleteOne(e){
 
     e.stopPropagation();
 
-
     document.getElementById(
         "historyMenu"
     ).style.display =
         "none";
-
 
     document.getElementById(
         "deleteOneBox"
     ).classList.add(
         "open"
     );
-
 
     document.getElementById(
         "deleteResiInput"
@@ -2570,7 +2792,6 @@ function deleteOneHistory(){
             ).value
         );
 
-
     if(!resi){
 
         alert(
@@ -2581,10 +2802,8 @@ function deleteOneHistory(){
 
     }
 
-
     const before =
         scanHistory.length;
-
 
     scanHistory =
         scanHistory.filter(
@@ -2593,7 +2812,6 @@ function deleteOneHistory(){
                     x.resi
                 ) !== resi
         );
-
 
     if(
         scanHistory.length===before
@@ -2608,15 +2826,12 @@ function deleteOneHistory(){
 
     }
 
-
     saveData();
-
 
     document.getElementById(
         "deleteResiInput"
     ).value =
         "";
-
 
     document.getElementById(
         "deleteOneBox"
@@ -2624,9 +2839,7 @@ function deleteOneHistory(){
         "open"
     );
 
-
     renderHistory();
-
 
     showNotif(
         "RIWAYAT RESI DIHAPUS",
@@ -2654,7 +2867,6 @@ function deleteOneHistoryDirect(
 
     }
 
-
     scanHistory =
         scanHistory.filter(
             x =>
@@ -2666,11 +2878,9 @@ function deleteOneHistoryDirect(
                 )
         );
 
-
     saveData();
 
     renderHistory();
-
 
     showNotif(
         "RIWAYAT DIHAPUS",
@@ -2688,12 +2898,10 @@ function deleteAllHistory(e){
 
     e.stopPropagation();
 
-
     document.getElementById(
         "historyMenu"
     ).style.display =
         "none";
-
 
     if(
         scanHistory.length===0
@@ -2708,13 +2916,11 @@ function deleteAllHistory(e){
 
     }
 
-
     const ok =
         confirm(
             "Hapus SEMUA riwayat scan di HP?\n\n" +
             "Data di Google Sheet TIDAK akan dihapus."
         );
-
 
     if(!ok){
 
@@ -2722,15 +2928,12 @@ function deleteAllHistory(e){
 
     }
 
-
     scanHistory =
         [];
-
 
     saveData();
 
     renderHistory();
-
 
     showNotif(
         "SEMUA RIWAYAT DIHAPUS",
@@ -2742,13 +2945,9 @@ function deleteAllHistory(e){
 
 /* =========================================================
    SYNC BATCH
-   ========================================================= */
+========================================================= */
 
 async function syncKeServer(){
-
-    /* =========================================
-       ANTI DOUBLE KLIK
-    ========================================= */
 
     if(syncSedangBerjalan){
 
@@ -2762,10 +2961,6 @@ async function syncKeServer(){
     }
 
 
-    /* =========================================
-       CEK ANTREAN
-    ========================================= */
-
     if(
         localData.length===0
     ){
@@ -2775,30 +2970,22 @@ async function syncKeServer(){
             ROBOT_CONFIG.pesan.antreanKosong
         );
 
-
         showNotif(
             "ANTREAN KOSONG",
             "warning"
         );
 
-
         speak(
             ROBOT_CONFIG.pesan.antreanKosong
         );
-
 
         return;
 
     }
 
 
-    /* =========================================
-       URL
-    ========================================= */
-
     const url =
         getTargetUrl();
-
 
     if(!url){
 
@@ -2807,72 +2994,53 @@ async function syncKeServer(){
             "URL Apps Script tidak ditemukan"
         );
 
-
         showNotif(
             "APP_URL TIDAK DITEMUKAN",
             "error"
         );
 
-
         alert(
             "APP_URL tidak ditemukan dari config.js"
         );
-
 
         return;
 
     }
 
 
-    /* =========================================
-       LOCK
-    ========================================= */
-
     syncSedangBerjalan =
         true;
-
 
     const btnSync =
         document.getElementById(
             "syncButton"
         );
 
-
     const oldText =
         btnSync.innerHTML;
-
 
     btnSync.disabled =
         true;
 
-
     btnSync.style.opacity =
         "0.6";
-
 
     btnSync.style.pointerEvents =
         "none";
 
-
-    /* =========================================
-       SALIN ANTREAN
-    ========================================= */
 
     const daftar =
         [
             ...localData
         ];
 
-
     const total =
         daftar.length;
-
 
     setStatus(
         "yellow",
         `Sync 0/${total}`
     );
-
 
     speak(
         ROBOT_CONFIG.pesan.syncMulai
@@ -2880,10 +3048,6 @@ async function syncKeServer(){
 
 
     try{
-
-        /* =====================================
-           SATU REQUEST
-        ===================================== */
 
         const response =
             await fetch(
@@ -2916,10 +3080,6 @@ async function syncKeServer(){
             );
 
 
-        /* =====================================
-           HTTP CHECK
-        ===================================== */
-
         if(
             !response.ok
         ){
@@ -2934,7 +3094,6 @@ async function syncKeServer(){
 
         const text =
             await response.text();
-
 
         let result;
 
@@ -2954,17 +3113,12 @@ async function syncKeServer(){
                 text
             );
 
-
             throw new Error(
                 "Response server tidak valid"
             );
 
         }
 
-
-        /* =====================================
-           SERVER ERROR
-        ===================================== */
 
         if(
             result.status==="error"
@@ -2978,33 +3132,25 @@ async function syncKeServer(){
         }
 
 
-        /* =====================================
-           RESULT
-        ===================================== */
-
         const berhasil =
             Number(
                 result.berhasil || 0
             );
-
 
         const duplicate =
             Number(
                 result.duplicate || 0
             );
 
-
         const invalid =
             Number(
                 result.invalid || 0
             );
 
-
         const gagal =
             Number(
                 result.gagal || 0
             );
-
 
         const results =
             Array.isArray(
@@ -3013,10 +3159,6 @@ async function syncKeServer(){
             ? result.results
             : [];
 
-
-        /* =====================================
-           UPDATE HISTORY
-        ===================================== */
 
         results.forEach(
             item=>{
@@ -3030,7 +3172,6 @@ async function syncKeServer(){
 
                 }
 
-
                 if(
                     item.status==="success"
                 ){
@@ -3042,7 +3183,6 @@ async function syncKeServer(){
                     );
 
                 }
-
 
                 else if(
                     item.status==="duplicate"
@@ -3059,10 +3199,6 @@ async function syncKeServer(){
             }
         );
 
-
-        /* =====================================
-           RESI YANG GAGAL
-        ===================================== */
 
         const gagalSet =
             new Set();
@@ -3091,10 +3227,6 @@ async function syncKeServer(){
         );
 
 
-        /* =====================================
-           ANTREAN BARU
-        ===================================== */
-
         localData =
             daftar.filter(
                 resi =>
@@ -3115,10 +3247,6 @@ async function syncKeServer(){
         renderHistory();
 
 
-        /* =====================================
-           STATUS HASIL
-        ===================================== */
-
         if(
             gagal>0 &&
             berhasil===0 &&
@@ -3130,19 +3258,16 @@ async function syncKeServer(){
                 `Sync gagal • ${gagal} resi`
             );
 
-
             showNotif(
                 `SYNC GAGAL • ${gagal} RESI`,
                 "error"
             );
-
 
             speak(
                 ROBOT_CONFIG.pesan.syncGagal
             );
 
         }
-
 
         else if(
             duplicate>0 &&
@@ -3154,19 +3279,16 @@ async function syncKeServer(){
                 `Sync selesai • ${berhasil} berhasil • ${duplicate} double`
             );
 
-
             showNotif(
                 `✓ ${berhasil} BERHASIL • ${duplicate} DOUBLE`,
                 "warning"
             );
-
 
             speak(
                 `${berhasil} resi berhasil disinkronkan, ${duplicate} resi double`
             );
 
         }
-
 
         else if(
             duplicate>0 &&
@@ -3178,19 +3300,16 @@ async function syncKeServer(){
                 `${duplicate} RESI DOUBLE DARI SERVER`
             );
 
-
             showNotif(
                 `${duplicate} RESI DOUBLE`,
                 "error"
             );
-
 
             speak(
                 `${duplicate} resi terdeteksi double oleh server`
             );
 
         }
-
 
         else if(
             berhasil>0
@@ -3201,19 +3320,16 @@ async function syncKeServer(){
                 `Sync selesai • ${berhasil} berhasil`
             );
 
-
             showNotif(
                 `✓ ${berhasil} RESI TERSINKRON`,
                 "success"
             );
-
 
             speak(
                 `${berhasil} ${ROBOT_CONFIG.pesan.syncBerhasil}`
             );
 
         }
-
 
         else if(
             invalid>0
@@ -3224,7 +3340,6 @@ async function syncKeServer(){
                 `${invalid} RESI TIDAK VALID`
             );
 
-
             showNotif(
                 `${invalid} RESI TIDAK VALID`,
                 "error"
@@ -3232,10 +3347,6 @@ async function syncKeServer(){
 
         }
 
-
-        /* =====================================
-           DASHBOARD
-        ===================================== */
 
         loadDashboard();
 
@@ -3247,19 +3358,16 @@ async function syncKeServer(){
             error
         );
 
-
         setStatus(
             "red",
             "Sinkronisasi gagal"
         );
-
 
         showNotif(
             "SYNC GAGAL: " +
             error.message,
             "error"
         );
-
 
         speak(
             ROBOT_CONFIG.pesan.syncGagal
@@ -3271,18 +3379,14 @@ async function syncKeServer(){
         syncSedangBerjalan =
             false;
 
-
         btnSync.disabled =
             false;
-
 
         btnSync.style.opacity =
             "";
 
-
         btnSync.style.pointerEvents =
             "";
-
 
         btnSync.innerHTML =
             oldText;
@@ -3307,17 +3411,14 @@ function markHistorySynced(
             resi
         );
 
-
     if(!item){
 
         return;
 
     }
 
-
     item.status =
         status;
-
 
     if(serverResult){
 
@@ -3326,14 +3427,12 @@ function markHistorySynced(
             serverResult.keterangan ||
             "DOUBLE SCAN";
 
-
         item.serverTime =
             serverResult.tglScan ||
             serverResult.scanTime ||
             null;
 
     }
-
 
     item.syncTime =
         new Date().toISOString();
@@ -3350,13 +3449,11 @@ async function loadDashboard(){
     const url =
         getTargetUrl();
 
-
     if(!url){
 
         return;
 
     }
-
 
     try{
 
@@ -3366,10 +3463,8 @@ async function loadDashboard(){
                 "?action=getDashboard"
             );
 
-
         const data =
             await response.json();
-
 
         if(
             data.status==="success"
@@ -3380,12 +3475,10 @@ async function loadDashboard(){
             ).innerText =
                 data.hariIni || 0;
 
-
             document.getElementById(
                 "kemarin"
             ).innerText =
                 data.kemarin || 0;
-
 
             document.getElementById(
                 "mingguIni"
@@ -3421,7 +3514,6 @@ function closeModal(
         "open"
     );
 
-
     if(
         id==="historyModal"
     ){
@@ -3430,7 +3522,6 @@ function closeModal(
             "historyMenu"
         ).style.display =
             "none";
-
 
         document.getElementById(
             "deleteOneBox"
@@ -3554,6 +3645,7 @@ document.addEventListener(
     }
 );
 
+
 /* =========================================================
    RESI DIBATALKAN
 ========================================================= */
@@ -3567,7 +3659,6 @@ function openCanceled(){
     ).classList.add(
         "open"
     );
-
 
     setTimeout(
         ()=>{
@@ -3592,18 +3683,15 @@ function updateCanceledUI(){
     const total =
         canceledResi.length;
 
-
     const btn =
         document.getElementById(
             "canceledButtonCount"
         );
 
-
     const modal =
         document.getElementById(
             "canceledCount"
         );
-
 
     if(btn){
 
@@ -3611,7 +3699,6 @@ function updateCanceledUI(){
             total;
 
     }
-
 
     if(modal){
 
@@ -3634,12 +3721,10 @@ function addCanceledResi(){
             "canceledResiInput"
         );
 
-
     const resi =
         normalizeResi(
             input.value
         );
-
 
     if(!resi){
 
@@ -3655,10 +3740,6 @@ function addCanceledResi(){
     }
 
 
-    /* =========================================
-       CEK SUDAH ADA
-    ========================================= */
-
     if(
         isCanceledResi(resi)
     ){
@@ -3668,23 +3749,19 @@ function addCanceledResi(){
             .25
         );
 
-
         setStatus(
             "red",
             "RESI SUDAH DIBATALKAN"
         );
-
 
         showNotif(
             "RESI SUDAH ADA DI DAFTAR BATAL",
             "warning"
         );
 
-
         speak(
             ROBOT_CONFIG.pesan.resiSudahDibatalkan
         );
-
 
         input.select();
 
@@ -3693,14 +3770,9 @@ function addCanceledResi(){
     }
 
 
-    /* =========================================
-       MASUK DAFTAR BATAL
-    ========================================= */
-
     canceledResi.unshift(
         resi
     );
-
 
     saveData();
 
@@ -3708,31 +3780,25 @@ function addCanceledResi(){
 
     renderCanceled();
 
-
     input.value =
         "";
 
-
     input.focus();
-
 
     beep(
         500,
         .12
     );
 
-
     setStatus(
         "red",
         "RESI DIBATALKAN • " + resi
     );
 
-
     showNotif(
         "RESI BERHASIL DIBATALKAN",
         "success"
     );
-
 
     speak(
         ROBOT_CONFIG.pesan.resiDibatalkanBerhasil
@@ -3752,13 +3818,11 @@ function renderCanceled(){
             "canceledList"
         );
 
-
     if(!list){
 
         return;
 
     }
-
 
     const search =
         normalizeResi(
@@ -3767,14 +3831,11 @@ function renderCanceled(){
             )?.value || ""
         );
 
-
     list.innerHTML =
         "";
 
-
     let data =
         canceledResi;
-
 
     if(search){
 
@@ -3790,7 +3851,6 @@ function renderCanceled(){
 
     }
 
-
     if(
         data.length===0
     ){
@@ -3804,7 +3864,6 @@ function renderCanceled(){
 
     }
 
-
     data.forEach(
         resi=>{
 
@@ -3813,10 +3872,8 @@ function renderCanceled(){
                     "div"
                 );
 
-
             div.className =
                 "item";
-
 
             div.innerHTML = `
 
@@ -3832,7 +3889,6 @@ function renderCanceled(){
 
                 </div>
 
-
                 <button
                     class="item-delete"
                     onclick="deleteCanceled('${escapeJS(resi)}')"
@@ -3842,14 +3898,12 @@ function renderCanceled(){
 
             `;
 
-
             list.appendChild(
                 div
             );
 
         }
     );
-
 
     updateCanceledUI();
 
@@ -3869,13 +3923,11 @@ function deleteCanceled(
             resi
         );
 
-
     if(!resi){
 
         return;
 
     }
-
 
     const ok =
         confirm(
@@ -3883,13 +3935,11 @@ function deleteCanceled(
             resi
         );
 
-
     if(!ok){
 
         return;
 
     }
-
 
     canceledResi =
         canceledResi.filter(
@@ -3898,13 +3948,11 @@ function deleteCanceled(
                 resi
         );
 
-
     saveData();
 
     updateCanceledUI();
 
     renderCanceled();
-
 
     showNotif(
         "RESI DIBATALKAN DIHAPUS",
@@ -3933,13 +3981,11 @@ function deleteAllCanceled(){
 
     }
 
-
     const ok =
         confirm(
             "HAPUS SEMUA RESI DIBATALKAN?\n\n" +
             "Daftar ini hanya tersimpan di HP."
         );
-
 
     if(!ok){
 
@@ -3947,17 +3993,14 @@ function deleteAllCanceled(){
 
     }
 
-
     canceledResi =
         [];
-
 
     saveData();
 
     updateCanceledUI();
 
     renderCanceled();
-
 
     showNotif(
         "SEMUA RESI BATAL DIHAPUS",
@@ -3979,7 +4022,6 @@ document.addEventListener(
             document.getElementById(
                 "canceledResiInput"
             );
-
 
         if(
             e.key==="Enter" &&
