@@ -634,6 +634,7 @@ button{
             KAMERA OFF
         </button>
 
+
         <!-- TAMBAHAN FLASH -->
 
         <button
@@ -644,6 +645,20 @@ button{
         >
             FLASH OFF
         </button>
+
+
+        <!-- =================================================
+             TAMBAHAN ROBOT SUARA ON / OFF
+        ================================================= -->
+
+        <button
+            id="robotToggle"
+            class="header-btn camera-on"
+            onclick="toggleRobotVoice()"
+        >
+            ROBOT ON
+        </button>
+
 
         <button
             class="header-btn refresh"
@@ -1052,7 +1067,10 @@ button{
 
 const ROBOT_CONFIG = {
 
-    enabled:true,
+    enabled:
+        localStorage.getItem(
+            "srf_robot_voice"
+        ) !== "off",
 
     bahasa:"id-ID",
 
@@ -1337,6 +1355,12 @@ window.addEventListener(
 
         updateFlashButton();
 
+        /* =================================================
+           TAMBAHAN ROBOT BUTTON
+        ================================================= */
+
+        updateRobotButton();
+
         setStatus(
             "yellow",
             ROBOT_CONFIG.pesan.siap
@@ -1534,6 +1558,110 @@ function speak(
 
     }
     catch(e){}
+
+}
+
+
+/* =========================================================
+   TAMBAHAN — ROBOT VOICE ON / OFF
+========================================================= */
+
+function updateRobotButton(){
+
+    const btn =
+        document.getElementById(
+            "robotToggle"
+        );
+
+    if(!btn){
+
+        return;
+
+    }
+
+    if(ROBOT_CONFIG.enabled){
+
+        btn.className =
+            "header-btn camera-on";
+
+        btn.innerText =
+            "ROBOT ON";
+
+    }
+    else{
+
+        btn.className =
+            "header-btn camera-off";
+
+        btn.innerText =
+            "ROBOT OFF";
+
+    }
+
+}
+
+
+/* =========================================================
+   TAMBAHAN — TOGGLE ROBOT VOICE
+========================================================= */
+
+function toggleRobotVoice(){
+
+    ROBOT_CONFIG.enabled =
+        !ROBOT_CONFIG.enabled;
+
+
+    localStorage.setItem(
+        "srf_robot_voice",
+        ROBOT_CONFIG.enabled
+            ? "on"
+            : "off"
+    );
+
+
+    if(!ROBOT_CONFIG.enabled){
+
+        try{
+
+            if(
+                "speechSynthesis" in window
+            ){
+
+                speechSynthesis.cancel();
+
+            }
+
+        }
+        catch(e){}
+
+
+        showNotif(
+            "SUARA ROBOT OFF",
+            "warning"
+        );
+
+        setStatus(
+            "yellow",
+            "Suara robot dimatikan"
+        );
+
+    }
+    else{
+
+        showNotif(
+            "SUARA ROBOT ON",
+            "success"
+        );
+
+        setStatus(
+            "green",
+            "Suara robot diaktifkan"
+        );
+
+    }
+
+
+    updateRobotButton();
 
 }
 
@@ -1802,6 +1930,7 @@ function doubleAlert(
     );
 
 }
+
 
 /* =========================================================
    SIMPAN LOKAL
