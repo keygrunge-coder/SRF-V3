@@ -1456,7 +1456,7 @@ function showNotif(
 ========================================================= */
 
 function beep(
-    freq=600,
+    freq=3200,
     duration=.08
 ){
 
@@ -1774,9 +1774,16 @@ function doubleAlert(
     ){
 
         beep(
-            300,
-            .35
+            350,
+            0.08
         );
+
+        setTimeout(() => {
+            beep(
+                250,
+                0.12
+            );
+        }, 100);
 
     }
 
@@ -1795,7 +1802,6 @@ function doubleAlert(
     );
 
 }
-
 
 /* =========================================================
    SIMPAN LOKAL
@@ -1976,7 +1982,7 @@ function simpanLokal(
     ){
 
         beep(
-            750,
+            3200,
             .08
         );
 
