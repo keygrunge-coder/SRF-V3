@@ -1147,7 +1147,7 @@ const ROBOT_CONFIG = {
 
 const SCAN_CONFIG = {
 
-    processingDelay:800,
+    processingDelay:300,
 
     beepSuccess:true,
 
@@ -2207,11 +2207,11 @@ async function startCamera(){
             },
 
             {
-                fps:15,
+                fps:20,
 
                 qrbox:{
-                    width:280,
-                    height:180
+                    width:380,
+                    height:280
                 },
 
                 aspectRatio:
@@ -3525,6 +3525,7 @@ async function syncKeServer(){
 
         btnSync.innerHTML =
             oldText;
+        updateUI();
 
     }
 
