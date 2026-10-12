@@ -168,6 +168,27 @@ button{
 
 
 /* =========================================================
+   TAMBAHAN — KEDIP HIJAU SAAT BARCODE TERDETEKSI
+========================================================= */
+
+.detect-flash{
+    position:absolute;
+    inset:0;
+    z-index:30;
+    border:6px solid #22c55e;
+    background:rgba(34,197,94,.25);
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .25s
+}
+
+.detect-flash.show{
+    opacity:1;
+    transition:none
+}
+
+
+/* =========================================================
    CAMERA OFF
 ========================================================= */
 
@@ -703,6 +724,9 @@ button{
 <div class="scanner">
 
     <div id="reader"></div>
+
+    <!-- TAMBAHAN: KEDIP HIJAU SAAT BARCODE TERDETEKSI -->
+    <div id="detectFlash" class="detect-flash"></div>
 
     <div
         id="cameraOverlay"
@@ -1517,6 +1541,48 @@ function beep(
 
 
 /* =========================================================
+   TAMBAHAN — FEEDBACK INSTAN SAAT BARCODE TERDETEKSI
+   (kedip hijau di layar + getar)
+========================================================= */
+
+function detectFeedback(){
+
+    const el =
+        document.getElementById(
+            "detectFlash"
+        );
+
+    if(el){
+
+        el.classList.add(
+            "show"
+        );
+
+        setTimeout(
+            ()=>{
+                el.classList.remove(
+                    "show"
+                );
+            },
+            120
+        );
+
+    }
+
+    if(
+        navigator.vibrate
+    ){
+
+        navigator.vibrate(
+            60
+        );
+
+    }
+
+}
+
+
+/* =========================================================
    SPEAK
 ========================================================= */
 
@@ -2229,6 +2295,12 @@ async function startCamera(){
 
                 processing =
                     true;
+
+                /* =========================================
+                   TAMBAHAN — FEEDBACK INSTAN BARCODE TERDETEKSI
+                ========================================= */
+
+                detectFeedback();
 
                 simpanLokal(
                     decodedText
